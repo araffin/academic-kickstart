@@ -19,27 +19,36 @@ date_format = "January 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 [[experience]]
-  title = "CEO"
-  company = "GenCoin"
+  title = "Research Engineer"
+  company = "ENSTA ParisTech - U2IS robotics lab"
   company_url = ""
-  location = "California"
-  date_start = "2017-01-01"
+  location = "Palaiseau"
+  date_start = "2017-10-15"
   date_end = ""
   description = """
-  Responsibilities include:
-  
-  * Analysing
-  * Modelling
-  * Deploying
+  Working on Reinforcement Learning and State Representation Learning for the DREAM project.
   """
 
 [[experience]]
-  title = "Professor"
-  company = "University X"
+  title = "Research Intern"
+  company = "Riminder"
   company_url = ""
-  location = "California"
-  date_start = "2016-01-01"
-  date_end = "2016-12-31"
-  description = """Taught electronic engineering and researched semiconductor physics."""
+  location = "Paris"
+  date_start = "2017-04-02"
+  date_end = "2017-09-30"
+  description = """"""
+
+
+[[experience]]
+  title = "Research Intern"
+  company = "TU Berlin - RBO lab"
+  company_url = ""
+  location = "Berlin"
+  date_start = "2016-05-01"
+  date_end = "2016-08-01"
+  description = """
+  Research internship in representation and reinforcement learning.
+
+  """
 
 +++
