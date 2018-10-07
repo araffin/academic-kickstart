@@ -22,5 +22,9 @@ weight = 5
   course = "MEng in Robotics"
   institution = "ENSTA ParisTech"
   year = 2017
- 
+
 +++
+
+# Bio
+
+Robots. Machine Learning. Blues Dance.
