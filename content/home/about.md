@@ -18,10 +18,10 @@ weight = 5
 
 # List your qualifications (such as academic degrees).
 
-[[education.courses]]
-  course = "MEng in Robotics"
-  institution = "ENSTA ParisTech"
-  year = 2017
+#[[education.courses]]
+#  course = "MEng in Robotics"
+#  institution = "ENSTA ParisTech"
+#  year = 2017
 
 +++
 
