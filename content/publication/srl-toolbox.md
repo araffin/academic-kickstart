@@ -36,11 +36,11 @@ selected = true
 #   Simply enter your project's filename without extension.
 #   E.g. `projects = ["deep-learning"]` references `content/project/deep-learning.md`.
 #   Otherwise, set `projects = []`.
-projects = []
+projects = ['srl-toolbox']
 
 # Tags (optional).
 #   Set `tags = []` for no tags, or use the form `tags = ["A Tag", "Another Tag"]` for one or more tags.
-tags = ["Reinforcement Learning", "State Representation Learning"]
+tags = ["Reinforcement Learning", "State Representation Learning", "Robotics"]
 
 # Links (optional).
 url_pdf = ""
@@ -49,7 +49,7 @@ url_code = "https://github.com/araffin/robotics-rl-srl"
 url_dataset = ""
 url_project = ""
 url_slides = ""
-url_video = ""
+url_video = "https://www.youtube.com/watch?v=qNsHMkIsqJc"
 url_poster = ""
 url_source = ""
 

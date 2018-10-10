@@ -6,7 +6,7 @@ date = 2017-10-26T00:00:00
 title = "Arduino Robust Serial"
 
 # Project summary to display on homepage.
-summary = "A simple and robust serial communication protocol. It was designed for Arduino but can be used for other purposes (e.g. bluetooth, sockets). Implementation in C Arduino, C++, Python and Rust."
+summary = "A simple and robust serial communication protocol. Implementation in C Arduino, C++, Python and Rust."
 
 # Optional image to display on homepage (relative to `static/img/` folder).
 image_preview = ""
