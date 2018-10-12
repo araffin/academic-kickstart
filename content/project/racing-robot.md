@@ -9,7 +9,7 @@ title = "Racing Robot"
 summary = "Autonomous Racing Robot With an Arduino, a Raspberry Pi and a Pi Camera"
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = ""
+image_preview = "racing-car.jpeg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`

@@ -9,7 +9,7 @@ title = "Stable Baselines"
 summary = "A fork of OpenAI Baselines, implementations of reinforcement learning algorithms "
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = ""
+image_preview = "baymax.png"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`

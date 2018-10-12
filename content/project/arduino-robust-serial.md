@@ -9,7 +9,7 @@ title = "Arduino Robust Serial"
 summary = "A simple and robust serial communication protocol. Implementation in C Arduino, C++, Python and Rust."
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = ""
+image_preview = "robust-serial.png"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`

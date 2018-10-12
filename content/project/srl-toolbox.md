@@ -9,7 +9,7 @@ title = "S-RL Toolbox"
 summary = "S-RL Toolbox: Reinforcement Learning (RL) and State Representation Learning (SRL) for Robotics"
 
 # Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = ""
+image_preview = "toolbox.gif"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
