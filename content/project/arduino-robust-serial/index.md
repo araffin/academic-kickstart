@@ -8,9 +8,6 @@ title = "Arduino Robust Serial"
 # Project summary to display on homepage.
 summary = "A simple and robust serial communication protocol. Implementation in C Arduino, C++, Python and Rust."
 
-# Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "robust-serial.png"
-
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
 tags = ["Robotics", "Arduino", "Python", "Rust", "C++"]
@@ -21,10 +18,15 @@ external_link = "https://github.com/araffin/arduino-robust-serial"
 # Does the project detail page use math formatting?
 math = false
 
-# Optional featured image (relative to `static/img/` folder).
-[header]
-image = ""
-caption = ""
+# Featured image
+# To use, add an image named `featured.jpg/png` to your project's folder.
+[image]
+  # Caption (optional)
+  caption = ""
+
+  # Focal point (optional)
+  # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+  focal_point = "Smart"
 
 +++
 

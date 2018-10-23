@@ -8,8 +8,6 @@ title = "Racing Robot"
 # Project summary to display on homepage.
 summary = "Autonomous Racing Robot With an Arduino, a Raspberry Pi and a Pi Camera"
 
-# Optional image to display on homepage (relative to `static/img/` folder).
-image_preview = "racing-car.jpeg"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
@@ -21,10 +19,15 @@ external_link = "https://github.com/sergionr2/RacingRobot"
 # Does the project detail page use math formatting?
 math = false
 
-# Optional featured image (relative to `static/img/` folder).
-[header]
-image = ""
-caption = ""
+# Featured image
+# To use, add an image named `featured.jpg/png` to your project's folder.
+[image]
+  # Caption (optional)
+  caption = ""
+
+  # Focal point (optional)
+  # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
+  focal_point = "Smart"
 
 +++
 
