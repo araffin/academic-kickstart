@@ -18,8 +18,8 @@ authors = ["Antonin Raffin", "Ashley Hill", "René Traoré", "Timothée Lesort",
 publication_types = ["0"]
 
 # Publication name and optional abbreviated version.
-publication = ""
-publication_short = ""
+publication = "Deep Learning Workshop at the Conference on Neural Information Processing Systems (NIPS)"
+publication_short = "In Deep RL Workshop NIPS"
 
 # Abstract and optional shortened version.
 abstract = "State representation learning aims at learning compact representations from raw observations in robotics and control applications. Approaches used for this objective are auto-encoders, learning forward models, inverse dynamics or learning using generic priors on the state characteristics. However, the diversity in applications and methods makes the field lack standard evaluation datasets, metrics and tasks. This paper provides a set of environments, data generators, robotic control tasks, metrics and tools to facilitate iterative state representation learning and evaluation in reinforcement learning settings."
