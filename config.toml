@@ -212,6 +212,12 @@ enableGitInfo = false
     # List publications and talks related to the project?
     list_children = true
 
+    # Post list format.
+    #   0 = Simple
+    #   1 = Detailed
+    #   2 = Stream
+    post_format = 2
+
     # Publication list format.
     #   0 = Simple
     #   1 = Detailed
@@ -240,17 +246,17 @@ enableGitInfo = false
   [[params.social]]
     icon = "linkedin"
     icon_pack = "fab"
-    link = "//www.linkedin.com/in/antonin-raffin-106b18a8/"
+    link = "https://www.linkedin.com/in/antonin-raffin-106b18a8/"
 
   [[params.social]]
     icon = "medium"
     icon_pack = "fab"
-    link = "//medium.com/@araffin"
+    link = "https://medium.com/@araffin"
 
   [[params.social]]
     icon = "twitter"
     icon_pack = "fab"
-    link = "//twitter.com/araffin2"
+    link = "https://twitter.com/araffin2"
 
   [[params.social]]
     icon = "google-scholar"
@@ -260,7 +266,7 @@ enableGitInfo = false
   [[params.social]]
     icon = "github"
     icon_pack = "fab"
-    link = "//github.com/araffin"
+    link = "https://github.com/araffin"
 
 
   # Link to a PDF of your resume/CV from the About widget.
