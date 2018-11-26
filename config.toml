@@ -59,7 +59,7 @@ enableGitInfo = false
   organizations = [ { name = "German Aerospace Center (DLR)", url = "https://www.dlr.de/rmc/" } ]
 
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
-  avatar = "allaq.jpeg"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
+  avatar = "photo_munich.jpg"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
 
   # Details for the Contact Widget
   email = "antonin.raffin [at] ensta [dot] org"
