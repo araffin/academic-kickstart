@@ -1,10 +1,11 @@
 +++
-title = "S-RL Toolbox: Environments, Datasets and Evaluation Metrics for State Representation Learning"
-date = 2018-09-01T00:00:00
+title = "Decoupling feature extraction from policy learning: assessing benefits of state representation learning in goal based robotics"
+date = 2019-01-26T00:00:00
 draft = false
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
 authors = ["Antonin Raffin", "Ashley Hill", "René Traoré", "Timothée Lesort", "Natalia Díaz-Rodríguez", "David Filliat"]
+
 
 # Publication type.
 # Legend:
@@ -15,21 +16,22 @@ authors = ["Antonin Raffin", "Ashley Hill", "René Traoré", "Timothée Lesort",
 # 4 = Report
 # 5 = Book
 # 6 = Book section
-publication_types = ["0"]
+publication_types = ["1"]
 
 # Publication name and optional abbreviated version.
-publication = "Deep Learning Workshop at the Conference on Neural Information Processing Systems (NIPS)"
-publication_short = "In Deep RL Workshop NIPS"
+publication = "Submitted to International Conference on Learning Representations (ICLR)"
+publication_short = "Submitted to ICLR"
 
 # Abstract and optional shortened version.
-abstract = "State representation learning aims at learning compact representations from raw observations in robotics and control applications. Approaches used for this objective are auto-encoders, learning forward models, inverse dynamics or learning using generic priors on the state characteristics. However, the diversity in applications and methods makes the field lack standard evaluation datasets, metrics and tasks. This paper provides a set of environments, data generators, robotic control tasks, metrics and tools to facilitate iterative state representation learning and evaluation in reinforcement learning settings."
-# abstract_short = ""
+abstract = "Scaling end-to-end reinforcement learning to control real robots from vision presents a series of challenges, in particular in terms of sample efficiency. Against end-to-end learning, state representation learning can help learn a compact, efficient and relevant representation of states that speeds up policy learning, reducing the number of samples needed, and that is easier to interpret. We evaluate several state representation learning methods on goal based robotics tasks and propose a new unsupervised model that stacks representations and combines strengths of several of these approaches. This method encodes all the relevant features, performs on par or better than end-to-end learning, and is robust to hyper-parameters change."
+
+abstract_short = "We evaluate the benefits of decoupling feature extraction from policy learning in robotics and propose a new way of combining state representation learning methods."
 
 # Featured image thumbnail (optional)
 image_preview = ""
 
 # Is this a selected publication? (true/false)
-selected = false
+selected = true
 
 # Projects (optional).
 #   Associate this publication with one or more of your projects.
@@ -44,12 +46,12 @@ tags = ["Reinforcement Learning", "State Representation Learning", "Robotics"]
 
 # Links (optional).
 url_pdf = ""
-url_preprint = "https://arxiv.org/abs/1809.09369"
+url_preprint = "https://openreview.net/forum?id=Hkl-di09FQ"
 url_code = "https://github.com/araffin/robotics-rl-srl"
 url_dataset = ""
 url_project = ""
 url_slides = ""
-url_video = "https://www.youtube.com/watch?v=qNsHMkIsqJc"
+url_video = ""
 url_poster = ""
 url_source = ""
 
