@@ -2,7 +2,8 @@
 # Contact widget.
 widget = "contact"
 active = true
-date = 2016-04-20T00:00:00
+headless = true  # This file represents a page section.
+publishDate = 2016-04-20T00:00:00
 
 title = "Contact"
 subtitle = ""
@@ -14,4 +15,3 @@ weight = 70
 autolink = true
 
 +++
-

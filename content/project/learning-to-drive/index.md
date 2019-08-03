@@ -1,34 +1,36 @@
-+++
+---
 # Date this page was created.
-date = 2019-01-26T00:00:00
+date: 2019-01-26T00:00:00
 
 # Project title.
-title = "Learning to Drive Smoothly in Minutes"
+title: "Learning to Drive Smoothly in Minutes"
 
 # Project summary to display on homepage.
-summary = "Learning to drive smoothly in minutes using reinforcement learning on a Donkey Car."
+summary: "Learning to drive smoothly in minutes using reinforcement learning on a Donkey Car."
 
 # Tags: can be used for filtering projects.
-# Example: `tags = ["machine-learning", "deep-learning"]`
-tags = ["Deep Learning", "Robotics", "Machine Learning", "Reinforcement Learning", "Python"]
+tags:
+- Deep Learning
+- Machine Learning
+- Reinforcement Learning
+- Python
+- Robotics
 
 # Optional external URL for project (replaces project detail page).
-external_link = "https://github.com/araffin/learning-to-drive-in-5-minutes"
+external_link: "https://github.com/araffin/learning-to-drive-in-5-minutes"
 
 # Does the project detail page use math formatting?
-math = false
+math: false
 
 # Featured image
 # To use, add an image named `featured.jpg/png` to your project's folder.
-[image]
-  # Caption (optional)
-  caption = ""
-
+image:
+  caption:
   # Focal point (optional)
   # Options: Smart, Center, TopLeft, Top, TopRight, Left, Right, BottomLeft, Bottom, BottomRight
-  focal_point = "Center"
+  focal_point: Center
 
-+++
+---
 Learning to drive smoothly in minutes, using a reinforcement learning algorithm -- Soft Actor-Critic (SAC) -- and a Variational AutoEncoder (VAE) in the Donkey Car simulator.
 
 Github repository: https://github.com/araffin/learning-to-drive-in-5-minutes
