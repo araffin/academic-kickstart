@@ -1,0 +1,695 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Stable Baselines Tutorial</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Stable Baselines Tutorial &middot; IAS Retreat &middot; 06.08.2019
+				</header>
+				<section>
+					<section data-background-image="images/bg_front.jpg">
+						<div class="row bottom-xs">
+							<div class="row middle-xs">
+								<div class="col-xs-7">
+									<div class="col-xs-12">
+										<h3 id='main-title'>Stable Baselines Tutorial</h3>
+										<p id="subtitle">Reinforcement Learning Made Easy</p>
+									</div>
+								</div>
+								<div class="col-xs-5">
+									<a target="_blank" href="https://github.com/hill-a/stable-baselines">
+										<img src="images/logo_sb.png" alt="baymax">
+									</a>
+								</div>
+							</div>
+							<div class="col-xs-6 xsmall-text">
+								Antonin RAFFIN <br>
+								<span class="italic">German Aerospace Center (DLR)</span><br>
+								<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Who am I?</h4>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/robots/david_robot.jpeg" alt="HASy" style="max-width: 35%">
+								<p class="xsmall-text caption">David (aka HASy)</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/robots/enstar.jpeg" alt="ENSTAR" style="max-width: 70%">
+								<p class="xsmall-text caption">ENSTA Robotique</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/robots/racing_car.jpg" alt="Racing Robot" style="max-width: 70%">
+								<p class="xsmall-text caption">Racing Robot</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/robots/baxter.jpeg" alt="Baxter" style="max-width: 30%">
+								<p class="xsmall-text caption">Baxter</p>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						### Outline
+						1. History of the Project
+						2. Lessons Learned
+						3. Tutorial
+						4. Projects Examples
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<h4>Machine Learning for Control (1/2)</h4>
+						<blockquote>
+							&ldquo;Don't learn what you already know.&rdquo;
+						</blockquote>
+					</section>
+					<section>
+						<h4>Machine Learning for Control (2/2)</h4>
+						<img src="images/timeline.png" alt="timeline">
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							#### State Representation Learning (SRL) (1/2)
+							![srl](images/srl_rl.png)
+						</textarea>
+					</section>
+					<section>
+						<div class="row bottom-xs">
+							<div class="col-xs-12">
+								<h4>SRL (2/2)</h4>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/enjoy-latent-real-baxter.gif" alt="Baxter inverse model" width="50%">
+								<p class="xsmall-text italic caption">"S-RL Toolbox: Environments, Datasets and Evaluation Metrics for SRL" (Raffin et al. 2018)</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/decoupling.png" alt="decoupling">
+								<p class="xsmall-text italic caption">"Decoupling feature extraction from policy learning" (Raffin et al. 2018)</p>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						### History of the Project
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>To fork or not to fork?</h4>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/baselines_fail.png" alt="build failed">
+							</div>
+							<div class="col-xs-6">
+								<img src="images/hard_to_read.png" alt="hard-to-read">
+							</div>
+							<div class="col-xs-6">
+								<img src="images/reddit_baselines.png" alt="reddit 1">
+							</div>
+							<div class="col-xs-6">
+								<img src="images/reddit_2.png" alt="reddit 2">
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Maintainers</h4>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/ashley.jpg" alt="Ashley Hill" style="max-width: 30%">
+								<p class="xsmall-text caption">Ashley</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/photo_munich.jpg" alt="Antonin" style="max-width: 30%">
+								<p class="xsmall-text caption">Antonin</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/adam.jpeg" alt="Adam Gleave" style="max-width: 30%">
+								<p class="xsmall-text caption">Adam</p>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/maximilian.jpeg" alt="Maximilian Ernerstus" style="max-width: 30%">
+								<p class="xsmall-text caption">Maximilian</p>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Features</h4>
+								<img src="images/sb_features.png" alt="features" width="80%">
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Algorithms</h4>
+								<img src="images/rl_algos.png" alt="RL Algos" width="80%">
+							</div>
+						</div>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							##### Stable Baselines vs other RL lib
+							- Model free RL and single agent setting
+							- User friendly (avoid breaking changes)
+							- Consistent and clean API (sklearn like)
+							- Self-contained implementations (vs modular lib)
+							- Robotics in mind
+						</textarea>
+					</section>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Lessons Learned
+					</textarea>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<textarea data-template>
+							#### Lessons Learned
+
+							![badge](images/stable.png)
+
+							- Code review (github)
+							- Common code style (PEP 8 & Codacy)
+							- Continuous integration (pytest & travis)
+							- Documentation (sphinx & rtd)
+						</textarea>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>Docstrings</h4>
+							</div>
+							<div class="col-xs-6">
+								<pre>
+									<!--  data-line-numbers="1" -->
+									<code class="python hljs medium-text" data-trim data-noescape
+										style="line-height: 1.4; font-size:50%;">
+										class LinearSchedule(Schedule):
+								    """
+								    Linear interpolation between initial_p and final_p over
+								    schedule_timesteps. After this many timesteps pass
+										final_p is returned.
+
+								    :param schedule_timesteps: (int) Number of timesteps for
+											which to linearly anneal initial_p to final_p
+								    :param initial_p: (float) initial output value
+								    :param final_p: (float) final output value
+								    """
+									</code>
+								</pre>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/documentation.png" alt="doc">
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>Tests and Continuous Integration</h4>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/travis.png" alt="travis">
+
+							</div>
+							<div class="col-xs-6">
+								<img src="images/codacy.png" alt="codacy" width="80%">
+							</div>
+							<div class="col-xs-12">
+								<img src="images/ci.png" alt="ci" width="50%">
+							</div>
+						</div>
+					</section>
+					<section>
+						<h5>Additional Topics</h5>
+						<div class="medium-text">
+							<ul style="line-height: 2;">
+								<li>Managing Open Source project (issues, contributing guide, ...)</li>
+								<li>How to write tests for machine learning projects?</li>
+								<li>How to implement and test RL algorithm</li>
+							</ul>
+						</div>
+					</section>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Tutorial
+					</textarea>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						##### Topics covered
+						- Getting started
+						- Multiprocessing
+						- Custom policy network
+						- Monitoring training
+						- (bonus) RL zoo and hyperparameter tuning
+					</textarea>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<textarea data-template>
+							### Getting Started
+
+							```python
+							from stable_baselines import SAC
+
+							model = SAC('MlpPolicy', 'Pendulum-v0', verbose=1)
+							model.learn(total_timesteps=50000)
+							model.save('SAC-Pendulum-v0')
+							```
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							### Installation
+
+							```
+							pip install stable-baselines==2.7.0
+							```
+							<small>[Documentation](https://stable-baselines.readthedocs.io/en/master/guide/install.html)</small>
+						</textarea>
+					</section>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						##### Visualize the trained agent
+
+						```python
+						env = model.get_env()
+						# model = SAC.load('SAC-Pendulum-v0')
+						obs = env.reset()
+						for i in range(1000):
+							action, _states = model.predict(obs, deterministic=True)
+							obs, rewards, dones, info = env.step(action)
+							env.render()
+						```
+					</textarea>
+				</section>
+				<section>
+					<h5>Multiprocessing: Vectorized Environments</h5>
+					<pre>
+						<!--  data-line-numbers="1" -->
+						<code class="python medium-text" data-trim data-noescape
+							style="line-height: 1.2; font-size:50%;">
+							import gym
+
+							from stable_baselines.common.vec_env import DummyVecEnv, SubprocVecEnv
+							from stable_baselines import A2C
+
+							def make_env(env_id, rank, seed=0):
+					    """
+					    Utility function for multiprocessed env.
+
+					    :param env_id: (str) the environment ID
+					    :param num_env: (int) the number of environments you wish to have in subprocesses
+					    :param seed: (int) the inital seed for RNG
+					    :param rank: (int) index of the subprocess
+					    """
+					    def _init():
+					        env = gym.make(env_id)
+					        env.seed(seed + rank)
+					        return env
+					    return _init
+
+							n_cpu = 8
+							env = DummyVecEnv([make_env('CartPole-v1', i) for i in range(n_cpu)])
+							model = A2C('MlpPolicy', env, verbose=1).learn(int(5e5))
+						</code>
+					</pre>
+				</section>
+				<section>
+					<h5>Custom Policy Network</h5>
+					<pre>
+						<!--  data-line-numbers="1" -->
+						<code class="python medium-text" data-trim data-noescape
+							style="line-height: 1.2; font-size:80%;">
+							import tensorflow as tf
+							from stable_baselines import PPO2, SAC, TD3
+
+							# Common policies (A2C family: A2C, PPO, TRPO, ACKTR, ACER)
+							# Custom MLP policy of two layers of size 32 each with tanh
+							# activation function
+							policy_kwargs = dict(act_fun=tf.nn.tanh, net_arch=[32, 32])
+							# Different architecture for actor/critic
+							# net_arch=[128, dict(vf=[256], pi=[16])]
+							model = PPO2('MlpPolicy', 'Pendulum-v0', policy_kwargs=policy_kwargs)
+
+							# Custom Architecture (DDPG, SAC, TD3)
+							model = TD3('MlpPolicy', 'MountainCarContinous-v0',
+							            policy_kwargs=dict(layers=[400, 300]))
+
+						</code>
+					</pre>
+				</section>
+				<section>
+					<section>
+						<h5>Monitoring Training: Monitor Wrapper (1/3)</h5>
+						<pre>
+							<!--  data-line-numbers="1" -->
+							<code class="python medium-text" data-trim data-noescape
+							style="line-height: 1.2; font-size:80%;">
+							import gym
+
+							from stable_baselines import PPO2
+							from stable_baselines.common.vec_env import DummyVecEnv
+							from stable_baselines.bench import Monitor
+
+							env = Monitor(gym.make('CartPole-v1'), filename=None, allow_early_resets=True)
+							env = DummyVecEnv([lambda: env])
+							model = PPO2('MlpPolicy', env, verbose=1).learn(int(1e5))
+						</code>
+					</pre>
+					</section>
+					<section>
+						<h5>Monitoring Training: Tensorboard (2/3)</h5>
+						<pre>
+							<!--  data-line-numbers="1" -->
+							<code class="python medium-text" data-trim data-noescape
+								style="line-height: 1.2; font-size:80%; max-height: 1000px">
+								from stable_baselines import SAC
+
+								model = SAC('MlpPolicy', 'LunarLanderContinuous-v2', verbose=1,
+								            tensorboard_log='/tmp/sac/')
+								model.learn(int(1e5))
+							</code>
+						</pre>
+					</section>
+					<section>
+						<h5>Monitoring Training: Callback (3/3)</h5>
+						<pre>
+							<!--  data-line-numbers="1" -->
+							<code class="python medium-text" data-trim data-noescape
+								style="line-height: 1.2; font-size:50%;">
+								import numpy as np
+								from stable_baselines import SAC
+
+								def callback(locals_, globals_):
+								    self_ = locals_['self']
+								    # Check every 1000 calls
+								    if self_.n_callback_calls % 1000 == 0:
+								        # Save best model (according to training reward)
+								        if locals_.get('mean_reward', -np.inf) > self_.best_mean_reward:
+								            print("Saving best model")
+								            self_.save('sac_best')
+								            self_.best_mean_reward = locals_['mean_reward']
+								        # Stop training when target performance attained
+								        if self_.best_mean_reward > -800:
+								            print("Stopping training")
+								            return False
+
+								    self_.n_callback_calls += 1
+								    return True
+
+								model = SAC("MlpPolicy", "Pendulum-v0", verbose=1)
+								# Define a properties to avoid global variables
+								model.best_mean_reward = -np.inf
+								model.n_callback_calls = 0
+								model.learn(100000, callback=callback)
+							</code>
+						</pre>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h5>RL Zoo: A collection of 120+ trained RL agents</h5>
+						<ol class="medium-text">
+							<li>Provide a simple interface to train and enjoy RL agents</li>
+							<li>Benchmark the different Reinforcement Learning algorithms</li>
+    					<li>Provide tuned hyperparameters for each environment and RL algorithm</li>
+							<li>Have fun with the trained agents!</li>
+						</ol>
+						<p class="xsmall-text">
+							<a href="https://github.com/araffin/rl-baselines-zoo">https://github.com/araffin/rl-baselines-zoo</a>
+						</p>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>RL Zoo: Training</h5>
+							</div>
+							<div class="col-xs-7">
+								<pre>
+									<code class="yaml" data-trim data-noescape
+										style="line-height: 1.2; font-size:70%;">
+										HalfCheetahBulletEnv-v0:
+										  env_wrapper: utils.wrappers.TimeFeatureWrapper
+										  n_timesteps: !!float 2e6
+										  policy: 'MlpPolicy'
+										  gamma: 0.99
+										  buffer_size: 1000000
+										  noise_type: 'normal'
+										  noise_std: 0.1
+										  learning_starts: 10000
+										  batch_size: 100
+										  learning_rate: !!float 1e-3
+										  train_freq: 1000
+										  gradient_steps: 1000
+										  policy_kwargs: 'dict(layers=[400, 300])'
+									</code>
+								</pre>
+							</div>
+							<div class="col-xs-5">
+								<video src="videos/td3-HalfCheetahBulletEnv-v0-step-0-to-step-1000.mp4" controls></video>
+							</div>
+							<div class="col-xs-12">
+								<pre>
+									<code class="bash" data-trim data-noescape
+										style="line-height: 1.2; font-size:80%;">
+										python train.py --algo td3 --env HalfCheetahBulletEnv-v0
+										python enjoy.py --algo td3 --env HalfCheetahBulletEnv-v0
+										python -m utils.record_video --algo td3 --env HalfCheetahBulletEnv-v0 -n 1000
+									</code>
+								</pre>
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h5>RL Zoo: Hyperparameter Optimization</h5>
+							</div>
+							<div class="col-xs-4">
+								<p>
+									<a href="https://github.com/pfnet/optuna">Optuna</a>
+								</p>
+								<ul class="medium-text">
+									<li>Easy to setup</li>
+									<li>Clean API</li>
+									<li>Good documentation</li>
+									<li>TPE, GP, CMAES, median pruner, ...</li>
+								</ul>
+							</div>
+							<div class="col-xs-8">
+								<pre>
+									<code class="bash" data-trim data-noescape
+									style="line-height: 1.2; font-size:80%;">
+									python train.py --algo ppo2 --env MountainCar-v0 \
+									--optimize --n-trials 1000 --n-jobs 2 \
+									--sampler tpe --pruner median
+								</code>
+							</pre>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h4>Projects using Stable Baselines</h4>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Learning to Drive in Minutes</h5>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/smooth.gif" alt="learning to drive">
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>Racing car with only a camera</li>
+									<li>VAE features + SAC</li>
+									<li>Smooth control by limiting rate of change</li>
+									<li>
+										<a href="https://github.com/araffin/learning-to-drive-in-5-minutes">https://github.com/araffin/learning-to-drive-in-5-minutes</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Making Roboy move with elegance</h5>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/projects/roboy.gif" style="max-width: 50%" alt="roboy">
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>Tendon-driven robot</li>
+									<li>PPO2 / SAC</li>
+									<li>Trained in simulation, tested on real hardware</li>
+									<li>
+										<a href="https://github.com/Roboy/DeepAndReinforced">https://github.com/Roboy/DeepAndReinforced</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>RL Local Planner</h5>
+							</div>
+							<div class="col-xs-6">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/laGrLaMaeT4?rel=0" width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>PPO2 on LIDAR 1D sensor</li>
+									<li>Trained in simulation, tested in the real world</li>
+									<li>
+										<a href="https://github.com/RGring/drl_local_planner_ros_stable_baselines">https://github.com/RGring/drl_local_planner_ros_stable_baselines</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Wave RL</h5>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/projects/wave.gif" style="max-width: 100%" alt="wave">
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>Active damping on a model of a vibrating bridge</li>
+									<li>PPO2</li>
+									<li>
+										<a href="https://github.com/jaberkow/WaveRL">https://github.com/jaberkow/WaveRL</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>raisimGym</h5>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/projects/raisim.gif" style="max-width: 100%" alt="raisim">
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>quadrupedal robot (ANYmal)</li>
+									<li>PPO2</li>
+									<li>
+										<a href="https://github.com/leggedrobotics/raisimGym">https://github.com/leggedrobotics/raisimGym</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h4>Conclusion</h4>
+					<ul class="medium-text">
+						<li>SRL for RL on real robots</li>
+						<li>Best practices for ML project</li>
+						<li>Easy to use and customizable RL lib</li>
+						<li>More examples in the documentation</li>
+						<li>Contributions are welcomed!</li>
+					</ul>
+				</section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true },
+					{ src: 'plugin/math/math.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>

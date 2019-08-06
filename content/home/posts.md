@@ -10,7 +10,7 @@ title = "Recent Posts"
 subtitle = ""
 
 # Order that this section will appear in.
-weight = 40
+weight = 50
 
 # Number of posts to list.
 count = 5

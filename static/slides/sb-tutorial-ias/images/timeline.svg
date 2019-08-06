@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="198.7966mm"
+   height="70.276894mm"
+   viewBox="0 0 704.3974 249.01261"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="timeline_2.svg"
+   inkscape:export-filename="/home/raff_an/Pictures/presentations/timeline.png"
+   inkscape:export-xdpi="153.24527"
+   inkscape:export-ydpi="153.24527">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Send"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Send"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4167"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.2,0,0,-0.2,-1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Sstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Sstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4164"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.2,0,0,0.2,1.2,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lend"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4173"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(-1.1,0,0,-1.1,-1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow2Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow2Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4170"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:0.625;stroke-linejoin:round;stroke-opacity:1"
+         d="M 8.7185878,4.0337352 -2.2072895,0.01601326 8.7185884,-4.0017078 c -1.7454984,2.3720609 -1.7354408,5.6174519 -6e-7,8.035443 z"
+         transform="matrix(1.1,0,0,1.1,1.1,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="323.47783"
+     inkscape:cy="115.37112"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1505"
+     inkscape:window-height="1136"
+     inkscape:window-x="95"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-6.3059731,-170.96338)">
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3.35167098;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-start:url(#Arrow2Lstart);marker-end:url(#Arrow2Lend)"
+       d="M 20.165474,241.67597 652.59612,241.24851"
+       id="path4146"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 104.55079,240.95717 c 0,128.2192 0,131.00654 0,131.00654"
+       id="path5341-3"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 211.78141,216.46226 c 0,47.7016 0,48.73858 0,48.73858"
+       id="path5341-6"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 432.54685,241.88067 c 0,69.37334 0,70.88144 0,70.88144"
+       id="path5341-7"
+       inkscape:connector-curvature="0" />
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 551.60126,241.16639 c 0,23.23351 0,23.73858 0,23.73858"
+       id="path5341-5"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="107.31668"
+       y="391.86346"
+       id="text6201"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="107.31668"
+         y="391.86346"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6260">Classic Control</tspan><tspan
+         sodipodi:role="line"
+         x="107.31668"
+         y="413.73846"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6284">(ex: MPC)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="58.063786"
+       y="190.66595"
+       id="text6201-3"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6203-5"
+         x="58.063786"
+         y="190.66595"
+         style="font-size:12.5px;text-align:center;text-anchor:middle">sample-efficient</tspan><tspan
+         sodipodi:role="line"
+         x="58.063786"
+         y="206.29095"
+         style="font-size:12.5px;text-align:center;text-anchor:middle"
+         id="tspan6235">assumptions</tspan><tspan
+         sodipodi:role="line"
+         x="58.063786"
+         y="221.91595"
+         style="font-size:12.5px;text-align:center;text-anchor:middle"
+         id="tspan6258">domain knowledge</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="626.99329"
+       y="204.28638"
+       id="text6201-3-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan6203-5-2"
+         x="626.99329"
+         y="204.28638"
+         style="font-size:12.5px;text-align:center;text-anchor:middle">sample-inefficient</tspan><tspan
+         sodipodi:role="line"
+         x="626.99329"
+         y="219.91138"
+         style="font-size:12.5px;text-align:center;text-anchor:middle"
+         id="tspan6235-9">no assumptions</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="594.62915"
+       y="288.52313"
+       id="text6201-1"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="594.62915"
+         y="288.52313"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6260-2">Black Box Optimization (BBO)</tspan><tspan
+         sodipodi:role="line"
+         x="594.62915"
+         y="310.39813"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6282">(ex: CMAES)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="433.25525"
+       y="330.2435"
+       id="text6201-1-7"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="433.25525"
+         y="330.2435"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6282-9">Model Free RL</tspan><tspan
+         sodipodi:role="line"
+         x="433.25525"
+         y="352.1185"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6309">(ex: SAC, PPO, TD3, ...)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="214.08064"
+       y="292.98956"
+       id="text6201-1-7-3"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="214.08064"
+         y="292.98956"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6282-9-6">Model Based RL</tspan><tspan
+         sodipodi:role="line"
+         x="214.08064"
+         y="314.86456"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6309-0">(ex: PILCO)</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="227.52391"
+       y="183.70386"
+       id="text6201-1-7-3-6"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="227.52391"
+         y="183.70386"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6282-9-6-2">Planning in Latent Space</tspan><tspan
+         sodipodi:role="line"
+         x="227.52391"
+         y="205.57886"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6309-0-6">(ex: PlaNet)</tspan></text>
+    <path
+       style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:3;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       d="m 327.14285,241.92149 c 0,130.89311 0,133.73858 0,133.73858"
+       id="path5341-6-1"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:sans-serif;text-align:center;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="321.93777"
+       y="394.41812"
+       id="text6201-1-7-8"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         x="321.93777"
+         y="394.41812"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6282-9-7">State Representation Learning</tspan><tspan
+         sodipodi:role="line"
+         x="321.93777"
+         y="416.29312"
+         style="font-size:17.5px;text-align:center;text-anchor:middle"
+         id="tspan6309-9">(ex: VAE)</tspan></text>
+  </g>
+</svg>
