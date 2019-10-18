@@ -1,9 +1,9 @@
 ---
-title: Stable Baselines Tutorial
+title: RL Tutorial on Stable Baselines
 event: JNRR 2019
-event_url:
-location: Vittel France
-summary: Tutorial on Stable Baselines library
+event_url: https://jnrr2019.loria.fr/
+location: Vittel, France
+summary: Beginner tutorial on Stable Baselines library with colab notebooks
 abstract:
 
 # Talk start and end times.
@@ -13,7 +13,7 @@ abstract:
 #all_day: false
 
 # Schedule page publish date (NOT talk date).
-publishDate: "2019-10-18T00:00:00Z"
+publishDate: "2019-10-18T00:09:00Z"
 
 authors:
   - admin
@@ -24,6 +24,8 @@ tags:
 featured: false
 
 url_slides: slides/rl-tuto-jnrr19/
+url_code: https://github.com/araffin/rl-tutorial-jnrr19
+
 
 #image:
 #  caption: 'Image credit: [**Unsplash**](https://unsplash.com/photos/bzdhc5b3Bxs)'

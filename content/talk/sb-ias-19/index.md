@@ -1,5 +1,5 @@
 ---
-title: Stable Baselines Tutorial
+title: SRL - Stable Baselines Presentation
 event: IAS Retreat
 event_url:
 location: Darmstädter Haus, Austria
