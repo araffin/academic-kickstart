@@ -1,0 +1,631 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>RL Tutorial on Stable Baselines</title>
+
+		<link rel="stylesheet" href="css/reset.css">
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/white.css">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/monokai.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Stable Baselines Tutorial &middot; JNRR 2019 &middot; 18.10.2019
+				</header>
+				<section data-background-image="images/bg_front.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Stable Baselines Tutorial</h3>
+									<p id="subtitle">Reinforcement Learning Made Easy</p>
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/hill-a/stable-baselines">
+									<img src="images/logo_sb.png" alt="baymax">
+								</a>
+							</div>
+						</div>
+							<div class="col-xs-2 xsmall-text">
+								Ashley HILL <br>
+								<span class="italic">CEA</span><br>
+							</div>
+							<div class="col-xs-2 xsmall-text">
+								Edward Beeching <br>
+								<span class="italic">INSA Lyon</span><br>
+							</div>
+							<div class="col-xs-2 xsmall-text">
+								Antonin RAFFIN <br>
+								<span class="italic">German Aerospace Center (DLR)</span><br>
+							</div>
+					</div>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						### Outline
+						1. Examples of RL for Robotics
+						2. Short presentation of Stable Baselines
+						3. Your move!
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<h4>Examples of Reinforcement Learning for Robotics</h4>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Learning Agile and Dynamic Motor Skills for Legged Robots (1)</h5>
+							</div>
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/aTDkYFZFWug?start=6&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Dexterous Manipulation</h5>
+							</div>
+							<div class="col-xs-6">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/jwSbzNHGflM?rel=0&start=26&end=46" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/nlJUOn3O1Ew?rel=0&start=54" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Learning to toss</h5>
+							</div>
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/-O-E1nFm6-A?rel=0&start=76" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+								<div class="col-xs-12">
+									<h5>Learning to Drive in Minutes</h5>
+								</div>
+								<div class="col-xs-6">
+									<div class="videoWrapper">
+										<iframe src="https://www.youtube.com/embed/eRwTbRtnT1I?rel=0&start=88" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<div class="videoWrapper">
+										<iframe src="https://www.youtube.com/embed/iiuKh0yDyKE?rel=0&start=104" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+									</div>
+								</div>
+							</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Wave RL</h5>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/wave.gif" style="max-width: 100%" alt="wave">
+							</div>
+							<div class="col-xs-6 small-text">
+								<ul>
+									<li>Active damping on a model of a vibrating bridge</li>
+									<li>
+										<a href="https://github.com/jaberkow/WaveRL">https://github.com/jaberkow/WaveRL</a>
+									</li>
+								</ul>
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/XggxeuFDaDU?rel=0&start=15" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h5>Deep Mimic</h5>
+							</div>
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/vppFvq2quQ0?rel=0&start=356" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+					</section>
+					<!-- One slide on martin's method + RL ? -->
+					<section>
+						<h5>Bonus</h5>
+						<ul>
+							<li>
+								<a href="https://www.youtube.com/watch?v=VCdxqn0fcnE">Stanford Autonomous Helicopter</a>
+							</li>
+							<li>
+								<a href="https://www.youtube.com/watch?v=BeU1KT-wzDM">Ball in a cup</a>
+							</li>
+							<li>
+								<a href="https://www.youtube.com/watch?v=SH3bADiB7uQ">Table Tennis</a>
+							</li>
+							<li>
+								<a href="https://www.youtube.com/watch?v=W_gxLKSsSIE">Pancake Flip</a>
+							</li>
+						</ul>
+					</section>
+				</section>
+				<section>
+					<section>
+						<div class="row bottom-xs">
+							<div class="row middle-xs">
+								<div class="col-xs-6">
+									<div class="col-xs-12">
+										<h3 id='main-title'>Stable Baselines Library</h3>
+									</div>
+								</div>
+								<div class="col-xs-6">
+									<a target="_blank" href="https://github.com/hill-a/stable-baselines">
+										<img src="images/repo.png" alt="github repo">
+									</a>
+								</div>
+							</div>
+							<div class="col-xs-6 xsmall-text">
+								Github:
+								<a href="https://github.com/hill-a/stable-baselines">https://github.com/hill-a/stable-baselines</a>
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Features</h4>
+								<img src="images/sb_features.png" alt="features" width="80%">
+							</div>
+						</div>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Algorithms</h4>
+								<img src="images/rl_algos.png" alt="RL Algos" width="80%">
+							</div>
+						</div>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							##### Stable Baselines vs other RL lib
+							- Model free RL and single agent setting
+							- User friendly (avoid breaking changes)
+							- Consistent and clean API (sklearn like)
+							- Self-contained implementations (vs modular lib)
+							- Robotics in mind
+						</textarea>
+					</section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>Active Community</h4>
+								<div class="col-xs-12">
+									<img src="images/github_stars.png" alt="git clones" width="40%">
+								</div>
+								<div class="row">
+									<div class="col-xs-6">
+										<img src="images/github_clones.png" alt="git clones">
+									</div>
+									<div class="col-xs-6">
+										<img src="images/github_active.png" alt="github active">
+										<img src="https://pepy.tech/badge/stable-baselines/month" alt="pypi">
+									</div>
+
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h3>Tutorial</h3>
+					<p class="medium-text">
+						Github repo:
+						<a href="https://github.com/araffin/rl-tutorial-jnrr19">https://github.com/araffin/rl-tutorial-jnrr19</a>
+					</p>
+					<div class="medium-text">
+						<ol>
+							<li>Getting Started <a href="https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/1_getting_started.ipynb" target="_blank">Colab Notebook</a></li>
+							<li>Saving/loading/callbacks <a href="https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/2_callbacks_saving_loading.ipynb" target="_blank">Colab Notebook</a></li>
+							<li>Multiprocessing <a href="https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/3_multiprocessing.ipynb" target="_blank">Colab Notebook</a></li>
+							<li>Wrappers and hyperparameter tuning <a href="https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/4_gym_wrappers.ipynb" target="_blank">Colab Notebook</a></li>
+							<li>Creating a custom gym environment <a href="https://colab.research.google.com/github/araffin/rl-tutorial-jnrr19/blob/master/5_custom_gym_env.ipynb" target="_blank">Colab Notebook</a></li>
+						</ol>
+					</div>
+				</section>
+				<section>
+					<section data-markdown>
+						<textarea data-template>
+							### Getting Started
+
+							```python
+							from stable_baselines import SAC
+
+							model = SAC('MlpPolicy', 'Pendulum-v0', verbose=1)
+							model.learn(total_timesteps=50000)
+							model.save('SAC-Pendulum-v0')
+							```
+						</textarea>
+					</section>
+					<section data-markdown>
+						<textarea data-template>
+							### Installation
+
+							```
+							pip install stable-baselines==2.8.0
+							```
+							<small>[Documentation](https://stable-baselines.readthedocs.io/en/master/guide/install.html)</small>
+						</textarea>
+					</section>
+			 </section>
+			 <section data-markdown>
+				 <textarea data-template>
+					 ##### Visualize the trained agent
+
+					 ```python
+					 env = model.get_env()
+					 # model = SAC.load('SAC-Pendulum-v0')
+					 obs = env.reset()
+					 for i in range(1000):
+						 action, _states = model.predict(obs, deterministic=True)
+						 obs, rewards, dones, info = env.step(action)
+						 env.render()
+					 ```
+				 </textarea>
+			 </section>
+				<section>
+ 				 <h4>à vous de jouer!</h4>
+				 	<p class="small-text"><a href="https://github.com/araffin/rl-tutorial-jnrr19">https://github.com/araffin/rl-tutorial-jnrr19</a></p>
+ 				 	<video src="images/kicks.mp4" controls loop data-autoplay>
+ 				 	</video>
+ 					<p class="xxsmall-text">Source: <a href="https://xbpeng.github.io/projects/DeepMimic/index.html">Deep Mimic (Jason Peng)</a></p>
+ 			 </section>
+
+			 <section data-markdown>
+				 <textarea data-template>
+					 ### Backup Slides: RL intro
+				 </textarea>
+			 </section>
+				<section data-markdown>
+					<textarea data-template>
+						### Key Concepts and Notations
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<h4>Branches of Machine Learning</h4>
+						<img src="images/taxonomy_ml.png" alt="taxonomy" style="max-width: 70%">
+						<p class="xxsmall-text">Source: <a href="https://www.argmin.net/2018/06/25/outsider-rl/">Outsider Tour RL by Ben Recht</a></p>
+					</section>
+					<section>
+						<h4>Many Face of RL</h4>
+						<img src="images/many_faces_rl.png" alt="many_faces" style="max-width: 50%">
+						<p class="xxsmall-text">Source: <a href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html">David Silver Course</a></p>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h4>RL 101</h4>
+						<img src="images/RL_illustration.png" alt="rl101" style="max-width: 70%">
+						<p class="xxsmall-text">Source: <a href="https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html">Lilian Weng blog</a></p>
+					</section>
+					<section>
+						<img src="images/baymax.png" alt="baymax" style="max-width: 70%">
+						<p class="xxsmall-text">Credit: L.M Tenkes</p>
+					</section>
+				</section>
+				<section>
+					<h4>Notation</h4>
+					<table>
+						<thead>
+							<th></th>
+							<th>Reinforcement Learning</th>
+							<th>Classical Control</th>
+						</thead>
+						<tr>
+							<th>State</th>
+							<th>$s_t$</th>
+							<th>$x_t$</th>
+						</tr>
+						<tr>
+							<th>Action</th>
+							<th>$a_t$</th>
+							<th>$u_t$</th>
+						</tr>
+						<tr>
+							<th>Reward</th>
+							<th>$r_t$</th>
+							<th>$-c_t$</th>
+						</tr>
+					</table>
+				</section>
+				<section>
+					<h4>Main Components of an RL algo</h4>
+					<p>An RL algo may include one or more of these components:</p>
+					<ul style="line-height: 1.8; font-size:80%;">
+						<li><b>Policy</b>: agent's behavior function ($a_t = \pi(s_t)$)</li>
+						<li><b>Value function</b>: how good is each state and/or action ($V(s_t)$ or $Q(s_t, a_t)$)</li>
+						<li><b>Model</b>: agent's representation of the environment ($s_{t+1} = f(s_t, a_t)$ or $r_{t+1} = g(s_t, a_t)$)</li>
+					</ul>
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						#### Categories of RL agents
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<h4>Model Free vs Model Based</h4>
+						<!-- TODO: say why MF > MB: no assumptions, overconfidence issue -->
+						<div class="col-xs-12 medium-text">
+							<ul>
+								<li><b>Model Free</b>: No explicit representation of the environment</li>
+								<li><b>Model Based</b>: Rely on a the model of the environment
+									<ul>
+										<li>known, given to the agent (ex: Chess)</li>
+										<li>learned explicitly (from scratch, parameter identification)</li>
+									</ul>
+								</ul>
+						</div>
+					</section>
+					<section>
+						<h4>Model Based RL</h4>
+						<img src="images/model_based.png" alt="Model based RL">
+						<p class="xxsmall-text">Source: <a href="https://bair.berkeley.edu/blog/2019/09/30/deep-dynamics/">BAIR blog</a></p>
+					</section>
+				</section>
+				<section>
+					<h4>On-Policy vs Off-policy</h4>
+					<ul>
+						<li><b>On-Policy</b>: The trajectories must be generated by the most recent policy</li>
+						<li><b>Off-Policy</b>: The trajectories can be collected by any behavior policy</li>
+					</ul>
+				</section>
+				<section>
+					<h4>Model Free RL Landscape</h4>
+					<img src="images/rl_landscape.png" alt="Model free RL landscape">
+				</section>
+				<section data-markdown>
+					<textarea data-template>
+						#### Additional key concepts
+					</textarea>
+				</section>
+				<section>
+					<section>
+						<h4>Exploration vs Exploitation Trade-Off (1)</h4>
+						<!-- Also bias/variance? -->
+						<div class="row start-xs">
+							<p><b>Exploration</b>: Try a new beer</p>
+							<p><b>Exploitation</b>: Drink your favorite beer</p>
+						</div>
+					</section>
+					<section>
+						<h4>Exploration vs Exploitation Trade-Off (2)</h4>
+						<div class="row start-xs">
+							<p><b>Exploration</b>: gather more information about the environment</p>
+							<p><b>Exploitation</b>: use the best known strategy to maximize reward</p>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h4>Common Assumptions</h4>
+					<div class="row start-xs">
+						<p><b>Markov</b>: the current state depends only on the previous step, not the complete history</p>
+						<p><b>Fully Observable</b>: agent directly observe the environment state ($o_t = s_t$)
+							Ex: Chess vs Poker
+						</p>
+					</div>
+				</section>
+				<section>
+					<h4>Recap</h4>
+					<ul>
+						<li>RL 101: state, action, reward</li>
+						<li>Policy, value function, model</li>
+						<li>Model free vs model based</li>
+						<li>On-policy vs off-policy</li>
+						<li>Model free landscape</li>
+						<li>Exploration vs exploitation</li>
+						<li>Common assumptions</li>
+					</ul>
+				</section>
+				<section>
+					 <h4>Current Challenges of RL</h4>
+					 <div class="col-xs-12 medium-text">
+						 <ul>
+							 <li>Sample efficiency (millions of samples required)</li>
+							 <li>Reward engineering ("RewArt")</li>
+							 <li>Stability and reproducibility (improving)</li>
+							 <li>Jittering (action noise and oscillations)</li>
+						 </ul>
+					 </div>
+				 </section>
+				<section>
+					 <h4>Topics not covered</h4>
+					 <div class="col-xs-12 medium-text">
+						 <ul>
+							 <li>Objective function (discounted and undiscounted return)</li>
+							 <li>Credit assignment problem</li>
+							 <li>Bias/variance trade-off</li>
+							 <li>Modern tricks (replay buffer, ...)</li>
+							 <li>How to explore ($\epsilon$-greedy, parameter space, ...)</li>
+							 <li>Successes in simulation/games (Mujoco, Atari, Go, Dota2, Starcraft)</li>
+						 </ul>
+					 </div>
+				 </section>
+				<section>
+					 <h5>Resources</h5>
+
+					 <div class="medium-text">
+						 <ul>
+						 	<li>https://www.argmin.net/2018/06/25/outsider-rl/</li>
+							<li>http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html</li>
+							<li>https://www.youtube.com/channel/UCLRpWDzTRLlQn7lMRwvK8Hg/videos</li>
+							<li>http://pages.isir.upmc.fr/~sigaud/teach/</li>
+							<li>https://spinningup.openai.com/en/latest/</li>
+							<li>http://rail.eecs.berkeley.edu/deeprlcourse/</li>
+							<li>https://lilianweng.github.io/lil-log/2018/02/19/a-long-peek-into-reinforcement-learning.html</li>
+							<li>https://sites.google.com/view/deep-rl-bootcamp/lectures</li>
+							<li>http://louiskirsch.com/maps/reinforcement-learning</li>
+						 </ul>
+					 </div>
+			 </section>
+			 	<section>
+			 	<section>
+			 		<h5>RL Zoo: A collection of 120+ trained RL agents</h5>
+			 		<ol class="medium-text">
+			 			<li>Provide a simple interface to train and enjoy RL agents</li>
+			 			<li>Benchmark the different Reinforcement Learning algorithms</li>
+			 			<li>Provide tuned hyperparameters for each environment and RL algorithm</li>
+			 			<li>Have fun with the trained agents!</li>
+			 		</ol>
+			 		<p class="xsmall-text">
+			 			<a href="https://github.com/araffin/rl-baselines-zoo">https://github.com/araffin/rl-baselines-zoo</a>
+			 		</p>
+			 	</section>
+			 	<section>
+			 		<div class="row middle-xs">
+			 			<div class="col-xs-12">
+			 				<h5>RL Zoo: Training</h5>
+			 			</div>
+			 			<div class="col-xs-7">
+			 				<pre>
+			 					<code class="yaml" data-trim data-noescape
+			 						style="line-height: 1.2; font-size:70%;">
+			 						HalfCheetahBulletEnv-v0:
+			 							env_wrapper: utils.wrappers.TimeFeatureWrapper
+			 							n_timesteps: !!float 2e6
+			 							policy: 'MlpPolicy'
+			 							gamma: 0.99
+			 							buffer_size: 1000000
+			 							noise_type: 'normal'
+			 							noise_std: 0.1
+			 							learning_starts: 10000
+			 							batch_size: 100
+			 							learning_rate: !!float 1e-3
+			 							train_freq: 1000
+			 							gradient_steps: 1000
+			 							policy_kwargs: 'dict(layers=[400, 300])'
+			 					</code>
+			 				</pre>
+			 			</div>
+			 			<div class="col-xs-5">
+			 				<video src="videos/td3-HalfCheetahBulletEnv-v0-step-0-to-step-1000.mp4" controls></video>
+			 			</div>
+			 			<div class="col-xs-12">
+			 				<pre>
+			 					<code class="bash" data-trim data-noescape
+			 						style="line-height: 1.2; font-size:80%;">
+			 						python train.py --algo td3 --env HalfCheetahBulletEnv-v0
+			 						python enjoy.py --algo td3 --env HalfCheetahBulletEnv-v0
+			 						python -m utils.record_video --algo td3 --env HalfCheetahBulletEnv-v0 -n 1000
+			 					</code>
+			 				</pre>
+			 			</div>
+			 		</div>
+
+			 	</section>
+			 	<section>
+			 		<div class="row">
+			 			<div class="col-xs-12">
+			 				<h5>RL Zoo: Hyperparameter Optimization</h5>
+			 			</div>
+			 			<div class="col-xs-4">
+			 				<p>
+			 					<a href="https://github.com/pfnet/optuna">Optuna</a>
+			 				</p>
+			 				<ul class="medium-text">
+			 					<li>Easy to setup</li>
+			 					<li>Clean API</li>
+			 					<li>Good documentation</li>
+			 					<li>TPE, GP, CMAES, median pruner, ...</li>
+			 				</ul>
+			 			</div>
+			 			<div class="col-xs-8">
+			 				<pre>
+			 					<code class="bash" data-trim data-noescape
+			 					style="line-height: 1.2; font-size:80%;">
+			 					python train.py --algo ppo2 --env MountainCar-v0 \
+			 					--optimize --n-trials 1000 --n-jobs 2 \
+			 					--sampler tpe --pruner median
+			 				</code>
+			 			</pre>
+			 			</div>
+			 		</div>
+			 	</section>
+			 </section>
+			</div>
+		</div>
+
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// More info about config & dependencies:
+			// - https://github.com/hakimel/reveal.js#configuration
+			// - https://github.com/hakimel/reveal.js#dependencies
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Global override for autoplaying embedded media (video/audio/iframe)
+				// - null: Media will only autoplay if data-autoplay is present
+				// - true: All media will autoplay, regardless of individual setting
+				// - false: No media will autoplay, regardless of individual setting
+				autoPlayMedia: null,
+
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true },
+					{ src: 'plugin/math/math.js', async: true }
+				]
+			});
+		</script>
+	</body>
+</html>
