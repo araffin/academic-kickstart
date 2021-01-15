@@ -5,30 +5,20 @@ date: 2021-01-01
 image:
   placement: 3
   caption: 'Image credit: [**L.M. Tenkes**](https://www.instagram.com/lucillehue/)'
+projects: ['stable-baselines3']
 ---
 
-After several months of beta, we are happy to announce the release of [Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) v1.0 =D, a set of reliable implementations of reinforcement learning (RL) algorithms in PyTorch. It is the next major version of [Stable Baselines](https://github.com/hill-a/stable-baselines).
+After several months of beta, we are happy to announce the release of [Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) v1.0, a set of reliable implementations of reinforcement learning (RL) algorithms in PyTorch =D! It is the next major version of [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 The implementations have been [benchmarked](https://arxiv.org/abs/2005.05719) against reference codebases, and automated unit tests cover 95% of the code.
 
+In this blog post, we give an overview of Stable-Baselines3: the motivation behind it, its design principles and features, how we ensure high-quality implementations and some concrete examples.
+
 <!-- The algorithms follow a consistent interface and are accompanied by extensive documentation, making it simple to train and compare different RL algorithms. -->
-
-
-## Links
-
-GitHub repository: [https://github.com/DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3)
-
-Documentation: [https://stable-baselines3.readthedocs.io/](https://stable-baselines3.readthedocs.io/)
-
-RL Baselines3 Zoo: [https://github.com/DLR-RM/rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo)
-
-SB3-Contrib: [https://github.com/Stable-Baselines-Team/stable-baselines3-contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib)
-
-RL Tutorial: [https://github.com/araffin/rl-tutorial-jnrr19](https://github.com/araffin/rl-tutorial-jnrr19)
 
 ## TL;DR:
 
-[Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) is a library providing reliable implementations of reinforcement learning algorithms in PyTorch. It provides a clean and simple interface for the user, giving access to off-the-shelf state-of-the-art model-free RL algorithms.
+[Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) is a library providing *reliable* implementations of reinforcement learning algorithms in PyTorch. It provides a *clean and simple interface* for the user, giving access to off-the-shelf state-of-the-art model-free RL algorithms.
 
 The library is *[fully documented](https://stable-baselines3.readthedocs.io/en/master/)*, tested and its interface allows to train an RL agent in only few lines of code =):
 
@@ -37,7 +27,7 @@ import gym
 from stable_baselines3 import SAC
 # Train an agent using Soft Actor-Critic on Pendulum-v0
 env = gym.make("Pendulum-v0")
-model = SAC("MlpPolicy", env)
+model = SAC("MlpPolicy", env, verbose=1)
 # Train the model
 model.learn(total_timesteps=20000)
 # Save the model
@@ -54,9 +44,21 @@ where defining and training a RL agent can be written in two lines of code:
 
 ```python
 from stable_baselines3 import PPO
-# Train an agent using Soft Actor-Critic on Pendulum-v0
-model = PPO("MlpPolicy", "Pendulum-v0").learn(total_timesteps=20000)
+# Train an agent using Proximal Policy Optimization on CartPole-v1
+model = PPO("MlpPolicy", "CartPole-v1").learn(total_timesteps=20000)
 ```
+
+## Links
+
+GitHub repository: [https://github.com/DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3)
+
+Documentation: [https://stable-baselines3.readthedocs.io/](https://stable-baselines3.readthedocs.io/)
+
+RL Baselines3 Zoo: [https://github.com/DLR-RM/rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo)
+
+Contrib: [https://github.com/Stable-Baselines-Team/stable-baselines3-contrib](https://github.com/Stable-Baselines-Team/stable-baselines3-contrib)
+
+RL Tutorial: [https://github.com/araffin/rl-tutorial-jnrr19](https://github.com/araffin/rl-tutorial-jnrr19)
 
 ## Motivation
 
@@ -64,7 +66,7 @@ Deep reinforcement learning (RL) research has grown rapidly in recent years, yet
 A major challenge is that small implementation details can have a substantial effect on performance -- often greater than the [difference between algorithms](https://iclr.cc/virtual_2020/poster_r1etN1rtPB.html).
 It is particularly important that implementations used as experimental *baselines* are reliable; otherwise, novel algorithms compared to weak baselines lead to inflated estimates of performance improvements.
 
-To address this challenge, we propose Stable-Baselines3 (SB3), an open-source framework implementing seven commonly used model-free deep RL algorithms.
+To address this challenge, we propose Stable-Baselines3 (SB3), an open-source framework implementing seven commonly used model-free deep RL algorithms, relying on the [OpenAI Gym interface](https://github.com/openai/gym).
 
 We take great care to adhere to software engineering best practices to achieve high-quality implementations that match prior results.
 
@@ -81,16 +83,47 @@ However, SB2 was still relying on OpenAI Baselines initial codebase and with the
 After discussing the matter with the community, we decided to go for a complete rewrite in PyTorch (cf issues [#366](https://github.com/hill-a/stable-baselines/issues/366), [#576](https://github.com/hill-a/stable-baselines/issues/576) and [#733](https://github.com/hill-a/stable-baselines/issues/733)), codename: Stable-Baselines3<sup>1</sup>.
 
 Stable-Baselines3 keeps the same easy-to-use API while improving a lot on the internal code, in particular by adding static type checking.
-Re-starting almost from scratch is long-term investment: we now have a smaller, cleaner core that is easier to maintain and extend =).
+
+Re-starting almost from scratch is long-term investment: it took quite some effort and time but we now have a smaller, cleaner and reliable core that is easier to maintain and extend =).
 
 <sup>1</sup> The very first name of the new version was "torchy-baselines"
 
+There are already [many](https://github.com/search?p=1&q=reinforcement+learning+library&type=Repositories) open source reinforcement learning libraries (almost one new every week), so why create a new one? In the next sections you will learn about the design principles and main features of the Stable-Baselines3 library that differenciate it from others.
+
+## Design Principles
+
+Our main goal is to provide a user-friendly and reliable RL library.
+To keep SB3 simple to use and maintain, we focus on model-free, single-agent RL algorithms, and rely on external projects to extend the scope to [imitation](https://github.com/HumanCompatibleAI/imitation) and [offline](https://github.com/takuseno/d3rlpy) learning.
+
+We prioritize maintaining *stable* implementations over adding new features or algorithms, and avoid making breaking changes.
+We provide a consistent, clean and fully documented API, inspired by the [scikit-learn](https://scikit-learn.org/stable/) API.
+
+Our code is [easily modifiable](https://stable-baselines3.readthedocs.io/en/master/guide/developer.html) by users as we favour readability and simplicity over modularity, although we make use of object-oriented programming to reduce code duplication.
+
 ## Features
+
+Stable-Baselines3 provides many features, ranging from a simple API to a complete [experimental framework](https://github.com/DLR-RM/rl-baselines3-zoo) that allows advance usage like automatic hyperparameters tuning..
 
 ### Simple API
 
-Training agents in Stable-Baselines3 takes just a few lines of code, after which the agent can be queried for actions.
+Training agents in Stable-Baselines3 takes just a few lines of code, after which the agent can be queried for actions (see quick example below).
 This allows researchers to easily use the baseline algorithms and components in their experiments (eg. [Imitating Animals](https://xbpeng.github.io/projects/Robotic_Imitation/index.html), [Slime Volleyball](https://github.com/hardmaru/slimevolleygym), [Adversarial Policies](https://adversarialpolicies.github.io/)), as well as apply RL to novel tasks and environments, like [continual learning](https://pwnagotchi.ai/) when attacking WiFi networks or [dampening bridge vibrations](https://github.com/jaberkow/WaveRL).
+
+```python
+from stable_baselines3 import A2C
+# Train an agent using A2C on Lunar-Lander-v2
+model = A2C("MlpPolicy", "Lunar-Lander-v2")
+model.learn(total_timesteps=20000)
+
+# Retrieve and reset the environment
+env = model.get_env()
+obs = env.reset()
+
+# Query the agent (stochastic action here)
+action, _ = model.predict(obs, deterministic=False)
+
+```
+
 
 
 ### Documentation
@@ -98,7 +131,7 @@ This allows researchers to easily use the baseline algorithms and components in 
 SB3 comes with [extensive documentation](https://stable-baselines3.readthedocs.io/en/master/) of the code API.
 We also include a user guide, covering both basic and more advanced usage with a collection of concrete examples.
 Moreover, we have developed a [Colab notebook based RL tutorial](https://github.com/araffin/rl-tutorial-jnrr19), enabling users to demo the library directly in the browser.
-Additionally, we include common tips for running RL experiments and a developer guide.
+Additionally, we include [common tips](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) for running RL experiments and a [developer guide](https://stable-baselines3.readthedocs.io/en/master/guide/developer.html).
 
 We also pay close attention to questions and uncertainties from SB3 users, updating the documentation to address these.
 
@@ -106,17 +139,41 @@ We also pay close attention to questions and uncertainties from SB3 users, updat
 
 Algorithms are verified against published results by comparing the agent learning curves (cf issues [#48](https://github.com/DLR-RM/stable-baselines3/issues/48) and [#48](https://github.com/DLR-RM/stable-baselines3/issues/49)).
 
-**TODO: explain comparison and link to source code used to compare**
+As an example, to compare against TD3 and SAC original implementation, we integrated SB3 callbacks and made sure both SB3 and original implementations were using the same hyperparameters (the code diff for SAC and TD3 can be found [here](https://github.com/rail-berkeley/softlearning/compare/master...Artemis-Skade:master) and [there](https://github.com/sfujim/TD3/compare/master...araffin:master)).
+
+https://github.com/Artemis-Skade/softlearning
+
+https://github.com/araffin/TD3
+
+During this period, that's how we realized some tricky details that made a big difference.
+For example, PyTorch RMSProp is different from TensorFlow one (we include a custom version inside our codebase), and the `epsilon` value of the optimizer can make a [big difference](https://twitter.com/araffin2/status/1329382226421837825).
+
+
+At the end, we managed to match SB2 results closely:
+
+![A2C](./a2c_comp.png)
+*Stable-Baselines (SB2) vs Stable-Baselines3 (SB3) A2C result on CartPole-v1*
+
+![A2C](./a2c.png)
+*A and B are actually the same RL algorithm (A2C), sharing the exact same code, same hardware, same hyperparameters... except the epsilon value to avoid division by zero in the optimizer (one is `eps=1e-5`, the other `eps=1e-7`)*
+
 
 Moreover, all functions are typed (parameter and return types) and documented with a consistent style, and most functions are covered by unit tests.
 
-Continuous integration checks that all changes pass unit tests and type check, as well as validating the code style and documentation.
+<!-- Continuous integration checks that all changes pass unit tests and type check, as well as validating the code style and documentation. -->
 
 ### Comprehensive
 
 Stable-Baselines3 contains the following state-of-the-art on- and off-policy algorithms, commonly used as experimental baselines: A2C, DDPG, DQN, HER, PPO, SAC and TD3.
 
-Moreover, SB3 provides various algorithm-independent features. We support logging to CSV files and TensorBoard. Users can log custom metrics and modify training via user-provided callbacks. To speed up training, we support parallel (or "vectorized") environments. To simplify training, we implement common environment wrappers, like preprocessing Atari observations to match the original DQN experiments.
+Moreover, SB3 provides various algorithm-independent features. We support logging to CSV files and [TensorBoard](https://stable-baselines3.readthedocs.io/en/master/guide/tensorboard.html). Users can log custom metrics and modify training via user-provided callbacks. To speed up training, we support parallel (or "vectorized") environments. To simplify training, we implement common environment wrappers, like preprocessing Atari observations to match the original DQN experiments.
+
+<video controls>
+ <source src="./tb_video.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video>
+
+*Tensorboard video integration*
 
 
 ### Experimental Framework
@@ -203,6 +260,8 @@ model = PPO("MlpPolicy", env, n_steps=128, batch_size=256, n_epochs=4, ent_coef=
 
 model.learn(int(1e5))
 ```
+
+For a complete migration example, you can also compare the RL Zoo of SB2 with the one from SB3.
 
 
 ## Examples
@@ -293,5 +352,20 @@ This blog post was co-written by Stable-Baselines3 maintainers:
 - [Maximilian Ernestus](https://github.com/ernestum) (aka @ernestum)
 - [Adam Gleave](https://github.com/adamgleave) (@AdamGleave)
 - [Anssi Kanervisto](https://github.com/Miffyli) (@Miffyli).
+
+## Citing the Project
+
+To cite Stable-Baselines3 in publications:
+
+```
+@misc{stable-baselines3,
+  author = {Raffin, Antonin and Hill, Ashley and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Dormann, Noah},
+  title = {Stable Baselines3},
+  year = {2019},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/DLR-RM/stable-baselines3}},
+}
+```
 
 ### Did you find this post helpful? Consider sharing it 🙌
