@@ -88,7 +88,7 @@ Re-starting almost from scratch is long-term investment: it took quite some effo
 
 <sup>1</sup> The very first name of the new version was "torchy-baselines"
 
-There are already [many](https://github.com/search?p=1&q=reinforcement+learning+library&type=Repositories) open source reinforcement learning libraries (almost one new every week), so why create a new one? In the next sections you will learn about the design principles and main features of the Stable-Baselines3 library that differenciate it from others.
+There are already [many](https://github.com/search?p=1&q=reinforcement+learning+library&type=Repositories) open source reinforcement learning libraries (almost one new every week), so why did we create a new one? In the next sections you will learn about the design principles and main features of the Stable-Baselines3 library that differenciate it from others.
 
 ## Design Principles
 
@@ -111,8 +111,8 @@ This allows researchers to easily use the baseline algorithms and components in 
 
 ```python
 from stable_baselines3 import A2C
-# Train an agent using A2C on Lunar-Lander-v2
-model = A2C("MlpPolicy", "Lunar-Lander-v2")
+# Train an agent using A2C on LunarLander-v2
+model = A2C("MlpPolicy", "LunarLander-v2")
 model.learn(total_timesteps=20000)
 
 # Retrieve and reset the environment
@@ -123,8 +123,6 @@ obs = env.reset()
 action, _ = model.predict(obs, deterministic=False)
 
 ```
-
-
 
 ### Documentation
 
@@ -141,24 +139,28 @@ Algorithms are verified against published results by comparing the agent learnin
 
 As an example, to compare against TD3 and SAC original implementation, we integrated SB3 callbacks and made sure both SB3 and original implementations were using the same hyperparameters (the code diff for SAC and TD3 can be found [here](https://github.com/rail-berkeley/softlearning/compare/master...Artemis-Skade:master) and [there](https://github.com/sfujim/TD3/compare/master...araffin:master)).
 
-https://github.com/Artemis-Skade/softlearning
-
-https://github.com/araffin/TD3
+<!-- https://github.com/Artemis-Skade/softlearning -->
+<!-- https://github.com/araffin/TD3 -->
 
 During this period, that's how we realized some tricky details that made a big difference.
-For example, PyTorch RMSProp is different from TensorFlow one (we include a custom version inside our codebase), and the `epsilon` value of the optimizer can make a [big difference](https://twitter.com/araffin2/status/1329382226421837825).
-
-
-At the end, we managed to match SB2 results closely:
-
-![A2C](./a2c_comp.png)
-*Stable-Baselines (SB2) vs Stable-Baselines3 (SB3) A2C result on CartPole-v1*
+For example, PyTorch RMSProp is different from TensorFlow one (we include a custom version inside our codebase), and the `epsilon` value of the optimizer can make a [big difference](https://twitter.com/araffin2/status/1329382226421837825):
 
 ![A2C](./a2c.png)
 *A and B are actually the same RL algorithm (A2C), sharing the exact same code, same hardware, same hyperparameters... except the epsilon value to avoid division by zero in the optimizer (one is `eps=1e-5`, the other `eps=1e-7`)*
 
 
-Moreover, all functions are typed (parameter and return types) and documented with a consistent style, and most functions are covered by unit tests.
+Despite all those tricky details (and other [nasty bugs](https://github.com/DLR-RM/stable-baselines3/issues/105)), at the end, we managed to match SB2 results and original implementations closely:
+
+![A2C](./a2c_comp.png)
+*Stable-Baselines (SB2) vs Stable-Baselines3 (SB3) A2C result on CartPole-v1*
+
+![Breakout](./Result_Breakout-1.png)
+*Stable-Baselines (SB2) vs Stable-Baselines3 (SB3) results on BreakoutNoFrameskip-v4*
+
+![HalfCheetah](./Result_HalfCheetah-1.png)
+*Stable-Baselines3 (SB3) vs original implementations results on HalfCheetahBulletEnv-v0*
+
+<!-- Moreover, all functions are typed (parameter and return types) and documented with a consistent style, and most functions are covered by unit tests. -->
 
 <!-- Continuous integration checks that all changes pass unit tests and type check, as well as validating the code style and documentation. -->
 
@@ -238,7 +240,8 @@ from stable_baselines.common.cmd_util import make_atari_env
 
 env = make_atari_env("BreakoutNoFrameskip-v4", num_env=8, seed=21)
 
-model = PPO2("MlpPolicy", env, n_steps=128, nminibatches=4, noptepochs=4, ent_coef=0.01, verbose=1)
+model = PPO2("MlpPolicy", env, n_steps=128, nminibatches=4,
+              noptepochs=4, ent_coef=0.01, verbose=1)
 
 model.learn(int(1e5))
 ```
@@ -253,10 +256,12 @@ from stable_baselines3.common.env_util import make_atari_env
 # num_env was renamed n_envs
 env = make_atari_env("BreakoutNoFrameskip-v4", n_envs=8, seed=21)
 
-# we use batch_size instead of nminibatches which was dependent on the number of environments
+# we use batch_size instead of nminibatches which
+# was dependent on the number of environments
 # batch_size = (n_steps * n_envs) // nminibatches = 256
 # noptepochs was renamed n_epochs
-model = PPO("MlpPolicy", env, n_steps=128, batch_size=256, n_epochs=4, ent_coef=0.01, verbose=1)
+model = PPO("MlpPolicy", env, n_steps=128, batch_size=256,
+            n_epochs=4, ent_coef=0.01, verbose=1)
 
 model.learn(int(1e5))
 ```
@@ -266,9 +271,43 @@ For a complete migration example, you can also compare the RL Zoo of SB2 with th
 
 ## Examples
 
+Let's see now how we can now use the library in practice with some examples. We're going to see how to easily customize the network architecture, train an agent to play Atari games and normalize observations when training on continuous control tasks like PyBullet environments.
+
+For each of them, you can try it online using [Google colab notebook](https://github.com/Stable-Baselines-Team/rl-colab-notebooks/tree/sb3).
+
+
+### Custom Policy Network
+
+To[customize a policy](https://stable-baselines3.readthedocs.io/en/master/guide/custom_policy.html) with SB3, all you need to do is choose a network architecture and pass a `policy_kwargs` ("policy keyword arguments") to the algorithm constructor.
+
+The following snippet shows how to customize the architecture and activation function for one on-policy (PPO) and one off-policy (SAC) algorithm:
+
+
+```python
+import torch as th
+
+from stable_baselines3 import PPO, SAC
+
+# Custom actor (pi) and value function (vf) networkss
+# of two layers of size 32 each with Relu activation function
+policy_kwargs = dict(activation_fn=th.nn.ReLU,
+                     net_arch=dict(pi=[32, 32], vf=[32, 32]))
+# Create the agent
+model = PPO("MlpPolicy", "CartPole-v1", policy_kwargs=policy_kwargs, verbose=1)
+
+# Custom actor architecture with two layers of 64 units each
+# Custom critic architecture with two layers of 400 and 300 units
+policy_kwargs = dict(net_arch=dict(pi=[64, 64], qf=[400, 300]))
+# Create the agent
+model = SAC("MlpPolicy", "Pendulum-v0", policy_kwargs=policy_kwargs, verbose=1)
+model.learn(5000)
+```
+
 ### Atari Games
 
 Training a RL agent on Atari games is straightforward thanks to `make_atari_env` helper function and the [VecFrameStack](https://stable-baselines3.readthedocs.io/en/master/guide/vec_envs.html#vecframestack) wrapper. It will do all the [preprocessing](https://stable-baselines3.readthedocs.io/en/master/common/atari_wrappers.html) and multiprocessing for you.
+
+[Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/atari_games.ipynb)
 
 ```python
 
@@ -298,6 +337,8 @@ while True:
 
 Normalizing input features may be essential to successful training of an RL agent (by default, images are scaled but not other types of input), for instance when training on [PyBullet](https://github.com/bulletphysics/bullet3/) environments. For that, a wrapper exists and will compute a running average and standard deviation of input features (it can do the same for rewards).
 
+
+[Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/pybullet.ipynb)
 
 ```python
 import gym
@@ -336,11 +377,15 @@ env.norm_reward = False
 
 ```
 
-### Custom Policy Network
+
 
 ### More examples
 
 You can find more examples and associated colab notebooks in the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/examples.html).
+
+## Conclusion
+
+Share your project with us ;)
 
 
 ## About the authors
