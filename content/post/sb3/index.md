@@ -8,6 +8,8 @@ image:
 projects: ['stable-baselines3']
 ---
 
+**THIS POST IS CURRENTLY A DRAFT - SB3 v1.0 will be released soon**
+
 After several months of beta, we are happy to announce the release of [Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) v1.0, a set of reliable implementations of reinforcement learning (RL) algorithms in PyTorch =D! It is the next major version of [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
 The implementations have been [benchmarked](https://arxiv.org/abs/2005.05719) against reference codebases, and automated unit tests cover 95% of the code.
