@@ -84,7 +84,7 @@ After discussing the matter with the community, we decided to go for a complete 
 
 Stable-Baselines3 keeps the same easy-to-use API while improving a lot on the internal code, in particular by adding static type checking.
 
-Re-starting almost from scratch is long-term investment: it took quite some effort and time but we now have a smaller, cleaner and reliable core that is easier to maintain and extend =).
+Re-starting almost from scratch is long-term investment: it took [quite some effort](https://github.com/DLR-RM/stable-baselines3/issues/1) and time but we now have a smaller, cleaner and reliable core that is easier to maintain and extend =).
 
 <sup>1</sup> The very first name of the new version was "torchy-baselines"
 
@@ -137,13 +137,13 @@ We also pay close attention to questions and uncertainties from SB3 users, updat
 
 Algorithms are verified against published results by comparing the agent learning curves (cf issues [#48](https://github.com/DLR-RM/stable-baselines3/issues/48) and [#48](https://github.com/DLR-RM/stable-baselines3/issues/49)).
 
-As an example, to compare against TD3 and SAC original implementation, we integrated SB3 callbacks and made sure both SB3 and original implementations were using the same hyperparameters (the code diff for SAC and TD3 can be found [here](https://github.com/rail-berkeley/softlearning/compare/master...Artemis-Skade:master) and [there](https://github.com/sfujim/TD3/compare/master...araffin:master)).
+As an example, to compare against TD3 and SAC original implementation, we integrated SB3 callbacks and made sure both SB3 and original implementations were using the same hyperparameters (the code diff for SAC and TD3 repos can be found [here](https://github.com/rail-berkeley/softlearning/compare/master...Artemis-Skade:master) and [there](https://github.com/sfujim/TD3/compare/master...araffin:master)).
 
 <!-- https://github.com/Artemis-Skade/softlearning -->
 <!-- https://github.com/araffin/TD3 -->
 
 During this period, that's how we realized some tricky details that made a big difference.
-For example, PyTorch RMSProp is different from TensorFlow one (we include a custom version inside our codebase), and the `epsilon` value of the optimizer can make a [big difference](https://twitter.com/araffin2/status/1329382226421837825):
+For example, PyTorch RMSProp is different from TensorFlow one (we include a [custom version](https://github.com/DLR-RM/stable-baselines3/blob/master/stable_baselines3/common/sb2_compat/rmsprop_tf_like.py) inside our codebase), and the `epsilon` value of the optimizer can make a [big difference](https://twitter.com/araffin2/status/1329382226421837825):
 
 ![A2C](./a2c.png)
 *A and B are actually the same RL algorithm (A2C), sharing the exact same code, same hardware, same hyperparameters... except the epsilon value to avoid division by zero in the optimizer (one is `eps=1e-5`, the other `eps=1e-7`)*
@@ -168,7 +168,9 @@ Despite all those tricky details (and other [nasty bugs](https://github.com/DLR-
 
 Stable-Baselines3 contains the following state-of-the-art on- and off-policy algorithms, commonly used as experimental baselines: A2C, DDPG, DQN, HER, PPO, SAC and TD3.
 
-Moreover, SB3 provides various algorithm-independent features. We support logging to CSV files and [TensorBoard](https://stable-baselines3.readthedocs.io/en/master/guide/tensorboard.html). Users can log custom metrics and modify training via user-provided callbacks. To speed up training, we support parallel (or "vectorized") environments. To simplify training, we implement common environment wrappers, like preprocessing Atari observations to match the original DQN experiments.
+Moreover, SB3 provides various algorithm-independent features. We support logging to CSV files and [TensorBoard](https://stable-baselines3.readthedocs.io/en/master/guide/tensorboard.html). Users can log custom metrics and modify training via user-provided [callbacks](https://stable-baselines3.readthedocs.io/en/master/guide/callbacks.html).
+
+To speed up training, we support parallel (or "vectorized") environments. To simplify training, we implement common environment wrappers, like preprocessing Atari observations to match the original DQN experiments.
 
 <video controls>
  <source src="./tb_video.mp4" type="video/mp4">
@@ -266,7 +268,7 @@ model = PPO("MlpPolicy", env, n_steps=128, batch_size=256,
 model.learn(int(1e5))
 ```
 
-For a complete migration example, you can also compare the RL Zoo of SB2 with the one from SB3.
+For a complete migration example, you can also compare the [RL Zoo of SB2](https://github.com/araffin/rl-baselines-zoo) with the [one from SB3](https://github.com/DLR-RM/rl-baselines3-zoo).
 
 
 ## Examples
@@ -288,7 +290,7 @@ import torch as th
 
 from stable_baselines3 import PPO, SAC
 
-# Custom actor (pi) and value function (vf) networkss
+# Custom actor (pi) and value function (vf) networks
 # of two layers of size 32 each with Relu activation function
 policy_kwargs = dict(activation_fn=th.nn.ReLU,
                      net_arch=dict(pi=[32, 32], vf=[32, 32]))
@@ -307,7 +309,7 @@ model.learn(5000)
 
 Training a RL agent on Atari games is straightforward thanks to `make_atari_env` helper function and the [VecFrameStack](https://stable-baselines3.readthedocs.io/en/master/guide/vec_envs.html#vecframestack) wrapper. It will do all the [preprocessing](https://stable-baselines3.readthedocs.io/en/master/common/atari_wrappers.html) and multiprocessing for you.
 
-[Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/atari_games.ipynb)
+Colab link: [Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/atari_games.ipynb)
 
 ```python
 
@@ -338,7 +340,7 @@ while True:
 Normalizing input features may be essential to successful training of an RL agent (by default, images are scaled but not other types of input), for instance when training on [PyBullet](https://github.com/bulletphysics/bullet3/) environments. For that, a wrapper exists and will compute a running average and standard deviation of input features (it can do the same for rewards).
 
 
-[Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/pybullet.ipynb)
+Colab link: [Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/pybullet.ipynb)
 
 ```python
 import gym
@@ -377,15 +379,19 @@ env.norm_reward = False
 
 ```
 
-
-
 ### More examples
 
 You can find more examples and associated colab notebooks in the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/examples.html).
 
 ## Conclusion
 
-Share your project with us ;)
+We presented Stable-Baselines3 v1.0, a set of reliable reinforcement learning implementations and the next major version of the Stable-Baselines.
+
+If you want to follow the updates of the library, we encourage you to star the repo on [GitHub](https://github.com/DLR-RM/stable-baselines3) and click on "Watch -> Custom -> Releases" to be notified each time a new version is released ;) (you can also follow [Adam](https://twitter.com/ARGleave) or [Antonin](https://twitter.com/araffin2) on Twitter).
+
+In case you want to contribute, make sure to read the [contributing guide](https://github.com/DLR-RM/stable-baselines3/blob/master/CONTRIBUTING.md) first.
+
+Finally, if you make a cool project using Stable-Baselines3, please tell us when you want it to appear in [our project page](https://stable-baselines3.readthedocs.io/en/master/misc/projects.html).
 
 
 ## About the authors
