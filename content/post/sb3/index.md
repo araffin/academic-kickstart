@@ -68,15 +68,14 @@ Deep reinforcement learning (RL) research has grown rapidly in recent years, yet
 A major challenge is that small implementation details can have a substantial effect on performance -- often greater than the [difference between algorithms](https://iclr.cc/virtual_2020/poster_r1etN1rtPB.html).
 It is particularly important that implementations used as experimental *baselines* are reliable; otherwise, novel algorithms compared to weak baselines lead to inflated estimates of performance improvements.
 
-To address this challenge, we propose Stable-Baselines3 (SB3), an open-source framework implementing seven commonly used model-free deep RL algorithms, relying on the [OpenAI Gym interface](https://github.com/openai/gym).
+To help with this problem, we present Stable-Baselines3 (SB3), an open-source framework implementing seven commonly used model-free deep RL algorithms, relying on the [OpenAI Gym interface](https://github.com/openai/gym).
 
 We take great care to adhere to software engineering best practices to achieve high-quality implementations that match prior results.
 
 ## History
 
 SB3 builds on our experience maintaining *[Stable Baselines](https://github.com/hill-a/stable-baselines)* (SB2), a fork of OpenAI Baselines built on TensorFlow 1.x.
-
-Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)*.
+Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)* with already more than 250 citations!
 
 Those two years of maintaining SB2 have been a rewarding exchange with our users, where tons of bugs where fixed and new features like callbacks where added to ease the use of the library.
 
@@ -88,9 +87,9 @@ Stable-Baselines3 keeps the same easy-to-use API while improving a lot on the in
 
 Re-starting almost from scratch is long-term investment: it took [quite some effort](https://github.com/DLR-RM/stable-baselines3/issues/1) and time but we now have a smaller, cleaner and reliable core that is easier to maintain and extend =).
 
-<sup>1</sup> The very first name of the new version was "torchy-baselines"
-
 There are already [many](https://github.com/search?p=1&q=reinforcement+learning+library&type=Repositories) open source reinforcement learning libraries (almost one new every week), so why did we create a new one? In the next sections you will learn about the design principles and main features of the Stable-Baselines3 library that differenciate it from others.
+
+<sup>1</sup> The very first name of the new version was "torchy-baselines"
 
 ## Design Principles
 
@@ -104,7 +103,7 @@ Our code is [easily modifiable](https://stable-baselines3.readthedocs.io/en/mast
 
 ## Features
 
-Stable-Baselines3 provides many features, ranging from a simple API to a complete [experimental framework](https://github.com/DLR-RM/rl-baselines3-zoo) that allows advance usage like automatic hyperparameters tuning..
+Stable-Baselines3 provides many features, ranging from a simple API to a complete [experimental framework](https://github.com/DLR-RM/rl-baselines3-zoo) that allows advance usage like automatic hyperparameters tuning.
 
 ### Simple API
 
@@ -273,6 +272,13 @@ model.learn(int(1e5))
 For a complete migration example, you can also compare the [RL Zoo of SB2](https://github.com/araffin/rl-baselines-zoo) with the [one from SB3](https://github.com/DLR-RM/rl-baselines3-zoo).
 
 
+<div style="margin-top:3em"></div>
+
+<hr/>
+
+<div style="margin-top:3em"></div>
+
+
 ## Examples
 
 Let's see now how we can now use the library in practice with some examples. We're going to see how to easily customize the network architecture, train an agent to play Atari games and normalize observations when training on continuous control tasks like PyBullet environments.
@@ -337,7 +343,7 @@ while True:
     env.render()
 ```
 
-### PyBullet: Normalizing input features
+### PyBullet: Normalizing Input Features
 
 Normalizing input features may be essential to successful training of an RL agent (by default, images are scaled but not other types of input), for instance when training on [PyBullet](https://github.com/bulletphysics/bullet3/) environments. For that, a wrapper exists and will compute a running average and standard deviation of input features (it can do the same for rewards).
 
@@ -381,28 +387,29 @@ env.norm_reward = False
 
 ```
 
-### More examples
+### More Examples
 
 You can find more examples and associated colab notebooks in the [documentation](https://stable-baselines3.readthedocs.io/en/master/guide/examples.html).
 
-## Conclusion
+## To the Infinity and Beyond!
 
 We presented Stable-Baselines3 v1.0, a set of reliable reinforcement learning implementations and the next major version of the Stable-Baselines.
 
 If you want to follow the updates of the library, we encourage you to star the repo on [GitHub](https://github.com/DLR-RM/stable-baselines3) and click on "Watch -> Custom -> Releases" to be notified each time a new version is released ;) (you can also follow [Adam](https://twitter.com/ARGleave) or [Antonin](https://twitter.com/araffin2) on Twitter).
+Coming soon, one of our long-time requested feature: [mixed observations](https://github.com/DLR-RM/stable-baselines3/pull/243) (aka dict obs) support.
 
 In case you want to contribute, make sure to read the [contributing guide](https://github.com/DLR-RM/stable-baselines3/blob/master/CONTRIBUTING.md) first.
 
 Finally, if you make a cool project using Stable-Baselines3, please tell us when you want it to appear in [our project page](https://stable-baselines3.readthedocs.io/en/master/misc/projects.html).
 
 
-## About the authors
+## About the Authors
 
 This blog post was co-written by Stable-Baselines3 maintainers:
 
-- [Antonin Raffin](https://github.com/araffin) (aka @araffin)
-- [Ashley Hill](https://github.com/hill-a) (aka @hill-a)
-- [Maximilian Ernestus](https://github.com/ernestum) (aka @ernestum)
+- [Antonin Raffin](https://github.com/araffin) (@araffin)
+- [Ashley Hill](https://github.com/hill-a) (@hill-a)
+- [Maximilian Ernestus](https://github.com/ernestum) (@ernestum)
 - [Adam Gleave](https://github.com/adamgleave) (@AdamGleave)
 - [Anssi Kanervisto](https://github.com/Miffyli) (@Miffyli).
 
