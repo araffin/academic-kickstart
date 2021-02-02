@@ -14,13 +14,13 @@ After several months of beta, we are happy to announce the release of [Stable-Ba
 
 The implementations have been [benchmarked](https://arxiv.org/abs/2005.05719) against reference codebases, and automated unit tests cover 95% of the code.
 
-In this blog post, we give an overview of Stable-Baselines3: the motivation behind it, its design principles and features, how we ensure high-quality implementations and some concrete examples.
+In this blog post, we give you an overview of Stable-Baselines3: the motivation behind it, its design principles and features, how we ensure high-quality implementations and some concrete examples.
 
 <!-- The algorithms follow a consistent interface and are accompanied by extensive documentation, making it simple to train and compare different RL algorithms. -->
 
 ## TL;DR:
 
-[Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) is a library providing *reliable* implementations of reinforcement learning algorithms in PyTorch. It provides a *clean and simple interface* for the user, giving access to off-the-shelf state-of-the-art model-free RL algorithms.
+[Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) is a library providing *reliable* implementations of reinforcement learning algorithms in PyTorch. It provides a *clean and simple interface*, giving you access to off-the-shelf state-of-the-art model-free RL algorithms.
 
 The library is *[fully documented](https://stable-baselines3.readthedocs.io/en/master/)*, tested and its interface allows to train an RL agent in only few lines of code =):
 
@@ -75,7 +75,7 @@ We take great care to adhere to software engineering best practices to achieve h
 ## History
 
 SB3 builds on our experience maintaining *[Stable Baselines](https://github.com/hill-a/stable-baselines)* (SB2), a fork of OpenAI Baselines built on TensorFlow 1.x.
-Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)* with already more than 250 citations!
+If you haven't heard of it, Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)* with already more than 270 citations!
 
 Those two years of maintaining SB2 have been a rewarding exchange with our users, where tons of bugs where fixed and new features like callbacks where added to ease the use of the library.
 
@@ -103,12 +103,12 @@ Our code is [easily modifiable](https://stable-baselines3.readthedocs.io/en/mast
 
 ## Features
 
-Stable-Baselines3 provides many features, ranging from a simple API to a complete [experimental framework](https://github.com/DLR-RM/rl-baselines3-zoo) that allows advance usage like automatic hyperparameters tuning.
+Stable-Baselines3 provides many features, ranging from a simple API to a complete [experimental framework](https://github.com/DLR-RM/rl-baselines3-zoo) that allows advanced usage like automatic hyperparameters tuning.
 
 ### Simple API
 
 Training agents in Stable-Baselines3 takes just a few lines of code, after which the agent can be queried for actions (see quick example below).
-This allows researchers to easily use the baseline algorithms and components in their experiments (eg. [Imitating Animals](https://xbpeng.github.io/projects/Robotic_Imitation/index.html), [Slime Volleyball](https://github.com/hardmaru/slimevolleygym), [Adversarial Policies](https://adversarialpolicies.github.io/)), as well as apply RL to novel tasks and environments, like [continual learning](https://pwnagotchi.ai/) when attacking WiFi networks or [dampening bridge vibrations](https://github.com/jaberkow/WaveRL).
+This allows you to easily use the baseline algorithms and components in your experiments (eg. [Imitating Animals](https://xbpeng.github.io/projects/Robotic_Imitation/index.html), [Slime Volleyball](https://github.com/hardmaru/slimevolleygym), [Adversarial Policies](https://adversarialpolicies.github.io/)), as well as apply RL to novel tasks and environments, like [continual learning](https://pwnagotchi.ai/) when attacking WiFi networks or [dampening bridge vibrations](https://github.com/jaberkow/WaveRL).
 
 ```python
 from stable_baselines3 import A2C
@@ -129,10 +129,10 @@ action, _ = model.predict(obs, deterministic=False)
 
 SB3 comes with [extensive documentation](https://stable-baselines3.readthedocs.io/en/master/) of the code API.
 We also include a user guide, covering both basic and more advanced usage with a collection of concrete examples.
-Moreover, we have developed a [Colab notebook based RL tutorial](https://github.com/araffin/rl-tutorial-jnrr19), enabling users to demo the library directly in the browser.
+Moreover, we have developed a [Colab notebook based RL tutorial](https://github.com/araffin/rl-tutorial-jnrr19), so you can demo the library directly in the browser.
 Additionally, we include [common tips](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) for running RL experiments and a [developer guide](https://stable-baselines3.readthedocs.io/en/master/guide/developer.html).
 
-We also pay close attention to questions and uncertainties from SB3 users, updating the documentation to address these.
+We also pay close attention to [questions](https://github.com/DLR-RM/stable-baselines3/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) and [uncertainties](https://github.com/DLR-RM/stable-baselines3/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation) from SB3 users, updating the documentation to address these.
 
 ### High-Quality Implementations
 
