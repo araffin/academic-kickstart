@@ -1,7 +1,7 @@
 ---
 draft: false
 title: "Stable-Baselines3: Reliable Reinforcement Learning Implementations"
-date: 2021-01-01
+date: 2021-02-01
 image:
   placement: 3
   caption: 'Image credit: [**L.M. Tenkes**](https://www.instagram.com/lucillehue/)'
@@ -111,10 +111,28 @@ Training agents in Stable-Baselines3 takes just a few lines of code, after which
 This allows you to easily use the baseline algorithms and components in your experiments (eg. [Imitating Animals](https://xbpeng.github.io/projects/Robotic_Imitation/index.html), [Slime Volleyball](https://github.com/hardmaru/slimevolleygym), [Adversarial Policies](https://adversarialpolicies.github.io/)), as well as apply RL to novel tasks and environments, like [continual learning](https://pwnagotchi.ai/) when attacking WiFi networks or [dampening bridge vibrations](https://github.com/jaberkow/WaveRL).
 
 ```python
+import gym
+
 from stable_baselines3 import A2C
+from stable_baselines3.common.monitor import Monitor
+from stable_baselines3.common.callbacks import CheckpointCallback, EvalCallback
+
+# Save a checkpoint every 1000 steps
+checkpoint_callback = CheckpointCallback(save_freq=5000, save_path="./logs/",
+                                         name_prefix="rl_model")
+
+# Evaluate the model periodically
+# and auto-save the best model and evaluations
+# Use a monitor wrapper to properly report episode stats
+eval_env = Monitor(gym.make("LunarLander-v2"))
+# Use deterministic actions for evaluation
+eval_callback = EvalCallback(eval_env, best_model_save_path="./logs/",
+                             log_path="./logs/", eval_freq=2000,
+                             deterministic=True, render=False)
+
 # Train an agent using A2C on LunarLander-v2
-model = A2C("MlpPolicy", "LunarLander-v2")
-model.learn(total_timesteps=20000)
+model = A2C("MlpPolicy", "LunarLander-v2", verbose=1)
+model.learn(total_timesteps=20000, callback=[checkpoint_callback, eval_callback])
 
 # Retrieve and reset the environment
 env = model.get_env()
@@ -133,6 +151,10 @@ Moreover, we have developed a [Colab notebook based RL tutorial](https://github.
 Additionally, we include [common tips](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) for running RL experiments and a [developer guide](https://stable-baselines3.readthedocs.io/en/master/guide/developer.html).
 
 We also pay close attention to [questions](https://github.com/DLR-RM/stable-baselines3/issues?q=is%3Aissue+is%3Aopen+label%3Aquestion) and [uncertainties](https://github.com/DLR-RM/stable-baselines3/issues?q=is%3Aissue+is%3Aopen+label%3Adocumentation) from SB3 users, updating the documentation to address these.
+
+![Documentation](./doc.png)
+*Stable-Baselines3 Documentation*
+
 
 ### High-Quality Implementations
 
