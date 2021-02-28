@@ -1,14 +1,12 @@
 ---
 draft: false
 title: "Stable-Baselines3: Reliable Reinforcement Learning Implementations"
-date: 2021-02-01
+date: 2021-02-28
 image:
   placement: 3
   caption: 'Image credit: [**L.M. Tenkes**](https://www.instagram.com/lucillehue/)'
 projects: ['stable-baselines3']
 ---
-
-**THIS POST IS CURRENTLY A DRAFT - SB3 v1.0 will be released soon**
 
 After several months of beta, we are happy to announce the release of [Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) v1.0, a set of reliable implementations of reinforcement learning (RL) algorithms in PyTorch =D! It is the next major version of [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
