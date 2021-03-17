@@ -73,7 +73,7 @@ We take great care to adhere to software engineering best practices to achieve h
 ## History
 
 SB3 builds on our experience maintaining *[Stable Baselines](https://github.com/hill-a/stable-baselines)* (SB2), a fork of OpenAI Baselines built on TensorFlow 1.x.
-If you haven't heard of it, Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)* with already more than 270 citations!
+If you haven't heard of it, Stable-Baselines (SB2) is a trusted library and has already been used in *many [projects](https://stable-baselines.readthedocs.io/en/master/misc/projects.html)* and *[papers](https://scholar.google.fr/scholar?oi=bibs&hl=fr&cites=7029285800852969820)* with already more than 300+ citations!
 
 Those two years of maintaining SB2 have been a rewarding exchange with our users, where tons of bugs where fixed and new features like callbacks where added to ease the use of the library.
 
@@ -371,6 +371,7 @@ Normalizing input features may be essential to successful training of an RL agen
 Colab link: [Try it online](https://colab.research.google.com/github/Stable-Baselines-Team/rl-colab-notebooks/blob/sb3/pybullet.ipynb)
 
 ```python
+import os
 import gym
 import pybullet_envs
 
