@@ -3,7 +3,7 @@ title: RL Tips and Tricks / The Challenges of Applying RL to Real Robots
 event: RLVS 2021
 event_url: https://rlvs.aniti.fr/
 location: Online
-summary: Talk at the reinforcement learning virtual school on applying RL in practice and code-along session with Stable-Baselines3. Registration is open and free!
+summary: Talk at the reinforcement learning virtual school on applying RL in practice and hands-on session with Stable-Baselines3.
 abstract:
 
 # Talk start and end times.
@@ -23,8 +23,8 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
-# url_slides: slides/rl-tuto-jnrr19/
-# url_code: https://github.com/araffin/rl-tutorial-jnrr19
+url_slides: slides/rlvs-tips-tricks/
+url_code: https://github.com/araffin/rl-handson-rlvs21
 
 
 #image:
@@ -50,3 +50,7 @@ projects:
 # Enable math on this page?
 math: false
 ---
+
+- [RL Tips and Tricks Slides](https://araffin.github.io/slides/rlvs-tips-tricks/)
+- [SB3 Hands-on Session slides](https://araffin.github.io/slides/slides/rlvs-sb3-handson/)
+- [SB3 Hands-on Session github repo](https://github.com/araffin/rl-handson-rlvs21)
