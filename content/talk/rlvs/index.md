@@ -52,5 +52,5 @@ math: false
 ---
 
 - [RL Tips and Tricks Slides](https://araffin.github.io/slides/rlvs-tips-tricks/)
-- [SB3 Hands-on Session slides](https://araffin.github.io/slides/slides/rlvs-sb3-handson/)
+- [SB3 Hands-on Session slides](https://araffin.github.io/slides/rlvs-sb3-handson/)
 - [SB3 Hands-on Session github repo](https://github.com/araffin/rl-handson-rlvs21)
