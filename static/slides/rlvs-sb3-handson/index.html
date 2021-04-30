@@ -1,0 +1,408 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Hands-on Session with Stable-Baselines3</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai-sublime.css" id="highlight-theme"> -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme"> -->
+	</head>
+	<body>
+		<!--
+		Timer: https://www.timer-tab.com/
+		Playstation 1: https://www.youtube.com/watch?v=Qg0BvV0HE4s
+		Marmotte: https://www.youtube.com/watch?v=iweOSPbU73Y
+		# Edith Piaf: https://www.youtube.com/watch?v=Q3Kvu6Kgp88
+		-->
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Hands-on Session with Stable-Baselines3 &middot; RLVS &middot; 09.04.2021
+				</header>
+				<section data-background-image="images/bg_front.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Hands-on Session with Stable-Baselines3 (SB3)</h3>
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<img src="images/sb_logo.png" alt="baymax">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (@araffin2) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+				<section>
+					<h3>Outline</h3>
+					<ol>
+						<li>
+							Stable-Baselines3 Overview
+						</li>
+						<li>
+							Questions?
+						</li>
+						<li>
+							Hands-on Session
+						</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>Stable-Baselines3 Overview</h3>
+				</section>
+				<section>
+					<h4>History of the project</h4>
+				</section>
+
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<h4>To fork or not to fork? (2018)</h4>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/baselines_fail.png" alt="build failed">
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/hard_to_read.png" alt="hard-to-read">
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/reddit_baselines.png" alt="reddit 1">
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/reddit_2.png" alt="reddit 2">
+						</div>
+					</div>
+					<aside class="notes">
+						working on SRL (cf. Racing Car) evaluation?
+						OpenAI Baselines working but breaking code + not easy to tweak
+					</aside>
+				</section>
+				<section>
+					<h3>Stable-Baselines?</h3>
+					<div class="row">
+						<div class="col-xs-6">
+							<pre><code class="python medium-text" data-trim>
+								from stable_baselines import A2C
+
+								model = A2C("MlpPolicy", "CartPole-v1")
+								model.learn(50000)
+								model.save("a2c_cartpole")
+							</code></pre>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/pr_openai.png" alt="PR OpenAI">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Stable-Baselines (2018-2020)</h3>
+					<p class="medium-text">Ashley Hill, Maximilian Ernestus, Adam Gleave, Anssi Kanervisto</p>
+					<p class="medium-text">
+						<a href="https://github.com/hill-a/stable-baselines">https://github.com/hill-a/stable-baselines</a>
+					</p>
+					<ul class="medium-text">
+						<li class="fragment">5 maintainers</li>
+						<li class="fragment">60+ contributors</li>
+						<li class="fragment">1000+ issues / pull requests</li>
+						<li class="fragment">300+ citations</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Stable-Baselines3 (2020-...)</h3>
+					<p class="medium-text">
+						<a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+					</p>
+					<ul>
+						<li class="fragment">cleaner codebase but same API</li>
+						<li class="fragment">performance checked</li>
+						<li class="fragment">code coverage: 95%</li>
+						<li class="fragment">active community</li>
+					</ul>
+					<aside class="notes">
+						TF2 coming, discussion with community -> PyTorch
+						refer to blog post (how performance were checked):
+						https://araffin.github.io/post/sb3/
+						+ documentation
+					</aside>
+				</section>
+
+				<section>
+					<h4>Active Community</h4>
+					<div class="row">
+						<div class="col-xs-6">
+							<p>Stable-Baselines (SB2)</p>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="images/sb3/sb2_stars.png" alt="git stars">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="https://pepy.tech/badge/stable-baselines/month" alt="pypi">
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-6">
+							<p>Stable-Baselines3 (SB3)</p>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="images/sb3/sb3_stars.png" alt="github active">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="https://pepy.tech/badge/stable-baselines3/month" alt="pypi">
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="images/sb3/contributors.png" alt="contributtors" width="60%">
+								</div>
+							</div>
+						</div>
+					</div>
+					<aside class="notes">
+						Active community is one of the big strength of the lib:
+						improve the quality/ add features depending on the needs
+						+ if a bug is present, quickly spotted
+					</aside>
+				</section>
+
+				<section>
+					<h3>Design Principles</h3>
+					<ul>
+						<li class="fragment">reliable implementations of RL algorithms</li>
+						<li class="fragment">user-friendly</li>
+						<li class="fragment">focus on model-free, single-agent RL</li>
+						<li class="fragment">favour readability and simplicity over modularity</li>
+					</ul>
+					<aside class="notes">
+						Despite being simple to use,
+						still require knowledge about RL (we had to put a warning)
+						small core to ensure quality and maintainability
+					</aside>
+				</section>
+
+				<section>
+					<h3>Features</h3>
+					<ul class="medium-text">
+						<li class="fragment">algorithms: A2C, DDPG, DQN, HER, PPO, SAC and TD3</li>
+						<li class="fragment">clean and simple interface</li>
+						<li class="fragment">fully documented</li>
+						<li class="fragment">comprehensive (tensorboard logging, callbacks, ...)</li>
+						<li class="fragment">training framework included (RL Zoo)</li>
+						<li class="fragment">SB3 Contrib: QR-DQN, TQC, ...</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Getting Started</h3>
+					<pre class="fragment"><code class="python" data-trim data-line-numbers="1-5|6-7|8-9|10-11|12-15">
+						import gym
+						from stable_baselines3 import SAC
+						# Train an agent using Soft Actor-Critic on Pendulum-v0
+						env = gym.make("Pendulum-v0")
+						model = SAC("MlpPolicy", env, verbose=1)
+						# Train the model
+						model.learn(total_timesteps=20000)
+						# Save the model
+						model.save("sac_pendulum")
+						# Load the trained model
+						model = SAC.load("sac_pendulum")
+						# Start a new episode
+						obs = env.reset()
+						# What action to take in state `obs`?
+						action, _ = model.predict(obs, deterministic=True)
+					</code></pre>
+					<aside class="notes">
+						Quick overview of what is possible,
+						more in detail in the notebook
+					</aside>
+				</section>
+
+				<section>
+					<h3>SB3 Training loop</h3>
+					<img src="images/sb3/sb3_loop.png" alt="training loop" width="70%">
+					<aside class="notes">
+						Quick look of what is happening internally
+					</aside>
+				</section>
+
+				<section>
+					<h4>Training framework: RL Zoo</h4>
+
+					<p class="medium-text">
+						<a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+							https://github.com/DLR-RM/rl-baselines3-zoo
+						</a>
+					</p>
+
+					<div class="row medium-text r-stack">
+						<div class="col-xs-12 fragment">
+							<ul>
+								<li>training, loading, plotting, hyperparameter optimization</li>
+								<li>100+ trained models + tuned hyperparameters</li>
+							</ul>
+							<pre style="width:100%"><code class="bash" data-trim>
+								# Train an A2C agent on Atari breakout using tuned hyperparameters,
+								# evaluate the agent every 10k steps and save a checkpoint every 50k steps
+								python train.py --algo a2c --env BreakoutNoFrameskip-v4 \
+								    --eval-freq 10000 --save-freq 50000
+								# Plot the learning curve
+								python scripts/all_plots.py -a a2c -e BreakoutNoFrameskip-v4 -f logs/
+							</code></pre>
+						</div>
+						<img class="fragment" src="images/neck/neck_target.jpg" alt="neck target">
+						<img class="fragment" src="images/car/racing_car.jpg" alt="racing car" width="60%">
+						<img class="fragment" src="images/bert/bert.jpg" alt="bert">
+					</div>
+
+					<aside class="notes">
+						- show the zoo and show how it relates to the first part<br>
+						- does a lot for you (to prevent error and help reproducibiltiy)<br>
+						- only use it when you are confident with SB3<br>
+						All 3 previous examples combine
+						SB3 + SB3 contrib + RL Zoo
+
+					</aside>
+				</section>
+
+				<section>
+					<h4>Recap</h4>
+					<ul>
+						<li class="fragment">reliable RL implementations</li>
+						<li class="fragment">user-friendly</li>
+						<li class="fragment">training framework (RL Zoo)</li>
+					</ul>
+				</section>
+
+				<section>
+					<h3>Questions?</h3>
+				</section>
+
+				<section>
+					<h4>Upcoming: Hands-on session</h4>
+					<p class="medium-text">
+						<a href="https://github.com/araffin/rl-handson-rlvs21">
+							https://github.com/araffin/rl-handson-rlvs21
+						</a>
+					</p>
+					<ul class="medium-text">
+						<li>getting started</li>
+						<li>Gym wrappers</li>
+						<li>callbacks</li>
+						<li>multiprocessing</li>
+						<li>importance of hyperparameters</li>
+					</ul>
+					<p class="xsmall-text">
+						<a href="https://www.timer-tab.com/">Timer</a>
+					</p>
+					<aside class="notes">
+						wait for me (5 minutes break)<br>
+						- the goal is to walkthrough the components together
+						that will serve you in practice<br>
+						- especially what is not completely covered by the doc
+						and don't have enough time to take a look at all the features<br>
+						- highly recommend to take a look at the doc and at the longer tutorial (JNRR19).<br>
+						- notes.md for the code along
+					</aside>
+				</section>
+
+
+				<section>
+					<h3>Backup Slides</h3>
+				</section>
+
+				<!-- TODO: slide about VecEnv -->
+
+				<section>
+					<h3>SB3 vs other libs</h3>
+					<img src="images/sb3/rl_libs.png" alt="RL libs" style="max-width:100%;">
+					<aside class="notes">
+						Main differences: community driven,
+						extensive doc, benchmark
+					</aside>
+				</section>
+
+				<section data-markdown>
+					<textarea data-template>
+						### Installation
+
+						```
+						pip install stable-baselines3[extra]
+						```
+						<small>[Documentation](https://stable-baselines3.readthedocs.io/)</small>
+					</textarea>
+				</section>
+
+				<section>
+					<h3>SB3 policy</h3>
+					<div class="row">
+						<div class="col-xs-6">
+							<img src="images/sb3/net_arch.png" alt="Network Architecture">
+							<p class="medium-text">Network Architecture</p>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/sb3/SB3Policy.png" alt="SB3 policy">
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath]
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,799 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>RL Tips and Tricks / The Challenges of Applying RL to Real Robots</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai-sublime.css" id="highlight-theme"> -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme"> -->
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; RL Tips and Tricks &middot; RLVS &middot; 09.04.2021
+				</header>
+				<section data-background-image="images/bg_front.jpg">
+					<!-- <h1 class="r-fit-text">RL Tips and Tricks</h1>
+					<h3>DLR Template</h3> -->
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>RL Tips and Tricks</h3>
+									<p id="subtitle">and The Challenges of Applying RL to Real Robots</p>
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<img class="shadow" src="images/intro/david_head.jpg" alt="DLR David" style="max-width:80%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (@araffin2) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+				<section>
+					<h3>What is this session about?</h3>
+					<ul style="list-style:None;" class="medium-text">
+						<li>Part I: RL Tips and Tricks and Examples on Real Robots</li>
+						<li>Part II: Hands-on Session with Stable-Baselines3 (SB3)</li>
+					</ul>
+					<aside class="notes">
+						This session is about tips and tricks to use RL
+						on custom problems/envs, not about tips/tricks to implement RL algos
+						(completely different issue, see John Schulman (PPO Author) nuts and bolts talk) <br>
+						We will first present best practices and then see concrete
+						examples with real robots.
+
+					</aside>
+				</section>
+				<section>
+					<h3>Outline</h3>
+					<ol>
+						<li>
+							RL Tips and Tricks
+							<ol class="small-text">
+								<li>General Nuts and Bolts of RL Experimentation</li>
+								<li>RL in practice on a custom task</li>
+								<li>Questions?</li>
+							</ol>
+						</li>
+						<li>
+							The Challenges of Applying RL to Real Robots
+							<ol class="small-text">
+								<li>Learning to control an elastic robot</li>
+								<li>Learning to drive in minutes and learning to race in hours</li>
+								<li>Learning to walk with an elastic quadruped robot</li>
+								<li>Questions?</li>
+							</ol>
+						</li>
+
+					</ol>
+				</section>
+				<section>
+					<h2>RL Tips And Tricks</h2>
+				</section>
+				<section>
+					<h3>1. General Nuts and Bolt of RL Experimentation</h3>
+				</section>
+				<section>
+					<h3>RL is Hard (1/2)</h3>
+					<div class="row">
+						<div class="col-xs-6">
+							<img src="images/a2c.png" alt="A2C" style="max-width: 100%">
+							<p class="xsmall-text caption">Which algorithm is better?</p>
+						</div>
+						<div class="col-xs-6">
+							<p class="medium-text fragment">
+								The only difference: the epsilon value to avoid division by zero in the optimizer
+								(one is <code class="medium-text">eps=1e-7</code>
+								the other <code class="medium-text">eps=1e-5</code>)
+							</p>
+						</div>
+					</div>
+					<aside class="notes">
+						A and B are actually the same RL algorithm (A2C),
+						sharing the exact same code, same hardware, same hyperparameters...
+						except the epsilon value to avoid division by zero in the optimizer
+					</aside>
+
+				</section>
+				<section>
+					<h3>RL is Hard (2/2)</h3>
+					<ul>
+						<li class="fragment">data collection by the agent itself</li>
+						<li class="fragment">sensitivity to the random seed / hyperparameters</li>
+						<li class="fragment">sample inefficient</li>
+						<li class="fragment">reward function design</li>
+					</ul>
+					<p class="xsmall-text fragment">
+						<a href="https://www.alexirpan.com/2018/02/14/rl-hard.html">RL is hard blog post</a>,
+						<a href="https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html">RL tips and tricks</a>
+					</p>
+					<aside class="notes">
+						- RL is hard (because quite different from supervised learning, data collection on the policy which depends on the data)
+					</aside>
+				</section>
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/rl_glitch.png" alt="RL Glitch" style="max-width: 40%">
+						</div>
+					</div>
+					<p class="xsmall-text">Credits: Rishabh Mehrotra (@erishabh)</p>
+					<aside class="notes">
+						reward hacking, if it can maximises its reward without
+						solving the task, it will do it!
+					</aside>
+				</section>
+				<section>
+					<h3>Best Practices</h3>
+					<ul class="medium-text">
+						<li class="fragment">quantitative evaluation</li>
+						<li class="fragment">use recommended hyperparameters</li>
+						<li class="fragment">save all experiments parameters</li>
+						<li class="fragment">
+							use the
+							<a href="https://github.com/DLR-RM/rl-baselines3-zoo">RL zoo</a>
+						</li>
+					</ul>
+					<p class="xsmall-text fragment">
+						<a href="https://arxiv.org/abs/1709.06560">
+							Deep RL that matters (Henderson et al.)
+						</a>
+
+					</p>
+					<aside class="notes">
+						- best practices for comparison: separate eval,
+							quantitative results, tune hyperparameters <br>
+						- save all parameters
+							to reproduce the run (all included in the RL Zoo) <br>
+						- rl zoo only when you know what you are doing <br>
+						- there is no silver bullet <br>
+						- more on what to do when it doesn't work later
+					</aside>
+				</section>
+
+				<section>
+					<div style="position:relative;">
+						<h3 class="fragment fade-in-then-out" data-fragment-index="1" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" >
+							RL in practice on a custom task
+						</h3>
+						<h3 class="fragment fade-in-then-out" data-fragment-index="2" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" >
+							Do you need RL?
+						</h3>
+						<h3 class="fragment" data-fragment-index="3" style="position:absolute; margin-left: auto; margin-right: auto; left: 0; right: 0;" >
+							Do you really need RL?
+						</h3>
+					</div>
+
+					<div class="row" style="margin-top: 50px;">
+						<div class="col-xs-12">
+							<img class="fragment" data-fragment-index="3" src="images/mr_bean_sure.jpg" alt="Mr Bean Are you sure meme"/>
+						</div>
+					</div>
+
+					<aside class="notes">
+						- Do I really need RL? If PID does the job, then don't, unless for education <br>
+
+						Most of the advices are already in the SB3 documentation.
+					</aside>
+				</section>
+				<section>
+					<h3>Defining a custom task</h3>
+					<ul>
+						<li class="fragment">observation space</li>
+						<li class="fragment">action space</li>
+						<li class="fragment">reward function</li>
+						<li class="fragment">termination conditions</li>
+					</ul>
+					<aside class="notes">
+						Always start simple!
+					</aside>
+				</section>
+				<section>
+					<h3>Choosing the observation space</h3>
+					<ul>
+						<li class="fragment">enough information to solve the task</li>
+						<li class="fragment">do not break Markov assumption</li>
+						<li class="fragment">normalize!</li>
+					</ul>
+					<aside class="notes">
+						normalize especially for PPO/A2C + running average when you don't know the limits in
+						advance (VecNormalize) <br>
+					</aside>
+				</section>
+
+				<section>
+					<h3>Choosing the Action space</h3>
+					<ul>
+						<li class="fragment">discrete / continuous</li>
+						<li class="fragment">complexity vs final performance</li>
+					</ul>
+					<aside class="notes">
+						depends on your task, sometimes you don't have the choice (e.g. atari games)
+						for robotics, makes more sense to use continuous action <br>
+						bigger action space: better performance at the end but may take much longer to train
+						(example: racing car) <br>
+						+ trial and errors
+					</aside>
+				</section>
+
+				<section>
+					<h3>Continuous action space: Normalize? Normalize!</h3>
+					<div class="row">
+						<div class="col-xs-12 medium-text r-stack">
+							<pre class="fragment"><code data-trim data-line-numbers="1-6|7-9|11-13|15-19" class="python">
+							from gym import spaces
+
+							# Unnormalized action spaces only work with algorithms
+							# that don't directly rely on a Gaussian distribution to define the policy
+							# (e.g. DDPG or SAC, where their output is rescaled to fit the action space limits)
+
+							# LIMITS TOO BIG: in that case, the sampled actions will only have values
+							# around zero, far away from the limits of the space
+							action_space = spaces.Box(low=-1000, high=1000, shape=(n_actions,), dtype="float32")
+
+							# LIMITS TOO SMALL: in that case, the sampled actions will almost
+							# always saturate (be greater than the limits)
+							action_space = spaces.Box(low=-0.02, high=0.02, shape=(n_actions,), dtype="float32")
+
+							# BEST PRACTICE: action space is normalized, symmetric
+							# and has an interval range of two,
+							# which is usually the same magnitude as the initial standard deviation
+							# of the Gaussian used to sample actions (unit initial std in SB3)
+							action_space = spaces.Box(low=-1, high=1, shape=(n_actions,), dtype="float32")
+							</code></pre>
+
+							<img src="images/gaussian.png" alt="Gaussian" class="fragment" style="max-width: 100%">
+
+						</div>
+					</div>
+					<aside class="notes">
+						- Common pitfalls: observation normalization, action space normalization (ex continuous action) -> use the env checker
+
+					</aside>
+				</section>
+				<section>
+					<h3>Choosing the reward function</h3>
+					<ul>
+						<li class="fragment">start with reward shaping</li>
+						<li class="fragment">primary / secondary reward</li>
+						<li class="fragment">normalize!</li>
+					</ul>
+					<aside class="notes">
+						- reward shaping: careful with reward hacking<br>
+						- choosing weights for rewards: primary and secondary
+						 look at the magnitude (ex continuity too high, it will do nothing)
+					</aside>
+				</section>
+				<section>
+					<h3>Termination conditions?</h3>
+					<ul>
+						<li class="fragment">early stopping</li>
+						<li class="fragment">special treatment needed for timeouts</li>
+						<li class="fragment">should not change the task (reward hacking)</li>
+					</ul>
+					<aside class="notes">
+						- early stopping: prevent the agent to explore useless regions of your env
+						make learning faster <br>
+						- careful or reward hacking: if you penalize at every steps but
+						stop the episode early if it explores unwanted regions:
+						will maximise its reward by stopping the episode early
+					</aside>
+				</section>
+				<section>
+					<h3>Which algorithm to choose?</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/algo_flow_dark.png" alt="Algo flow" style="max-width: 80%">
+						</div>
+					</div>
+					<aside class="notes">
+						- Which algorithm should I use? depends on the env and on what matters for you
+						action space + multiprocessing (wall clock time vs sample efficiency)? <br>
+						- w.r.t. performance: usually a hyperparameter problem (between the latest algo)
+						for continuous control: use TQC <br>
+						- even more parallel: ES (cf previous lecture)
+					</aside>
+				</section>
+				<section>
+					<h3>It doesn't work!</h3>
+					<ul class="medium-text">
+						<li class="fragment">did you follow the best practices?</li>
+						<li class="fragment">start simple</li>
+						<li class="fragment">use trusted implementations</li>
+						<li class="fragment">increase budget</li>
+						<li class="fragment">hyperparameter tuning (<a href="https://github.com/optuna/optuna">Optuna</a>)</li>
+					</ul>
+
+					<aside class="notes">
+						- What to do when it does not work? <br>
+							First, use trusted implementation (SB3) with recommend hyperparameters
+							(cf papers and RL zoo, ex normalization for PPO)<br>
+							then try with more budget and with hyperparameters tuning before saying "it does not work"
+							<br>
+							Iterate quickly
+					</aside>
+				</section>
+				<section>
+					<h4>Recap</h4>
+					<ul>
+						<li class="fragment">RL is hard</li>
+						<li class="fragment">do you need RL?</li>
+						<li class="fragment">best practices</li>
+						<li class="fragment">task specification</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Questions?</h3>
+				</section>
+				<section>
+					<h2>2. The Challenges of Applying RL to Real Robots</h2>
+				</section>
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<aside class="notes">
+					</aside>
+				</section>
+				<section>
+					<h3>Simulation is all you need</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/sim_broken.gif" alt="sim broken"/>
+						</div>
+					</div>
+					<p class="xsmall-text">Credits: Nathan Lambert (@natolambert)</p>
+				</section>
+				<section>
+					<h3>Simulation is all you need (bis)</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<video src="images/take_over.mp4" controls></video>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<ul>
+						<li class="fragment">simulation is safer, faster</li>
+						<li class="fragment">simulation to reality (sim2real): accurate model and randomization needed</li>
+						<li class="fragment">challenges: robot safety, sample efficiency</li>
+					</ul>
+					<aside class="notes">
+						simulation: safer, faster, parallelize, ...<br>
+						good for iterating<br>
+						simulation not always accurate<br>
+						(and then need to randomize to cover real world setting, ...)
+						requires good model of robot <br>
+						sim2real: possible (Anymal robot) but also cooler if it works directly on it
+					</aside>
+				</section>
+				<section>
+					<section>
+						<h4>Learning to control an elastic robot</h4>
+
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<li class="fragment">hard to model (silicon neck)</li>
+									<li class="fragment">oscillations</li>
+									<li class="fragment">real robot (safety)</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/neck/david_neck_highlight.jpg" alt="david head" style="max-width: 100%;">
+							</div>
+						</div>
+						<aside class="notes">
+							Do we need RL? - challenge: hard to model, good for model free RL<br>
+							- challenge: oscillation -> two types (exploration and task)
+							 	use gSDE + continuity cost with history wrapper <br>
+							- challenge: real robot -> cannot break it -> use gSDE + safe action space <br>
+						</aside>
+					</section>
+					<section>
+						<h4>Generalized State-Dependent Exploration (gSDE)</h4>
+						<div class="row medium-text">
+								<div class="col-xs-6 fragment">
+									Independent Gaussian noise:
+									\[ \epsilon_t \sim \mathcal{N}(0, \sigma) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t \]
+								</div>
+								<div class="col-xs-6 fragment">
+									State dependent exploration:
+									\[ \theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(s_t; \theta_{\epsilon}) \]
+								</div>
+								<!-- <div class="col-xs-4">
+									Linear case:
+									\[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+								</div> -->
+							<div class="col-xs-12">
+								<img src="images/sde/mountain.png" alt="gSDE vs Independent noise" style="max-width:70%;"/>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h4>Continuity Cost</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<ul class="medium-text">
+									<li class="fragment">formulation: \[ r_{continuity} = - (a_t - a_{t - 1})^2 \]</li>
+									<li class="fragment">requires a history wrapper</li>
+									<li class="fragment">can be done in the loss function</li>
+								</ul>
+							</div>
+							<div class="col-xs-12">
+								<p class="xsmall-text">References:
+									<a href="https://arxiv.org/abs/2005.05719">generalized State-Dependent Exploration (gSDE)</a>,
+									<a href="https://www.frontiersin.org/articles/10.3389/frobt.2021.619238/abstract">Fault-Tolerant Six-DoF Pose Estimation for Tendon-Driven Continuum Mechanisms</a>,
+									<a href="http://ai.bu.edu/caps/">CAPS</a>
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							simple formulation: careful, weight of that cost too high:
+							the robot will do nothing <br>
+							do not forget history wrapper (otherwise break markov assumption and does not work)
+						</aside>
+					</section>
+					<section>
+						<h4>Task Specification</h4>
+						<div class="row">
+							<div class="col-xs-6 medium-text">
+								<table>
+								<tbody>
+									<tr>
+										<th>Observation<br>Space</th>
+										<td class="fragment">tendon forces, desired pose, current pose</td>
+									</tr>
+									<tr>
+										<th>Action Space</th>
+										<td class="fragment">desired forces (4D)</td>
+									</tr>
+								  <tr>
+								    <th>Reward<br>Function</th>
+								    <td class="fragment">distance to target / continuity</td>
+								  </tr>
+									<tr>
+										<th>Terminations</th>
+										<td class="fragment">success / timeout</td>
+									</tr>
+									<tr>
+										<th>Algorithm</th>
+										<td class="fragment">SAC + gSDE</td>
+									</tr>
+								</tbody>
+								</table>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/neck/neck_target.jpg" alt="david neck" style="max-width: 100%;">
+							</div>
+						</div>
+						<aside class="notes">
+							- reward function: shaped (primary) + early stopping + continuity<br>
+							- one robot: off-policy algorithm (sample efficient),
+								true for all my subsequent experiments <br>
+							- later: combine model based control with model free RL
+						</aside>
+					</section>
+					<section>
+						<h4>Results</h4>
+						<div class="row">
+							<div class="col-xs-12 medium-text">
+								<p>
+									<a href="file:///home/antonin/Vid%C3%A9os/CoRL_neck/gsde_corl_720p.mp4">Video</a>
+								</p>
+							</div>
+							<div class="col-xs-12">
+								<img src="images/neck/result_neck.png" alt="Result neck" style="max-width: 60%;">
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<section>
+						<h4>Learning to drive in minutes / learning to race in hours</h4>
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<li class="fragment">minimal number of sensors (image, speed)</li>
+									<li class="fragment">variability of the scene (light, shadows, other cars, ...)</li>
+									<li class="fragment">oscillations</li>
+									<li class="fragment">limited computing power</li>
+									<li class="fragment">communication delay</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/car/racing_car.jpg" alt="Racing car" style="max-width: 100%;">
+							</div>
+						</div>
+						<aside class="notes">
+							challenge: only a minimal number of sensors (image + speed):
+							hard to apply model based control <br>
+							without a map, hard to design "fastest traj" + need to learn to recover -> good candidate for RL
+						</aside>
+
+					</section>
+					<section>
+						<h4>Learning a state representation (SRL)</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="images/car/race_auto_encoder.png" alt="augmented auto-encoder">
+							</div>
+							<div class="col-xs-12">
+								<p class="xsmall-text">References:
+									<a href="https://github.com/DLR-RM/AugmentedAutoencoder">Augmented Autoencoders (Sundermeyer et al.)</a>,
+									<a href="https://arxiv.org/abs/1901.08651">Decoupling Feature Extraction from Policy Learning (Raffin et al.)</a>,
+									<a href="https://github.com/araffin/robotics-rl-srl">SRL-Toolbox</a>,
+									<a href="https://github.com/araffin/learning-to-drive-in-5-minutes">Learning To Drive Smoothly in Minutes</a>,
+									<a href="https://arxiv.org/abs/2011.10566">Sim Siam (Chen&He)</a>...
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							Why SRL? <br>
+							Why AAE? (link to martin's paper) <br>
+							+ recent development (constrastive learning) <br>
+							+ why autoencoder -> can inspect what was learned <br>
+							(caveat: if something is useless but visually salient will try to reconstruct)
+						</aside>
+					</section>
+					<section>
+						<h4>Task Specification</h4>
+						<div class="row">
+							<div class="col-xs-6 medium-text">
+								<table>
+								<tbody>
+									<tr>
+										<th>Observation<br>Space</th>
+										<td class="fragment">latent vector / current speed + history</td>
+									</tr>
+									<tr>
+										<th>Action Space</th>
+										<td class="fragment">steering angle / throttle</td>
+									</tr>
+								  <tr>
+								    <th>Reward<br>Function</th>
+								    <td class="fragment">speed + smoothness</td>
+								  </tr>
+									<tr>
+										<th>Terminations</th>
+										<td class="fragment">crash / timeout</td>
+									</tr>
+									<tr>
+										<th>Algorithm</th>
+										<td class="fragment">SAC / TQC + gSDE</td>
+									</tr>
+								</tbody>
+								</table>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/car/ae_robot.jpg" alt="AE real robot" style="max-width: 60%;">
+							</div>
+						</div>
+						<aside class="notes">
+							- image as input but limited computational power: pretrained encoder
+								(lots of works recently) see SRL Toolbox paper<br>
+							- reduced action space <br>
+							- additional issues: communication delay (asynchronous sim)
+								-> history wrapper + train after each episode <br>
+							- fast to learn to drive, much longer to learn to race
+							 	(could be faster with imitation learning) <br>
+							- later: combine knowledge with model free RL
+						</aside>
+					</section>
+					<section>
+						<h4>Results</h4>
+						<div class="row">
+							<div class="col-xs-12 medium-text">
+								<p>
+									<a href="file:///home/antonin/Vid%C3%A9os/rl_robot/RL_at_home.mp4">Learning to drive on the real robot</a>
+								</p>
+								<p>
+									<a href="https://youtu.be/g9TXadLwFRA?t=3220">Learning to race</a>
+									<!-- /home/antonin/Vidéos/stream/car/ -->
+								</p>
+							</div>
+						</div>
+					</section>
+
+				</section>
+				<section>
+					<section>
+						<h4>Learning to walk with an elastic quadruped robot</h4>
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<li class="fragment">hardcoded solution possible (CPG) but need tuning / not energy efficient / fast</li>
+									<li class="fragment">robot safety</li>
+									<li class="fragment">manual reset</li>
+									<li class="fragment">communication delay</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/bert/bert.jpg" alt="bert" style="max-width: 100%;">
+							</div>
+						</div>
+						<aside class="notes">
+						- challenge: can hardcode some pattern (CPG)
+							+ much harder for turning <br>
+						- challenge: safety of the robot (electronics fragile, backflips)
+							-> reduce action space, motor velocity<br>
+						- challenge: manual reset -> semi-automated using very basic recover strategy + treadmill
+						</aside>
+
+					</section>
+					<section>
+						<h4>Task Specification</h4>
+						<div class="row">
+							<div class="col-xs-7 medium-text">
+								<table>
+								<tbody>
+									<tr>
+										<th>Observation<br>Space</th>
+										<td class="fragment">joints positons / torques / imu / gyro + history</td>
+									</tr>
+									<tr>
+										<th>Action Space</th>
+										<td class="fragment">motor positions (6D)</td>
+									</tr>
+								  <tr>
+								    <th>Reward<br>Function</th>
+								    <td class="fragment">forward distance / walk straight / continuity</td>
+								  </tr>
+									<tr>
+										<th>Terminations</th>
+										<td class="fragment">fall / timeout</td>
+									</tr>
+									<tr>
+										<th>Algorithm</th>
+										<td class="fragment">TQC + gSDE</td>
+									</tr>
+								</tbody>
+								</table>
+							</div>
+							<div class="col-xs-5">
+								<img src="images/bert/bert_2.jpg" alt="bert" style="max-width: 100%;">
+							</div>
+						</div>
+						<aside class="notes">
+							- reward function: shaped (primary: go forward)
+								+ early termination + penalty (secondary) to avoid undesired behaviors <br>
+							- later: combine model hand coded control with model free RL <br>
+							+ use modes
+						</aside>
+					</section>
+					<section>
+						<h4>Results</h4>
+						<div class="row">
+							<div class="col-xs-12 medium-text">
+								<p>
+									<a href="file:///home/antonin/Vid%C3%A9os/dlr/bert/bert_training_720p.mp4">Video</a>
+								</p>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h4>Recap</h4>
+					<ul>
+						<li class="fragment"><strike>simulation is all you need</strike></li>
+						<li class="fragment">learning directly on a real robot</li>
+						<li class="fragment">smooth control</li>
+						<li class="fragment">decoupling features extraction from policy learning</li>
+					</ul>
+					<aside class="notes">
+					to make things even more sample efficient: use more knowledge
+					(cf ES talk)
+					</aside>
+
+				</section>
+				<section>
+					<h3>Questions?</h3>
+				</section>
+				<section>
+					<h3>Coming Next: Hands-on Session with Stable Baselines3</h3>
+					<p>
+						Notebook repo: <a href="https://github.com/araffin/rl-handson-rlvs21">https://github.com/araffin/rl-handson-rlvs21</a>
+					</p>
+				</section>
+				<section>
+					<h3>Backup slides</h3>
+				</section>
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<h4>Who am I?</h4>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/sb_logo.png" alt="SB" style="max-width: 100%">
+							<p class="xsmall-text caption">Stable-Baselines</p>
+
+						</div>
+						<div class="col-xs-4">
+							<img src="images/intro/david_robot.jpeg" alt="HASy" style="max-width: 50%">
+							<p class="xsmall-text caption">David (aka HASy)</p>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/intro/enstar.jpeg" alt="ENSTAR" style="max-width: 100%">
+							<p class="xsmall-text caption">ENSTA Robotique</p>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/intro/ensta.jpg" alt="ENSTA" style="max-width: 30%">
+							<p class="xsmall-text caption">ENSTA Paris</p>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/dlr_logo.png" alt="DLR" style="max-width: 30%">
+							<p class="xsmall-text caption">German Aerospace Center (DLR)</p>
+						</div>
+					</div>
+					<aside class="notes">
+						- researcher at DLR (German Aerospace Center) in Munich (doing a PhD) <br>
+						- worked / build robots for 5 years+ <br>
+							doing RL for 3 years+
+						- current goal of PhD: bringing RL to real robots <br>
+						- simulation is not enough: all that I do should work on a real hardware <br>
+						- co-authored Stable-Baselines (with my student) when I was working at ENSTA in France
+							and created Stable-Baselines3 <br>
+							I have maintaining it (with 3 others) for 2 years and half now <br>
+					</aside>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath]
+			});
+		</script>
+	</body>
+</html>
