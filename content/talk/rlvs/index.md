@@ -1,7 +1,7 @@
 ---
 title: RL Tips and Tricks / The Challenges of Applying RL to Real Robots
 event: RLVS 2021
-event_url: https://rlvs.aniti.fr/
+event_url: https://rl-vs.github.io/rlvs2021/tips-and-tricks.html
 location: Online
 summary: Talk at the reinforcement learning virtual school on applying RL in practice and hands-on session with Stable-Baselines3.
 abstract:
