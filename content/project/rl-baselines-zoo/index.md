@@ -16,7 +16,7 @@ tags:
 - Python
 
 # Optional external URL for project (replaces project detail page).
-external_link: "https://github.com/araffin/rl-baselines-zoo"
+external_link: "https://github.com/DLR-RM/rl-baselines3-zoo"
 
 
 # Featured image
@@ -30,7 +30,7 @@ image:
 
 A collection of trained Reinforcement Learning (RL) agents, with tuned hyperparameters, using [Stable Baselines](https://github.com/hill-a/stable-baselines).
 
-Github repository: https://github.com/araffin/rl-baselines-zoo
+Github repository: https://github.com/DLR-RM/rl-baselines3-zoo
 
 Goals of this repository:
 
