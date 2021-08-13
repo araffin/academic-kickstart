@@ -25,6 +25,7 @@ featured: false
 
 url_slides: slides/rlvs-tips-tricks/
 url_code: https://github.com/araffin/rl-handson-rlvs21
+url_video: https://www.youtube.com/watch?v=Ikngt0_DXJg
 
 
 #image:
