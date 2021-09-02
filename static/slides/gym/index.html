@@ -1,0 +1,386 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>OpenAI Gym</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai-sublime.css" id="highlight-theme"> -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme"> -->
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; OpenAI Gym &middot; Formation RL &middot; 06.09.2021
+				</header>
+				<section data-background-image="images/bg_front.jpg">
+					<!-- <h1 class="r-fit-text">RL Tips and Tricks</h1>
+					<h3>DLR Template</h3> -->
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>OpenAI Gym</h3>
+									<p id="subtitle">Reinforcement Learning Environments</p>
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/openai/gym">
+									<img class="shadow" src="images/openai.png" alt="OpenAI Logo" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (@araffin2) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+				<section>
+					<h3>Outline</h3>
+					<ol>
+						<li>
+							What is Gym?
+						</li>
+						<li>
+							RL on a custom task
+						</li>
+					</ol>
+				</section>
+
+				<section>
+					<h3>What is Gym? (1/2)</h3>
+					<div class="row">
+						<div class="col-xs-12 medium-text">
+							<p>An API</p>
+						</div>
+						<div class="col-xs-12 medium-text">
+							<pre class="fragment"><code data-trim data-line-numbers="1-4|5-6|8-10|11-12|14-17|19-21|" class="python">
+								import gym
+
+								# Create the environment
+								env = gym.make("CartPole-v1")
+								# Reset env and get first observation
+								obs = env.reset()
+
+								# Step in the env with random actions
+								# and display the env
+								for _ in range(100):
+								    # Display the env
+								    env.render(mode="human")
+
+								    action = env.action_space.sample()
+								    # Retrieve new observation, reward, termination signal
+								    # and additional infos
+								    obs, reward, done, info = env.step(action)
+
+								    # End of an episode
+								    if done:
+								        obs = env.reset()
+
+							</code></pre>
+
+						</div>
+					</div>
+
+				</section>
+
+				<section>
+					<h4>Live Demo</h4>
+				</section>
+
+				<section>
+					<h3>What is Gym? (2/2)</h3>
+					<div class="row">
+						<div class="col-xs-12 medium-text">
+							<p>A collection of environments.</p>
+						</div>
+						<div class="col-xs-12">
+							<a href="https://gym.openai.com/envs/">
+								<img src="images/gym_envs.png" alt="" height="70%">
+							</a>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Questions?</h3>
+				</section>
+
+				<section>
+					<h4>RL in Practice: Tips and Tricks</h4>
+					<p>Full video:
+						<a href="https://rl-vs.github.io/rlvs2021/tips-and-tricks.html">
+							https://rl-vs.github.io/rlvs2021/tips-and-tricks.html
+						</a>
+					</p>
+					<p>Today: only about how to define custom task</p>
+				</section>
+
+				<section>
+					<h3>Defining a custom task</h3>
+					<ul>
+						<li class="fragment">observation space</li>
+						<li class="fragment">action space</li>
+						<li class="fragment">reward function</li>
+						<li class="fragment">termination conditions</li>
+					</ul>
+					<aside class="notes">
+						Always start simple!
+					</aside>
+				</section>
+				<section>
+					<h3>Choosing the observation space</h3>
+					<ul>
+						<li class="fragment">enough information to solve the task</li>
+						<li class="fragment">do not break Markov assumption</li>
+						<li class="fragment">normalize!</li>
+					</ul>
+					<aside class="notes">
+						normalize especially for PPO/A2C + running average when you don't know the limits in
+						advance (VecNormalize) <br>
+					</aside>
+				</section>
+
+				<section>
+					<h3>CartPole Observation Space</h3>
+					<div class="col-xs-12 medium-text">
+						<pre class="fragment"><code data-trim data-line-numbers="1-9|10-20|" class="python">
+							"""
+							Observation:
+							    Type: Box(4)
+							    Num     Observation               Min                     Max
+							    0       Cart Position             -4.8                    4.8
+							    1       Cart Velocity             -Inf                    Inf
+							    2       Pole Angle                -0.418 rad (-24 deg)    0.418 rad (24 deg)
+							    3       Pole Angular Velocity     -Inf                    Inf
+							"""
+							high = np.array(
+							    [
+							        self.x_threshold * 2,
+							        np.finfo(np.float32).max,
+							        self.theta_threshold_radians * 2,
+							        np.finfo(np.float32).max,
+							    ],
+							    dtype=np.float32,
+							)
+
+							self.observation_space = gym.spaces.Box(low=-high, high=high, dtype=np.float32)
+
+						</code></pre>
+
+					</div>
+
+				</section>
+
+				<section>
+					<h3>Choosing the Action space</h3>
+					<ul>
+						<li class="fragment">discrete / continuous</li>
+						<li class="fragment">complexity vs final performance</li>
+					</ul>
+					<aside class="notes">
+						depends on your task, sometimes you don't have the choice (e.g. atari games)
+						for robotics, makes more sense to use continuous action <br>
+						bigger action space: better performance at the end but may take much longer to train
+						(example: racing car) <br>
+						+ trial and errors
+					</aside>
+				</section>
+
+				<section>
+					<h3>CartPole Observation Space</h3>
+					<div class="col-xs-12 medium-text">
+						<pre class="fragment"><code data-trim data-line-numbers="|" class="python">
+							"""
+					    Actions:
+					        Type: Discrete(2)
+					        Num   Action
+					        0     Push cart to the left
+					        1     Push cart to the right
+							"""
+							self.action_space = gym.spaces.Discrete(2)
+						</code></pre>
+
+					</div>
+
+				</section>
+
+				<section>
+					<h3>Continuous action space: Normalize? Normalize!</h3>
+					<div class="row">
+						<div class="col-xs-12 medium-text r-stack">
+							<pre class="fragment"><code data-trim data-line-numbers="1-6|7-9|11-13|15-19" class="python">
+							from gym import spaces
+
+							# Unnormalized action spaces only work with algorithms
+							# that don't directly rely on a Gaussian distribution to define the policy
+							# (e.g. DDPG or SAC, where their output is rescaled to fit the action space limits)
+
+							# LIMITS TOO BIG: in that case, the sampled actions will only have values
+							# around zero, far away from the limits of the space
+							action_space = spaces.Box(low=-1000, high=1000, shape=(n_actions,), dtype="float32")
+
+							# LIMITS TOO SMALL: in that case, the sampled actions will almost
+							# always saturate (be greater than the limits)
+							action_space = spaces.Box(low=-0.02, high=0.02, shape=(n_actions,), dtype="float32")
+
+							# BEST PRACTICE: action space is normalized, symmetric
+							# and has an interval range of two,
+							# which is usually the same magnitude as the initial standard deviation
+							# of the Gaussian used to sample actions (unit initial std in SB3)
+							action_space = spaces.Box(low=-1, high=1, shape=(n_actions,), dtype="float32")
+							</code></pre>
+
+							<img src="images/gaussian.png" alt="Gaussian" class="fragment" style="max-width: 100%">
+
+						</div>
+					</div>
+					<aside class="notes">
+						- Common pitfalls: observation normalization, action space normalization (ex continuous action) -> use the env checker
+
+					</aside>
+				</section>
+
+				<section>
+					<h3>Choosing the reward function</h3>
+					<ul>
+						<li class="fragment">start with reward shaping</li>
+						<li class="fragment">primary / secondary reward</li>
+						<li class="fragment">normalize!</li>
+					</ul>
+					<aside class="notes">
+						- reward shaping: careful with reward hacking<br>
+						- choosing weights for rewards: primary and secondary
+						 look at the magnitude (ex continuity too high, it will do nothing)
+					</aside>
+				</section>
+
+				<section>
+					<h3>CartPole Reward</h3>
+					<div class="col-xs-12 medium-text">
+						<pre class="fragment"><code data-trim data-line-numbers="|" class="python">
+							if not done:
+							    reward = 1.0
+						</code></pre>
+
+					</div>
+
+				</section>
+
+				<section>
+					<h3>Termination conditions?</h3>
+					<ul>
+						<li class="fragment">early stopping</li>
+						<li class="fragment">special treatment needed for timeouts</li>
+						<li class="fragment">should not change the task (reward hacking)</li>
+					</ul>
+					<aside class="notes">
+						- early stopping: prevent the agent to explore useless regions of your env
+						make learning faster <br>
+						- careful or reward hacking: if you penalize at every steps but
+						stop the episode early if it explores unwanted regions:
+						will maximise its reward by stopping the episode early
+					</aside>
+				</section>
+
+				<section>
+					<h3>CartPole Termination</h3>
+					<div class="col-xs-12 medium-text">
+						<pre class="fragment"><code data-trim data-line-numbers="1-6|8-14|" class="python">
+							done = bool(
+							    x < -self.x_threshold
+							    or x > self.x_threshold
+							    or theta < -self.theta_threshold_radians
+							    or theta > self.theta_threshold_radians
+							)
+
+							# in the registration:
+							register(
+							    id="CartPole-v1",
+							    entry_point="gym.envs.classic_control:CartPoleEnv",
+							    max_episode_steps=500,
+							    reward_threshold=475.0,
+							)
+						</code></pre>
+
+					</div>
+
+				</section>
+
+				<section>
+					<h3>Which algorithm to choose?</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/algo_flow_dark.png" alt="Algo flow" style="max-width: 80%">
+						</div>
+					</div>
+					<aside class="notes">
+						- Which algorithm should I use? depends on the env and on what matters for you
+						action space + multiprocessing (wall clock time vs sample efficiency)? <br>
+						- w.r.t. performance: usually a hyperparameter problem (between the latest algo)
+						for continuous control: use TQC <br>
+						- even more parallel: ES (cf previous lecture)
+					</aside>
+				</section>
+
+				<section>
+					<h3>Questions?</h3>
+				</section>
+				<section>
+					<h3>Backup Slides</h3>
+					<p>
+						<a href="https://araffin.github.io/slides/rlvs-tips-tricks/#/27/0/2">Real Robot Example</a>
+					</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath]
+			});
+		</script>
+	</body>
+</html>
