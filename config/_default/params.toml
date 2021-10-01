@@ -69,7 +69,7 @@ highlight_style = "atom-one-light"  # For supported styles, see https://cdnjs.co
 
 # Enable LaTeX math rendering? true/false
 #   If false, you can enable math on a per page basis as needed.
-math = false
+math = true
 
 # Enable diagram rendering? true/false
 #   If false, you can enable diagrams on a per page basis as needed.
