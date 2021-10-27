@@ -5,7 +5,7 @@ date: 2021-10-26
 ---
 
 It is critical for Reinforcement Learning (RL) practitioners to properly evaluate and compare results.
-Reporting results with poor comparison leads to a progress mirage and may undermine the stochasticity of the results. To this end, [Deep RL at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) (Neurips Oral) provides recommendations for a more rigorous evaluation of DeepRL algorithms. The paper comes with an open-source library named [rliable](https://agarwl.github.io/rliable/).
+Reporting results with poor comparison leads to a progress mirage and may underestimate the stochasticity of the results. To this end, [Deep RL at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) (Neurips Oral) provides recommendations for a more rigorous evaluation of DeepRL algorithms. The paper comes with an open-source library named [rliable](https://agarwl.github.io/rliable/).
 
 This blog post is meant to be a visual explanation of the tools used by the [rliable](https://agarwl.github.io/rliable/) library to better evaluate and compare RL algorithms.
 We will through the different recommendation of the authors and give a visual explanation for each of them.
@@ -58,7 +58,7 @@ Source: image from the authors of the rliable library
 
 ## Probability of Improvement
 
-Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses a modified [Mann–Whitney U test ](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
+Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses a modified [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
 
 <object width="100%" type="image/svg+xml" data="./proba_improvement.svg"></object>
 
