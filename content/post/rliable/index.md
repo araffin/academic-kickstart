@@ -5,10 +5,10 @@ date: 2021-10-26
 ---
 
 It is critical for Reinforcement Learning (RL) practitioners to properly evaluate and compare results.
-Reporting results with poor comparison leads to a progress mirage and may underestimate the stochasticity of the results. To this end, [Deep RL at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) (Neurips Oral) provides recommendations for a more rigorous evaluation of DeepRL algorithms. The paper comes with an open-source library named [rliable](https://agarwl.github.io/rliable/).
+Reporting results with poor comparison leads to a progress mirage and may underestimate the stochasticity of the results. To this end, [Deep RL at the Edge of the Statistical Precipice](https://arxiv.org/abs/2108.13264) (Neurips Oral) provides recommendations for a more rigorous evaluation of DeepRL algorithms. The paper comes with an open-source library named [rliable](https://github.com/google-research/rliable).
 
 This blog post is meant to be a visual explanation of the tools used by the [rliable](https://agarwl.github.io/rliable/) library to better evaluate and compare RL algorithms.
-We will through the different recommendation of the authors and give a visual explanation for each of them.
+We will go through the different recommendations of the authors and give a visual explanation for each of them.
 
 
 ## Score Normalization
@@ -22,7 +22,7 @@ Note: the score may depend on what you want to compare. It is usually the final 
 ## Stratified Bootstrap Confidence Intervals
 
 To account for uncertainty in aggregate performance, rliable uses stratified bootstrap confidence intervals.
-This may sound complicated, but we will go slowly through the meaning of each of those terms.
+This may sound complicated, but let's go slowly through the meaning of each of those terms.
 
 First, bootstrap means sampling with replacement. For instance, if we sample four times with replacement 3 runs of indices [1, 2, 3] on a task A, we may get: [2, 2, 3, 1] the first time, [3, 1, 1, 1] the second time, ...
 
@@ -58,7 +58,7 @@ Source: image from the authors of the rliable library
 
 ## Probability of Improvement
 
-Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses a modified [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
+Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses a the U-statistic from a [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
 
 <object width="100%" type="image/svg+xml" data="./proba_improvement.svg"></object>
 
@@ -67,7 +67,7 @@ A probability of improvement around 0.5 means that the two algorithms have simil
 
 ## In Practice: Using the RL Zoo
 
-To allow more users to use rliable, we added basic support of it in the [RL Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo#plot-with-the-rliable-library) which is a training framework for [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3). Fore more information, please follow the instructions in the [README](https://github.com/DLR-RM/rl-baselines3-zoo#plot-with-the-rliable-library).
+To allow more users to use rliable, we added basic support of it in the [RL Baselines3 Zoo](https://github.com/DLR-RM/rl-baselines3-zoo#plot-with-the-rliable-library), a training framework for [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3). Fore more information, please follow the instructions in the [README](https://github.com/DLR-RM/rl-baselines3-zoo#plot-with-the-rliable-library).
 
 ## Conclusion
 
