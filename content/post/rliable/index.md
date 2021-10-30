@@ -58,7 +58,7 @@ Source: image from the authors of the rliable library
 
 ## Probability of Improvement
 
-Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses a the U-statistic from a [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
+Finally, to test whether an algorithm X is probably better or not than an algorithm Y, rliable uses the U-statistic from a [Mann–Whitney U test](https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test):
 
 <object width="100%" type="image/svg+xml" data="./proba_improvement.svg"></object>
 
