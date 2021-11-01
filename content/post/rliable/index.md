@@ -1,7 +1,7 @@
 ---
 draft: false
-title: "Rliable: Better Evaluation for Reinforcement Learning"
-date: 2021-10-26
+title: "Rliable: Better Evaluation for Reinforcement Learning - A Visual Explanation"
+date: 2021-10-29
 ---
 
 It is critical for Reinforcement Learning (RL) practitioners to properly evaluate and compare results.
@@ -80,7 +80,7 @@ In this post, we have seen the different tools used by rliable to better evaluat
 
 ## Acknowledgement
 
-I would like to thanks [Pablo Samuel Castro](https://psc-g.github.io/) for checking the correctness of the visuals.
+I would like to thanks [Pablo Samuel Castro](https://psc-g.github.io/) and [Rishabh Agarwal](https://agarwl.github.io/) for checking the correctness of the visuals.
 
 All the graphics were made using [excalidraw](https://excalidraw.com/).
 
