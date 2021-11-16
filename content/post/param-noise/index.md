@@ -20,23 +20,21 @@ We provide code to reproduce the experiments.
 
 ## Introduction
 
-While working the paper [Smooth Exploration for Robotic Reinforcement Learning]({{< relref "/publication/gsde" >}}) (aka gSDE, accepted at CoRL21 =)), I ran several ablation studies and had to compare the method I was working on to different baselines. One of them was *Parameter Space Exploration for Reinforcement Learning* by Plappert et al. (we will refer to it as *Param Exploration paper* for brievety) which proposes an alternative to exploration in action space.
+While working the paper [Smooth Exploration for Robotic Reinforcement Learning]({{< relref "/publication/gsde" >}}), I ran several ablation studies and had to compare to *Parameter Space Exploration for Reinforcement Learning* by Plappert et al. which proposes an alternative to exploration in action space (we will refer to it as *Param Exploration paper* for brievety) .
 
-The ablation study on my method (gSDE) revealed the importance of an hyperparameter, that was only briefly mentioned in the appendix of the other paper.
-I therefore decided to investigate more closely the role of that hyperparameter for the parameter space exploration method.\
+The ablation study revealed the importance of an hyperparameter, that was only briefly mentioned in the appendix of the other paper.
+I therefore decided to investigate more closely the role of the different design choices for the parameter space exploration method.\
 This blog post is the summary of my findings.
 
-
 Note: the finding should be similar for noisy net DQN (+ also only mentioned in the appendix (screenshot))
-
 
 [^1]: Plappert, Matthias, et al. "Parameter space noise for exploration." ICLR (2017).
 
 
 ## Exploration in Action or Parameter Space
 
-Before we dive into the Param Exploration paper, let's do a quick recap of how exploration can be done in Reinforcement Learning (RL) with continuous actions.
-It is usually done in action space but can be done in parameters space or alternatively using a third solution named State-Dependent Exploration.
+Before we dive into the Param Exploration method, let's do a quick recap of how exploration can be done in Reinforcement Learning (RL) with continuous actions.
+It is usually done in action space but can be done in parameter space or alternatively using a third solution named State-Dependent Exploration.
 
 
 ### Exploration in Action Space
@@ -64,7 +62,7 @@ $$
 $$
 
 at the beginning of an episode, the perturbation $\epsilon$ is sampled and added to the policy parameters $\theta$.
-This usually results in more consistent exploration but becomes challenging with an increasing number of parameters[^1].
+This results in more consistent exploration but becomes challenging with an increasing number of parameters[^1].
 That's what the Parameter Space Exploration paper tried to tackle.
 We will see how in the next section, but before let's finish the tour with the last type of exploration.
 
@@ -92,13 +90,12 @@ Now that we have an overview of how exploration can be done in RL, let's dive in
 
 ## Parameter Space Exploration for Reinforcement Learning
 
-Published in 2017 by OpenAI, this paper tries to address the difficulty of exploring in parameter space when the number of parameter is high, which is the case when we use neural networks.
+Published in 2017 by OpenAI, this paper tries to address the difficulty of exploring in parameter space when the number of parameters is high, which is the case with neural networks policies.
 
 To tackle that issue, it proposes two improvements over classic parameter space exploration:
 
 1. Add layer normalization at each layer, so the perturbation can ...
 2. Adapt the noise magnitude over time by defining a distance in the action space
-
 
 
 One last hyperparameter mentioned in the appendix only: noise sampling interval.
@@ -115,6 +112,8 @@ Note: in the paper, DQN, TRPO and DDPG was used. Here we will focus on one, more
 
 Decoupling exploration effect from the rest: only update the policy at the end of an episode
 + explain baseline no noise + interesting baselines no_noise_8 (doing implicit exploration in parameter space)
+
+We will be using the tools provided by the [rliable](https://agarwl.github.io/rliable/) library for evaluating and comparing the different variants. If you are not familiar with it, I highly recommend you to take a look at the [visual introduction](https://araffin.github.io/post/rliable/) I wrote about it recently.
 
 [^rl-survey]: TODO: cite RL for robot survey
 
