@@ -58,8 +58,8 @@ url_code: "https://github.com/DLR-RM/stable-baselines3"
 url_dataset: ""
 url_project: ""
 url_slides: ""
-url_video: ""
-url_poster: ""
+url_video: "https://www.youtube.com/watch?v=f_FmDFrYkPM"
+url_poster: "https://openreview.net/attachment?id=TSuSGVkjuXd&name=poster"
 url_source: ""
 
 
