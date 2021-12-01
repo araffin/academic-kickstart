@@ -52,6 +52,8 @@ model = PPO("MlpPolicy", "CartPole-v1").learn(total_timesteps=20000)
 
 GitHub repository: [https://github.com/DLR-RM/stable-baselines3](https://github.com/DLR-RM/stable-baselines3)
 
+Paper: [http://jmlr.org/papers/v22/20-1364.html](http://jmlr.org/papers/v22/20-1364.html)
+
 Documentation: [https://stable-baselines3.readthedocs.io/](https://stable-baselines3.readthedocs.io/)
 
 RL Baselines3 Zoo: [https://github.com/DLR-RM/rl-baselines3-zoo](https://github.com/DLR-RM/rl-baselines3-zoo)
@@ -439,13 +441,15 @@ This blog post was co-written by Stable-Baselines3 maintainers:
 To cite Stable-Baselines3 in publications:
 
 ```
-@misc{stable-baselines3,
-  author = {Raffin, Antonin and Hill, Ashley and Ernestus, Maximilian and Gleave, Adam and Kanervisto, Anssi and Dormann, Noah},
-  title = {Stable Baselines3},
-  year = {2019},
-  publisher = {GitHub},
-  journal = {GitHub repository},
-  howpublished = {\url{https://github.com/DLR-RM/stable-baselines3}},
+@article{stable-baselines3,
+  author  = {Antonin Raffin and Ashley Hill and Adam Gleave and Anssi Kanervisto and Maximilian Ernestus and Noah Dormann},
+  title   = {Stable-Baselines3: Reliable Reinforcement Learning Implementations},
+  journal = {Journal of Machine Learning Research},
+  year    = {2021},
+  volume  = {22},
+  number  = {268},
+  pages   = {1-8},
+  url     = {http://jmlr.org/papers/v22/20-1364.html}
 }
 ```
 
