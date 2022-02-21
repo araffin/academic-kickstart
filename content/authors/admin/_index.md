@@ -41,9 +41,9 @@ social:
   icon_pack: fab
   link: https://www.linkedin.com/in/antonin-raffin-106b18a8/
 
-- icon: medium
-  icon_pack: fab
-  link: https://medium.com/@araffin
+#- icon: medium
+#  icon_pack: fab
+#  link: https://medium.com/@araffin
 
 - icon: twitter
   icon_pack: fab
@@ -60,6 +60,10 @@ social:
 - icon: twitch
   icon_pack: fab
   link: https://www.twitch.tv/givethatrobotacookie
+
+- icon: youtube
+  icon_pack: fab
+  link: https://www.youtube.com/user/atooo57
 
 # Link to a PDF of your resume/CV from the About widget.
 # To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.  
