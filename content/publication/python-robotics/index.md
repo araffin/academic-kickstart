@@ -1,7 +1,7 @@
 ---
 title: "PythonRobotics: a Python code collection of robotics algorithms"
 publishDate: 2018-08-31T00:00:00
-draft: true
+draft: false
 
 
 authors:
