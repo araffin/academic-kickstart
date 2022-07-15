@@ -26,7 +26,7 @@ featured: false
 
 url_project: https://araffin.github.io/tools-for-robotic-rl-icra2022/
 # url_slides:
-# url_video:
+url_video: https://www.youtube.com/playlist?list=PL42jkf1t1F7etDiYXWC5Q77yIuVYhXNoy
 
 
 #image:
