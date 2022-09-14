@@ -1,0 +1,704 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Training RL agents directly on real robots</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai-sublime.css" id="highlight-theme"> -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme"> -->
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; RL on real robots &middot; RL Dresden &middot; 15.09.2022
+				</header>
+				<section data-background-image="images/bg_front.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Training RL agents directly <br> on real robots</h3>
+									<!-- <p id="subtitle">and The Challenges of Applying RL to Real Robots</p> -->
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<!-- <img class="shadow" src="images/bert/optimized_crop_2.jpg" alt="DLR bert" style="max-width:100%;"> -->
+									<img class="shadow" src="images/bert/jump16_styled.jpg" alt="DLR bert" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (
+							<a href="https://twitter.com/araffin2">@araffin2</a>
+							) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<h4>Who am I?</h4>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/sb_logo.png" alt="SB" style="max-width: 100%">
+							<p class="xsmall-text caption">Stable-Baselines</p>
+
+						</div>
+						<div class="col-xs-4">
+							<img src="images/antonin-bert.jpg" alt="ENSTAR" style="max-width: 100%">
+							<p class="xsmall-text caption">bert</p>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/intro/david_robot.jpeg" alt="HASy" style="max-width: 50%">
+							<p class="xsmall-text caption">David (aka HASy)</p>
+						</div>
+						<!-- <div class="col-xs-6">
+							<img src="images/intro/ensta.jpg" alt="ENSTA" style="max-width: 30%">
+							<p class="xsmall-text caption">ENSTA Paris</p>
+						</div> -->
+						<div class="col-xs-12">
+							<img src="images/dlr_logo.png" alt="DLR" style="max-width: 15%">
+							<p class="xsmall-text caption">German Aerospace Center (DLR)</p>
+						</div>
+					</div>
+					<aside class="notes">
+						- researcher at DLR (German Aerospace Center) in Munich (doing a PhD) <br>
+						<p>- SB3 RL Zoo -> reliable software and proper RL experiments</p>
+
+						- current goal of PhD: bringing RL to real robots <br>
+						- simulation is not enough: all that I do should work on a real hardware <br>
+					</aside>
+				</section>
+
+				<!-- <section>
+					Outline
+					We should do more RL on real robots,
+					simulation is not enough and
+					it is now possible (because of software + hardware)
+					complementary approach to RL in sim (for instance finetuning + doesn't need sim2real)
+					RL should not be done from scratch (when possible)
+					using knowledge allow to learn fast and good looking behavior
+				</section> -->
+
+				<section>
+					<h3>Outline</h3>
+					<ol>
+							<li>Why learn directly on real robots?</li>
+							<li>Learning from scratch</li>
+							<li>Knowledge guided RL</li>
+							<li>Questions?</li>
+					</ol>
+				</section>
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<!-- ETH Hike -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/zXbb6KQ0xV8?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+									Miki, Takahiro, et al. "Learning robust perceptive locomotion for quadrupedal robots in the wild." Science Robotics (2022)
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							current state of RL for robotics <br>
+							simulation only most of the time (improving) <br>
+							MuJoCo env != real robots <br>
+							Real-World RL Benchmark Suite, still simulation...
+							<!-- https://github.com/google-research/realworldrl_suite -->
+						</aside>
+					</section>
+					<!-- Learning in 5 minutes -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/8sO7VS3q8d0?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+								Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." CoRL. PMLR, 2022.
+								</p>
+							</div>
+						</div>
+					</section>
+					<!-- RMA -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/nBy1piJrq1A?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<h3>Simulation is all you need?</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/sim_broken.gif" alt="sim broken"/>
+						</div>
+					</div>
+					<p class="xsmall-text">Credits: Nathan Lambert (@natolambert)</p>
+				</section>
+				<section>
+					<section>
+						<h3>Simulation is all you need? (bis)</h3>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="images/take_over.mp4" controls></video>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Simulation is really all you need</h3>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="images/flying_robot.mp4" controls></video>
+							</div>
+						</div>
+					</section>
+				</section>
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<ul>
+						<li class="fragment">because you can! (software/hardware)</li>
+						<li class="fragment">simulation is safer, faster</li>
+						<li class="fragment">simulation to reality (sim2real): accurate model and randomization needed</li>
+						<li class="fragment">challenges: robot safety, sample efficiency</li>
+					</ul>
+					<aside class="notes">
+						simulation good for iterating<br>
+						requires good model of robot <br>
+						learning in sim + reality complementary
+					</aside>
+				</section>
+				<section>
+					<h3>Learning from scratch</h3>
+				</section>
+
+				<!-- <section>
+					Learning from scratch
+					now possible with recent algorithms (and implementation)
+					and robust hardware
+					but not necessarly a good idea
+					(work but still not natural gaits, can tell it's RL)
+					RL on real robots
+					requires careful design of the task anyway
+					requires smooth exploration and controller (gSDE + continuity cost + low pass filter if needed)
+				</section> -->
+
+				<section>
+					<section>
+						<h4>Learning to control an elastic robot</h4>
+
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<li class="fragment">hard to model (silicon neck)</li>
+									<li class="fragment">oscillations</li>
+									<li class="fragment">2h on the real robot (safety)</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/neck/david_neck_highlight.jpg" alt="david head" style="max-width: 100%;">
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+							</p>
+						</div>
+						<aside class="notes">
+							- present task, observation, action space, reward <br>
+							 	use gSDE + continuity cost with history wrapper <br>
+								SB3 / RL Zoo / SAC/TQC for all experiments
+						</aside>
+					</section>
+					<section>
+						<h4>Smooth Exploration for Robotic RL</h4>
+						<div class="row medium-text">
+								<div class="col-xs-6 fragment">
+									Independent Gaussian noise:
+									\[ \epsilon_t \sim \mathcal{N}(0, \sigma) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t \]
+								</div>
+								<div class="col-xs-6 fragment">
+									State dependent exploration:
+									\[ \theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(s_t; \theta_{\epsilon}) \]
+								</div>
+								<!-- <div class="col-xs-4">
+									Linear case:
+									\[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+								</div> -->
+							<div class="col-xs-12">
+								<img src="images/sde/mountain.png" alt="gSDE vs Independent noise" style="max-width:70%;"/>
+							</div>
+						</div>
+					</section>
+					<!-- Smooth exploration for robotics -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>Result</h4>
+							</div>
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=63&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h4>Learning to walk with an elastic quadruped robot</h4>
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<!-- <li class="fragment">hardcoded solution possible (CPG) but need tuning / not energy efficient / fast</li> -->
+									<li class="fragment">robot safety (5h+ of training)</li>
+									<li class="fragment">manual reset</li>
+									<li class="fragment">communication delay</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/bert/bert.jpg" alt="bert" style="max-width: 100%;">
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+							</p>
+						</div>
+
+						<aside class="notes">
+							- present task, observation, action space, reward <br>
+						</aside>
+					</section>
+
+					<!-- Smooth exploration for robotics -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=101&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<!-- DroQ walk in the park -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>DroQ - 20 Minutes Training</h4>
+							</div>
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/YO1USfn6sHY?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+									Smith, Laura, Ilya Kostrikov, and Sergey Levine. "A Walk in the Park: Learning to Walk in 20 Minutes With Model-Free Reinforcement Learning." arXiv preprint (2022).
+								</p>
+							</div>
+
+						</div>
+					</section>
+
+					<!-- Dreamer -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/A6Rg0qRwTYs?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<h3>Knowledge guided RL</h3>
+					<div class="row">
+						<div class="col-xs-12 meidum-text">
+							<ul>
+								<li class="fragment">knowledge about the task (frozen encoder)</li>
+								<li class="fragment">knowledge about the robot (neck)</li>
+								<li class="fragment">RL for improved robustness (CPG + RL)</li>
+							</ul>
+						</div>
+					</div>
+					<aside class="notes">
+						Learning from scratch doesn't make sense most of the time <br>
+						and results in un-natural behavior / dangerous behaviors <br>
+						and take long time
+					</aside>
+				</section>
+
+				<!-- <section>
+					knowledge guided reinforcement learning
+					RL does not solve the main task (done by simple controller)
+					but improve performance and make it more robust
+					Using robot / task knowledge: Model based/SRL + RL here.
+					Using robot knowledge, exploiting physics: bert
+					model based control + RL -> neck (70% at the beginning of training)
+					2h vs 30 minutes
+					pre-trained encoder -> robot racing car
+					nominal controller + RL -> quadruped
+				</section> -->
+				<section>
+					<section>
+						<h4>Learning to drive in minutes / learning to race in hours</h4>
+						<div class="row medium-text">
+							<div class="col-xs-6">
+								<h5>Challenges</h5>
+								<ul>
+									<li class="fragment">minimal number of sensors (image, speed)</li>
+									<li class="fragment">variability of the scene (light, shadows, other cars, ...)</li>
+									<!-- <li class="fragment">oscillations</li> -->
+									<li class="fragment">limited computing power</li>
+									<li class="fragment">communication delay</li>
+								</ul>
+							</div>
+							<div class="col-xs-6">
+								<img src="images/car/racing_car.jpg" alt="Racing car" style="max-width: 100%;">
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+							</p>
+						</div>
+
+						<aside class="notes">
+							- present task, observation, action space, reward <br>
+						</aside>
+					</section>
+					<section>
+						<h4>Learning a state representation (SRL)</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="images/car/race_auto_encoder.png" alt="augmented auto-encoder">
+							</div>
+							<div class="col-xs-12">
+								<p class="xsmall-text">References:
+									<a href="https://github.com/DLR-RM/AugmentedAutoencoder">Augmented Autoencoders (Sundermeyer et al.)</a>,
+									<a href="https://arxiv.org/abs/1901.08651">Decoupling Feature Extraction from Policy Learning (Raffin et al.)</a>,
+									<a href="https://github.com/araffin/robotics-rl-srl">SRL-Toolbox</a>,
+									<a href="https://github.com/araffin/learning-to-drive-in-5-minutes">Learning To Drive Smoothly in Minutes</a>,
+									<a href="https://arxiv.org/abs/2011.10566">Sim Siam (Chen&He)</a>...
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							Why SRL? <br>
+							+ why autoencoder -> can inspect what was learned <br>
+						</aside>
+					</section>
+					<!-- Smooth exploration for robotics -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=176&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>Pre-trained agent on Huggingface hub</h4>
+						<a href="https://huggingface.co/araffin/tqc-donkey-minimonaco-track-v0" target="_blank">
+							<img src="images/car/hugginface_race.jpg" alt="">
+						</a>
+					</section>
+
+					<!-- Learning to race serie -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>Video Serie on YouTube</h4>
+							</div>
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<!-- https://www.youtube.com/watch?v=ngK33h00iBE&list=PL42jkf1t1F7dFXE7f0VTeFLhW0ZEQ4XJV -->
+									<iframe src="https://www.youtube.com/embed/ngK33h00iBE?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<h4>Learning to Exploit Elastic Actuators for Quadruped Locomotion</h4>
+						<div class="row">
+							<div class="col-xs-3">
+
+							</div>
+							<div class="col-xs-6">
+								<img src="images/icra/cpg_rl_combined.svg" alt="" style="max-width:100%">
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+									Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion" In preparation ICRA, 2023.
+								</p>
+							</div>
+
+						</div>
+							<!-- <div class="row medium-text">
+								<div class="col-xs-6">
+									CPG + RL
+									10 minutes vs 5h
+									natural looking gaits
+									exploit the springs (image fast trot vs hand-tuned trot)
+									Videos: https://b2drop.eudat.eu/s/2H2QPjAamSyN46o
+								</div>
+							</div> -->
+						</section>
+						<section>
+							<h4>Otimized CPG + RL</h4>
+							<div class="row">
+								<div class="col-xs-6 medium-text">
+									<p>Coupled oscillator</p>
+									<div style="font-size:70%">
+										\[\begin{aligned}
+										\dot{r_i} &amp; = a (\mu - r_i^2)r_i \\
+										\dot{\varphi_i} &amp; = \omega + \sum_j \, r_j \, c_{ij} \, \sin(\varphi_j - \varphi_i - \Phi_{ij}) \\
+										\end{aligned} \]
+									</div>
+									<img src="images/icra/cpg_parameters.svg" alt="">
+
+								</div>
+								<div class="col-xs-6 medium-text">
+									<p style="color:#a61e4d">Desired foot position</p>
+									<div style="font-size:70%">
+										\[\begin{aligned}
+										x_{des,i} &amp;= \textcolor{#5f3dc4}{\Delta x_\text{len}} \cdot r_i \cos(\varphi_i)\\
+										z_{des,i} &amp;= \Delta z \cdot \sin(\varphi_i) \\
+										\Delta z  &amp;= \begin{cases}
+										  \textcolor{#5c940d}{\Delta z_\text{clear}}  &amp;\text{if $\sin(\varphi_i) > 0$ (\textcolor{#0b7285}{swing})}\\
+										  \textcolor{#d9480f}{\Delta z_\text{pen}}  &amp;\text{otherwise (\textcolor{#862e9c}{stance}).}
+										\end{cases}
+
+										\end{aligned} \]
+
+									</div>
+									<p style="color:#1864ab">closing the loop with RL</p>
+									<div style="font-size:70%">
+										\[\begin{aligned}
+										x_{des,i} &amp;= \textcolor{#a61e4d}{\Delta x_\text{len} \cdot r_i \cos(\varphi_i)} + \textcolor{#1864ab}{\pi_{x,i}(s_t)} \\
+										z_{des,i} &amp;= \textcolor{#a61e4d}{\Delta z \cdot \sin(\varphi_i)} + \textcolor{#1864ab}{\pi_{z,i}(s_t)}
+										\end{aligned} \]
+
+									</div>
+
+								</div>
+							</div>
+						</section>
+						<section>
+							<h3>Fast Trot (~30 minutes training)</h3>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<video src="https://b2drop.eudat.eu/s/At9Fqirway3BCFP/download" controls></video>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h4>Learning to Exploit Elastic Actuators</h4>
+							<div class="row">
+								<div class="col-xs-6">
+									<div class="col-xs-12">
+										<img src="images/icra/motor_vel.png" width="100%" alt="">
+									</div>
+
+								</div>
+								<div class="col-xs-6">
+									<div class="col-xs-12">
+										<img src="images/icra/sea.jpg" width="60%" alt="">
+									</div>
+
+									<div class="col-xs-12">
+										<img src="images/icra/bert_leg_latex.svg" width="50%" alt="">
+									</div>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h4>Stabilizing Pronking (1)</h4>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<video src="https://b2drop.eudat.eu/s/YgP8bra8tSbD2P7/download" controls></video>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h4>Stabilizing Pronking (2)</h4>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<video src="https://b2drop.eudat.eu/s/mf2LwR3iqKL2krT/download" controls></video>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h4>Stabilizing Pronking (3)</h4>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<video src="https://b2drop.eudat.eu/s/R5ABpiFnyeRBWkZ/download" controls></video>
+								</div>
+							</div>
+						</section>
+						<section>
+							<h4>Patterns</h4>
+							<div class="row">
+								<div class="col-xs-12">
+									<img src="images/icra/pattern_trot_optimized.svg"  width="50%"alt="">
+								</div>
+								<div class="col-xs-12">
+									<img src="images/icra/pattern_pronk_optimized.svg" width="50%" alt="">
+								</div>
+							</div>
+						</section>
+					</section>
+
+
+				<section>
+					<h4>Recap</h4>
+					<ul>
+						<li class="fragment"><strike>simulation is all you need</strike></li>
+						<li class="fragment">learning directly on a real robot is possible</li>
+						<!-- <li class="fragment">smooth control</li> -->
+						<!-- <li class="fragment">decoupling features extraction from policy learning</li> -->
+						<li class="fragment">knowledge guided RL to improve efficiency</li>
+					</ul>
+					<aside class="notes">
+
+					</aside>
+
+				</section>
+				<section>
+					<h3>Questions?</h3>
+					<p class="small-text">Additional References</p>
+					<p class="small-text">
+						<a href="https://www.youtube.com/watch?v=Ikngt0_DXJg">RLVS: RL in practice: tips & tricks</a>
+						<br>
+						<a href="https://araffin.github.io/tools-for-robotic-rl-icra2022/">ICRA  Tutorial: Tools for Robotic Reinforcement Learning</a>
+					</p>
+				</section>
+
+				<section>
+					<h3>Backup slides</h3>
+				</section>
+				<section>
+					<h4>Continuity Cost</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<ul class="medium-text">
+								<li class="fragment">formulation: \[ r_{continuity} = - (a_t - a_{t - 1})^2 \]</li>
+								<li class="fragment">requires a history wrapper</li>
+								<!-- <li class="fragment">can be done in the loss function</li> -->
+							</ul>
+						</div>
+						<div class="col-xs-12">
+							<p class="xsmall-text">References:
+								<a href="https://arxiv.org/abs/2005.05719">generalized State-Dependent Exploration (gSDE)</a>,
+								<!-- <a href="https://www.frontiersin.org/articles/10.3389/frobt.2021.619238/abstract">Fault-Tolerant Six-DoF Pose Estimation for Tendon-Driven Continuum Mechanisms</a>, -->
+								<a href="http://ai.bu.edu/caps/">CAPS</a>
+							</p>
+						</div>
+					</div>
+					<aside class="notes">
+						simple formulation: careful, weight of that cost too high:
+						the robot will do nothing <br>
+						do not forget history wrapper (otherwise break markov assumption and does not work)
+					</aside>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
