@@ -28,7 +28,7 @@ summary: Fault-Tolerant 6D Pose Estimation for Soft Robot. We present a simple e
 
 tags:
 - Robotics
-featured: true
+featured: false
 
 # links:
 # - name: ""
