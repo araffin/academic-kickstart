@@ -45,9 +45,9 @@ social:
 #  icon_pack: fab
 #  link: https://medium.com/@araffin
 
-- icon: mastodon
-  icon_pack: fab
-  link: https://sigmoid.social/@araffin
+#- icon: mastodon
+#  icon_pack: fab
+#  link: https://sigmoid.social/@araffin
 
 - icon: twitter
   icon_pack: fab
