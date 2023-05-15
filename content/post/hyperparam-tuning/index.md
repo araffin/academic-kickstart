@@ -20,7 +20,7 @@ The [slides](https://araffin.github.io/tools-for-robotic-rl-icra2022/), notebook
 
 {{< youtube AidFTOdGNFQ >}}
 
-<div style="margin-top: 100px"></div>
+<div style="margin-top: 50px"></div>
 
 ## Hyperparameter Optimization: The "n vs B/n" tradeoff
 
@@ -121,18 +121,63 @@ Gaussian Process (GP) and [Tree of Parzen Estimators](https://optuna.readthedocs
 I won't cover them in details but you should also know about two additional class of algorithms for black box optimization (BBO): [Evolution Strategies](https://blog.otoro.net/2017/10/29/visual-evolution-strategies/) (ES, CMA-ES) and [Particle Swarm Optimization](https://en.wikipedia.org/wiki/Particle_swarm_optimization) (PSO).
 Both of those approaches optimize a population of solutions that evolves over time.
 
+
+----
+
+Now that you're familiar with the different samplers for automatic hyperparameter tuning, it's time to dive into another critical aspect: pruners.
+These techniques work hand in hand with the search algorithms to further improve the efficiency of the optimization process.
+
+----
+
 ## Schedulers / Pruners
+
+The job of pruners is to identify and discard poorly performing hyperparameter configurations, eliminating them from further consideration.
+This ensures that your resources are focused on the most promising candidates, saving valuable time and computational power.
+
+Deciding when to prune a trial can be tricky.
+If you don't give enough resources to a trial, then you won't be able to judge whether it is a good one or not.
+
+If you prune too aggressively, you will favor the candidates that reach a good performance early (and plateau afterward) to the detriment of the one that perform better with more budget.
+
 
 ### Median Pruner
 
+One simple but effective scheduler is the [median pruner](https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html), used in [Google Vizier](https://research.google/pubs/pub46180/).
+
+
+The idea is to prune if the trial’s best intermediate result is worse than the median of intermediate results of previous trials at the same step.
+In other words, at a given time, you look at the current candidate.
+If it performs worse than half of the canditate at the same point in time, you stop it, otherwise, you let it continue.
+
+<object width="100%" type="image/svg+xml" data="./img/median_pruner.svg"></object>
+
+
+To not bias the optimization towards only candidates that perform good early in the training, you can play with a "warmup" parameter, which prevents from pruning any trial until a minimum budget is reached.
+
+
 ### Successive Halving
+
+Successive halving is a slightly more advanced algorithm.
+You start with many configurations and give a minimum budget to all of them.
+
+Then, at some intermediate step, you will reduce the number of candidates and only keep the most promising ones.
+
+<object width="100%" type="image/svg+xml" data="./img/successive_halving_comment.svg"></object>
+
+One limitation with this algorithm is that it has three hyperparameters (to be tuned :p!): the minimum budget, the initial number of trials and the reduction factor (what percentage of trials do you discard at every intermediate step.).
+
+That's where the [Hyperband](https://arxiv.org/abs/1603.06560) algorithm comes into play (I highly recommend to read the paper). Hyperband does a grid search on the successive halving parameters (in parallel) and thererfore tries different compromise (do you recall the "n" vs "n/B" tradeoff ;)?).
+
 
 ## Conclusion
 
-In this post, we have seen the challenges and basic components of automatic hyperparameter tuning:
+In this post, I presented the challenges and basic components of automatic hyperparameter tuning:
 - the tradeoff between the number of trials and the resource allocated per trial
 - the different samplers to choose which set of parameters should be tried
 - the differents schedulers that decide how to allocate the resources and when to stop a trial
+
+The second part (WIP) will be about applying hyperparameter tuning in practice, using reinforcement learning as an example
+(if you are impatient, the video and colab notebook are already online).
 
 
 ## Acknowledgement
