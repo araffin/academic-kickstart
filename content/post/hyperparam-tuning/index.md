@@ -144,7 +144,7 @@ If you prune too aggressively, you will favor the candidates that perform well e
 A simple but effective scheduler is the [median pruner](https://optuna.readthedocs.io/en/stable/reference/generated/optuna.pruners.MedianPruner.html), used in [Google Vizier](https://research.google/pubs/pub46180/).
 
 
-The idea is to prune if the best intermediate result of the trial is worse than the median of the intermediate results of previous trials at the same step.
+The idea is to prune if the intermediate result of the trial is worse than the median of the intermediate results of previous trials at the same step.
 In other words, at a given time, you look at the current candidate.
 If it performs worse than half of the candidates at the same time, you stop it, otherwise you let it continue.
 
