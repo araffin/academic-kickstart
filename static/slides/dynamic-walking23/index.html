@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Learning to Exploit Elastic Actuators for Quadruped Locomotion</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme">
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai-sublime.css" id="highlight-theme"> -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme"> -->
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot;Learning to Exploit Elastic Actuators &middot; Dynamic Walking 2023 &middot; 13.06.2023
+				</header>
+				<section data-background-image="images/bg_image.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Learning to Exploit Elastic Actuators for <br> Quadruped Locomotion</h3>
+									<!-- <p id="subtitle">and The Challenges of Applying RL to Real Robots</p> -->
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<!-- <img class="shadow" src="images/bert/optimized_crop_2.jpg" alt="DLR bert" style="max-width:100%;"> -->
+									<img class="shadow" src="images/bert/jump16_styled.jpg" alt="DLR bert" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (
+							<a href="https://twitter.com/araffin2">@araffin2</a>
+							) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+
+				<section>
+					<h3>background: Learning directly on real robots</h3>
+					<p>
+						<a href="https://araffin.github.io/slides/real-robots-dresden/">
+							https://araffin.github.io/slides/real-robots-dresden/
+						</a>
+					</p>
+				</section>
+
+				<!-- <section>
+					<h3>Outline</h3>
+					<ol>
+							<li>Hardware: bert</li>
+							<li>Open-Loop policy with BBO</li>
+							<li>Closing the loop with RL</li>
+							<li>Results</li>
+							<li>Questions?</li>
+					</ol>
+				</section> -->
+
+				<section>
+					<h4>The elastic quadruped bert</h4>
+					<div class="row">
+						<div class="col-xs-6">
+							<div class="col-xs-12">
+								<img src="images/bert/jump16_styled.jpg" width="100%" alt="">
+							</div>
+
+							<ul class="col-xs-12 medium-text">
+								<li>Mass: 3.1kg</li>
+								<li>Spring stiffness: 2.75 Nm/rad</li>
+								<li>Max motor torque: 4 Nm</li>
+							</ul>
+
+						</div>
+						<div class="col-xs-6">
+							<div class="col-xs-12">
+								<img src="images/icra/sea.jpg" width="60%" alt="">
+							</div>
+
+							<div class="col-xs-12">
+								<img src="images/icra/bert_leg_latex.svg" width="50%" alt="">
+							</div>
+						</div>
+					</div>
+					<aside class="notes">
+						hard to model,
+						interested in learning directly on real robot
+					</aside>
+				</section>
+
+				<section>
+					<h3>RL from scratch</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls></video>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-xs-12">
+							<p class="small-text">Using SB3 + Jax = SBX:
+								<a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+							</p>
+
+						</div>
+
+					</div>
+					<aside class="notes">
+						not natural, risky for the robot,
+						requires knowledge guided-learning
+					</aside>
+				</section>
+
+				<section>
+					<h4>Learning to Exploit Elastic Actuators for Quadruped Locomotion</h4>
+					<div class="row">
+						<div class="col-xs-3">
+
+						</div>
+						<div class="col-xs-6">
+							<img src="images/icra/cpg_rl_combined.svg" alt="" style="max-width:100%">
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion" In preparation RA-L, 2023.
+							</p>
+						</div>
+						<aside class="notes">
+							we want to exploit the spring,
+							use the natural dynamics of the robot
+						</aside>
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h3>Teaser</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/JWM56Wep7mJtfzc/download" controls></video>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h3>Another bert</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/DrWAgrNH48tZTEZ/download" controls></video>
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<h3>Multiple gaits</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/q4wTxSZFpPpQaaN/download" controls></video>
+							</div>
+						</div>
+
+					</section>
+				</section>
+
+				<section>
+					<!-- <h3>Video</h3> -->
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/cT7wMNmsC6nySkc/download" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Fast trot task</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/icra/table_result.png" alt="">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Trot comparison</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/CYyZ3faNxz98jZy/download" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Learning to Exploit Elastic Actuators</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-12">
+								<img src="images/icra/motor_vel.png" width="50%" alt="">
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Conclusion</h4>
+					<ul>
+						<li class="fragment">learn directly on the real robot</li>
+						<li class="fragment">exploit elastic actuators</li>
+						<li class="fragment">model-free, works on multiple robots</li>
+						<li class="fragment">RL from scratch is not enough</li>
+					</ul>
+					<aside class="notes">
+
+					</aside>
+
+				</section>
+				<section>
+					<h3>Questions?</h3>
+
+				</section>
+
+				<section>
+					<h3>Backup slides</h3>
+				</section>
+
+				<section>
+					<h4>Central Pattern Generator (CPG)</h4>
+					<div class="row fragment">
+						<div class="col-xs-6 medium-text">
+							<p>Coupled oscillator</p>
+							<div style="font-size:70%">
+								\[\begin{aligned}
+								\dot{r_i} &amp; = a (\mu - r_i^2)r_i \\
+								\dot{\varphi_i} &amp; = \omega + \sum_j \, r_j \, c_{ij} \, \sin(\varphi_j - \varphi_i - \Phi_{ij}) \\
+								\end{aligned} \]
+							</div>
+
+						</div>
+						<div class="col-xs-6 medium-text">
+							<p>Variables</p>
+							<div style="font-size:70%; text-align:center">
+								\[\begin{aligned}
+								\mu, \omega: \text{desired radius, pulsation} \\
+								\Phi_{ij}: \text{phase shift between oscillators} \\
+								\end{aligned} \]
+							</div>
+
+						</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-6 fragment">
+								<img src="images/icra/cpg_parameters.svg" alt="">
+
+							</div>
+							<div class="col-xs-6 medium-text fragment">
+								<p style="color:#a61e4d">Desired foot position</p>
+								<div style="font-size:70%">
+									\[\begin{aligned}
+									x_{des,i} &amp;= \textcolor{#5f3dc4}{\Delta x_\text{len}} \cdot r_i \cos(\varphi_i)\\
+									z_{des,i} &amp;= \Delta z \cdot \sin(\varphi_i) \\
+									\Delta z  &amp;= \begin{cases}
+										\textcolor{#5c940d}{\Delta z_\text{clear}}  &amp;\text{if $\sin(\varphi_i) > 0$ (\textcolor{#0b7285}{swing})}\\
+										\textcolor{#d9480f}{\Delta z_\text{pen}}  &amp;\text{otherwise (\textcolor{#862e9c}{stance}).}
+									\end{cases}
+
+									\end{aligned} \]
+
+								</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Black Box Optimization (BBO)</h4>
+					<div class="row fragment">
+						<div class="col-xs-6 medium-text">
+							<p>Variables</p>
+							<div style="font-size:70%">
+								\[\begin{aligned}
+									\alpha = \{\textcolor{#5c940d}{\Delta z_\text{clear}},
+																\textcolor{#d9480f}{\Delta z_\text{pen}},
+																\textcolor{#5f3dc4}{\Delta x_\text{len}},
+																\textcolor{#0b7285}{\omega_\text{swing}},
+																\textcolor{#862e9c}{\omega_\text{stance}}
+														\}.
+								\end{aligned} \]
+							</div>
+							<p>BBO</p>
+							<div style="font-size:70%">
+								\[\begin{aligned}
+									\alpha^* =  \argmax {f(\alpha)}.
+								\end{aligned} \]
+							</div>
+							<p>Fitness function</p>
+							<div style="font-size:70%">
+								\[\begin{aligned}
+									f: \text{mean forward speed}.
+								\end{aligned} \]
+							</div>
+						</div>
+						<div class="col-xs-6 medium-text fragment">
+							<p>Result</p>
+							<img src="images/icra/optim_history.png" alt="">
+
+						</div>
+						</div>
+				</section>
+
+				<section>
+					<h4>Closing the loop with RL</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<p class="medium-text">
+								desired position =
+								<span style="color:#a61e4d" class="fragment">open-loop foot position</span>
+								+
+								<span style="color:#1864ab" class="fragment">closed-loop control with RL</span>
+
+							</p>
+
+						</div>
+						<div class="col-xs-6 medium-text">
+							<div style="font-size:70%" class="fragment">
+								\[\begin{aligned}
+								x_{des,i} &amp;= \textcolor{#a61e4d}{\Delta x_\text{len} \cdot r_i \cos(\varphi_i)} + \textcolor{#1864ab}{\pi_{x,i}(s_t)} \\
+								z_{des,i} &amp;= \textcolor{#a61e4d}{\Delta z \cdot r_i \sin(\varphi_i)} + \textcolor{#1864ab}{\pi_{z,i}(s_t)}
+								\end{aligned} \]
+
+							</div>
+
+						</div>
+						<div class="col-xs-6 fragment">
+							<img src="images/icra/cpg_rl_offsets.png" alt="">
+
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Patterns</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/icra/pattern_trot_optimized.svg"  width="50%"alt="">
+						</div>
+						<div class="col-xs-12">
+							<img src="images/icra/pattern_pronk_optimized.svg" width="50%" alt="">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<ul>
+						<li class="fragment">because you can! (software/hardware)</li>
+						<li class="fragment">simulation is safer, faster</li>
+						<li class="fragment">simulation to reality (sim2real): accurate model and randomization needed</li>
+						<li class="fragment">challenges: robot safety, sample efficiency</li>
+					</ul>
+					<aside class="notes">
+						simulation good for iterating<br>
+						requires good model of robot <br>
+						learning in sim + reality complementary
+					</aside>
+				</section>
+
+				<section>
+					<h3>Learning from scratch</h3>
+				</section>
+
+
+				<section>
+					<h4>Learning to walk with an elastic quadruped robot</h4>
+					<div class="row medium-text">
+						<div class="col-xs-6">
+							<h5>Challenges</h5>
+							<ul>
+								<li class="fragment">robot safety (5h+ of training)</li>
+								<li class="fragment">manual reset</li>
+								<li class="fragment">communication delay</li>
+							</ul>
+						</div>
+						<div class="col-xs-6">
+							<img src="images/bert/bert.jpg" alt="bert" style="max-width: 100%;">
+						</div>
+					</div>
+					<div class="col-xs-12 xsmall-text">
+						<p>
+							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+						</p>
+					</div>
+
+					<aside class="notes">
+						- present task, observation, action space, reward <br>
+					</aside>
+				</section>
+
+					<!-- Smooth exploration for robotics -->
+				<section>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<div class="videoWrapper">
+								<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=101&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<!-- DroQ walk in the park -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<h4>DroQ - 20 Minutes Training</h4>
+							</div>
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/YO1USfn6sHY?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+									Smith, Laura, Ilya Kostrikov, and Sergey Levine. "A Walk in the Park: Learning to Walk in 20 Minutes With Model-Free Reinforcement Learning." arXiv preprint (2022).
+								</p>
+							</div>
+
+						</div>
+					</section>
+
+					<!-- Dreamer -->
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/A6Rg0qRwTYs?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+
+
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<h4>Who am I?</h4>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/sb_logo.png" alt="SB" style="max-width: 100%">
+							<p class="xsmall-text caption">Stable-Baselines</p>
+
+						</div>
+						<div class="col-xs-4">
+							<img src="images/antonin-bert.jpg" alt="ENSTAR" style="max-width: 100%">
+							<p class="xsmall-text caption">bert</p>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/intro/david_robot.jpeg" alt="HASy" style="max-width: 50%">
+							<p class="xsmall-text caption">David (aka HASy)</p>
+						</div>
+						<!-- <div class="col-xs-6">
+							<img src="images/intro/ensta.jpg" alt="ENSTA" style="max-width: 30%">
+							<p class="xsmall-text caption">ENSTA Paris</p>
+						</div> -->
+						<div class="col-xs-12">
+							<img src="images/dlr_logo.png" alt="DLR" style="max-width: 15%">
+							<p class="xsmall-text caption">German Aerospace Center (DLR)</p>
+						</div>
+					</div>
+					<aside class="notes">
+						- researcher at DLR (German Aerospace Center) in Munich (doing a PhD) <br>
+						<p>- SB3 RL Zoo -> reliable software and proper RL experiments</p>
+
+						- current goal of PhD: bringing RL to real robots <br>
+						- simulation is not enough: all that I do should work on a real hardware <br>
+					</aside>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
