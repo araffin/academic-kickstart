@@ -54,25 +54,117 @@
 
 				</section>
 
-				<section>
+				<!-- <section>
 					<h3>background: Learning directly on real robots</h3>
 					<p>
 						<a href="https://araffin.github.io/slides/real-robots-dresden/">
 							https://araffin.github.io/slides/real-robots-dresden/
 						</a>
 					</p>
+				</section> -->
+				<section>
+						<h3>Why learn directly on real robots?</h3>
+						<aside class="notes">
+						</aside>
 				</section>
 
 				<!-- <section>
-					<h3>Outline</h3>
-					<ol>
-							<li>Hardware: bert</li>
-							<li>Open-Loop policy with BBO</li>
-							<li>Closing the loop with RL</li>
-							<li>Results</li>
-							<li>Questions?</li>
-					</ol>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/zXbb6KQ0xV8?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+									Miki, Takahiro, et al. "Learning robust perceptive locomotion for quadrupedal robots in the wild." Science Robotics (2022)
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							current state of RL for robotics <br>
+							simulation only most of the time (improving) <br>
+							MuJoCo env != real robots <br>
+							Real-World RL Benchmark Suite, still simulation...
+						</aside>
+					</section>
+					<section>
+						<div class="row middle-xs">
+							<div class="col-xs-2">
+
+							</div>
+							<div class="col-xs-10">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/8sO7VS3q8d0?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+							<div class="col-xs-12 xsmall-text">
+								<p>
+								Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." CoRL. PMLR, 2022.
+								</p>
+							</div>
+						</div>
+					</section>
 				</section> -->
+
+				<!-- <section>
+					<h3>Simulation is all you need?</h3>
+					<div class="row">
+						<div class="col-xs-12 fragment">
+							<img src="https://araffin.github.io/slides/real-robots-dresden/images/sim_broken.gif" alt="sim broken"/>
+						</div>
+					</div>
+					<p class="xsmall-text">Credits: Nathan Lambert (@natolambert)</p>
+				</section> -->
+				<section>
+					<h3>Simulation is all you need?</h3>
+					<div class="row">
+						<div class="col-xs-12 fragment">
+							<video src="https://araffin.github.io/slides/real-robots-dresden/images/flying_robot.mp4" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h3>Simulation is all you need? (bis)</h3>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://araffin.github.io/slides/real-robots-dresden/images/take_over.mp4" controls></video>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<h3>Why learn directly on real robots?</h3>
+					<ul>
+						<li class="fragment">because you can! (software/hardware)</li>
+						<li class="fragment">simulation is safer, faster</li>
+						<li class="fragment">simulation to reality (sim2real): accurate model and randomization needed</li>
+						<li class="fragment">challenges: robot safety, sample efficiency</li>
+					</ul>
+					<aside class="notes">
+						simulation good for iterating<br>
+						requires good model of robot <br>
+						learning in sim + reality complementary
+					</aside>
+				</section>
+
+				<section>
+						<h3>Outline</h3>
+						<ol>
+								<li>Hardware: bert</li>
+								<li>Open-Loop policy with BBO</li>
+								<li>Closing the loop with RL</li>
+								<li>Results</li>
+								<li>Questions?</li>
+						</ol>
+				</section>
 
 				<section>
 					<h4>The elastic quadruped bert</h4>
@@ -175,66 +267,6 @@
 						</div>
 
 					</section>
-				</section>
-
-				<section>
-					<!-- <h3>Video</h3> -->
-					<div class="row middle-xs">
-						<div class="col-xs-12">
-							<video src="https://b2drop.eudat.eu/s/cT7wMNmsC6nySkc/download" controls></video>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h3>Fast trot task</h3>
-					<div class="row">
-						<div class="col-xs-12">
-							<img src="images/icra/table_result.png" alt="">
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h3>Trot comparison</h3>
-					<div class="row middle-xs">
-						<div class="col-xs-12">
-							<video src="https://b2drop.eudat.eu/s/CYyZ3faNxz98jZy/download" controls></video>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h4>Learning to Exploit Elastic Actuators</h4>
-					<div class="row">
-						<div class="col-xs-12">
-							<div class="col-xs-12">
-								<img src="images/icra/motor_vel.png" width="50%" alt="">
-							</div>
-						</div>
-					</div>
-				</section>
-
-				<section>
-					<h4>Conclusion</h4>
-					<ul>
-						<li class="fragment">learn directly on the real robot</li>
-						<li class="fragment">exploit elastic actuators</li>
-						<li class="fragment">model-free, works on multiple robots</li>
-						<li class="fragment">RL from scratch is not enough</li>
-					</ul>
-					<aside class="notes">
-
-					</aside>
-
-				</section>
-				<section>
-					<h3>Questions?</h3>
-
-				</section>
-
-				<section>
-					<h3>Backup slides</h3>
 				</section>
 
 				<section>
@@ -351,6 +383,67 @@
 				</section>
 
 				<section>
+					<h3>Video</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/cT7wMNmsC6nySkc/download" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Fast trot task</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/icra/table_result.png" alt="">
+
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Trot comparison</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/CYyZ3faNxz98jZy/download" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Learning to Exploit Elastic Actuators</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="col-xs-12">
+								<img src="images/icra/motor_vel.png" width="50%" alt="">
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Conclusion</h4>
+					<ul>
+						<li class="fragment">learn directly on the real robot</li>
+						<li class="fragment">exploit elastic actuators</li>
+						<li class="fragment">model-free, works on multiple robots</li>
+						<li class="fragment">RL from scratch is not enough</li>
+					</ul>
+					<aside class="notes">
+
+					</aside>
+
+				</section>
+				<section>
+					<h3>Questions?</h3>
+
+				</section>
+
+				<section>
+					<h3>Backup slides</h3>
+				</section>
+
+				<section>
 					<h4>Patterns</h4>
 					<div class="row">
 						<div class="col-xs-12">
@@ -360,21 +453,6 @@
 							<img src="images/icra/pattern_pronk_optimized.svg" width="50%" alt="">
 						</div>
 					</div>
-				</section>
-
-				<section>
-					<h3>Why learn directly on real robots?</h3>
-					<ul>
-						<li class="fragment">because you can! (software/hardware)</li>
-						<li class="fragment">simulation is safer, faster</li>
-						<li class="fragment">simulation to reality (sim2real): accurate model and randomization needed</li>
-						<li class="fragment">challenges: robot safety, sample efficiency</li>
-					</ul>
-					<aside class="notes">
-						simulation good for iterating<br>
-						requires good model of robot <br>
-						learning in sim + reality complementary
-					</aside>
 				</section>
 
 				<section>
@@ -418,44 +496,6 @@
 						</div>
 					</div>
 				</section>
-
-				<section>
-					<!-- DroQ walk in the park -->
-					<section>
-						<div class="row middle-xs">
-							<div class="col-xs-12">
-								<h4>DroQ - 20 Minutes Training</h4>
-							</div>
-							<div class="col-xs-2">
-
-							</div>
-							<div class="col-xs-10">
-								<div class="videoWrapper">
-									<iframe src="https://www.youtube.com/embed/YO1USfn6sHY?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
-								</div>
-							</div>
-							<div class="col-xs-12 xsmall-text">
-								<p>
-									Smith, Laura, Ilya Kostrikov, and Sergey Levine. "A Walk in the Park: Learning to Walk in 20 Minutes With Model-Free Reinforcement Learning." arXiv preprint (2022).
-								</p>
-							</div>
-
-						</div>
-					</section>
-
-					<!-- Dreamer -->
-					<section>
-						<div class="row middle-xs">
-							<div class="col-xs-12">
-								<div class="videoWrapper">
-									<iframe src="https://www.youtube.com/embed/A6Rg0qRwTYs?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
-								</div>
-							</div>
-						</div>
-					</section>
-				</section>
-
-
 
 				<section>
 					<div class="row">
