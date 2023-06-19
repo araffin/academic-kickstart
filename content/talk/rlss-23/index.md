@@ -24,7 +24,8 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
-# url_slides: slides/real-robots-dresden/
+url_slides: slides/dqn-tutorial/
+url_code: https://github.com/araffin/rlss23-dqn/
 
 
 #image:

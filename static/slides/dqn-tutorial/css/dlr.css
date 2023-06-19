@@ -1,0 +1,110 @@
+/* DLR Logo */
+.reveal {
+  background-image: url("../images/dlr_logo_black.png");
+  background-position: top 1em right 1em;
+  background-repeat: no-repeat;
+  background-size: 7%;
+}
+
+/* Blue ribbon on the left */
+.side-block {
+  height: 100%;
+  background-color: #00658b;
+  width: 2em;
+  position: absolute;
+  left: 0%;
+}
+
+
+/* Title background */
+.reveal .slide-background.present:first-of-type {
+  opacity: 0.4;
+}
+
+
+/* No borders for img */
+.reveal section img
+{
+  border: None;
+}
+
+/* Bigger slide number */
+.reveal .slide-number
+{
+  font-size: 24px;
+  top: 8px;
+  bottom: revert;
+}
+
+/* YouTube Videos */
+.videoWrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 */
+	padding-top: 25px;
+	height: 0;
+}
+.videoWrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+header
+{
+  position: absolute;
+  bottom: 1%;
+  font-size: 14px;
+  color: #6C6F73;
+}
+
+/* Progress bar at the top */
+.progress{
+  top: 0;
+}
+
+/* Utility styles */
+
+.medium-text
+{
+  font-size: 70%;
+}
+
+.small-text{
+  font-size: 50%;
+}
+
+.xsmall-text{
+  font-size: 40%;
+}
+
+.italic
+{
+  font-style: italic;
+}
+
+#main-title
+{
+  line-height: 1.0;
+  margin-bottom: 10px;
+}
+
+#subtitle
+{
+  font-style: italic;
+  margin-top: 10px;
+  margin-bottom: 25px;
+  font-size: 70%;
+}
+
+.margin-top-25
+{
+  margin-top: 25px;
+}
+
+.reveal section .caption
+{
+  margin-top: -15px;
+  line-height: 1.0;
+}

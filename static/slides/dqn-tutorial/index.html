@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Tutorial: From Tabular Q-Learning to DQN</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+		<link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; From Tabular Q-Learning to DQN &middot; RL Summer School Barcelona &middot; 27.06.2023
+				</header>
+
+				<section data-background-image="images/bg_image.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-5">
+								<div class="col-xs-12">
+									<h3 id='main-title'>From <br> Tabular Q-Learning <br> to <br> DQN</h3>
+								</div>
+							</div>
+							<div class="col-xs-7" style="background-color: rgba(255, 255, 255, 0.2);">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<img class="shadow" src="images/q_learning/dqn_pirate_cover.png" alt="DQN cover" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-5 xsmall-text">
+							Antonin RAFFIN (
+							<a href="https://twitter.com/araffin2">@araffin2</a>
+							) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+
+				</section>
+
+				<section>
+					<h4>Outline</h4>
+					<ol class="medium-text">
+						<li>RL 101 refresher</li>
+						<li>Tabular Q-Learning</li>
+						<li>RL as a regression problem (Fitted Q Iteration)</li>
+						<li>From FQI to Deep Q-Network (DQN)</li>
+					</ol>
+				</section>
+
+				<section>
+					<section>
+						<h3>Motivation</h3>
+						<!-- <ul>
+							<li>Most SOTA algos (SAC/TD3/TQC/DroQ) derive from DQN</li>
+							<li>SB3 implements DQN but it's better to have an understanding of it</li>
+							<li>Show learning directly on real robot in minutes</li>
+							<li>Show flappy bird demo</li>
+						</ul> -->
+						<aside class="notes">
+							Most SOTA algos (SAC/TD3/TQC/DroQ) derive from DQN
+							requires knowledge guided-learning
+						</aside>
+					</section>
+					<section>
+	 					<h3>Stable-Baselines3 (SB3)</h3>
+						<div class="row">
+							<div class="col-xs-12" style="font-size: 100%">
+								<pre><code data-noescape data-trim data-line-numbers="|" class="python">
+									from stable_baselines3 import DQN
+									# SAC, TD3, TQC are all successors of DQN
+									from stable_baselines3 import SAC, TD3
+									from sb3_contrib import TQC
+
+									# Instantiate the algorithm on the Lunar Lander env
+									model = DQN("MlpPolicy", "LunarLander-v2", verbose=1)
+									# Train for 100 000 steps
+									model.learn(100_000, progress_bar=True)
+								</code></pre>
+
+							</div>
+							<div class="medium-text col-xs-12">
+								<p>
+									<a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+								</p>
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<h3>RL from scratch</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls></video>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<p class="small-text">Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion.":
+									<a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+								</p>
+
+							</div>
+
+						</div>
+						<aside class="notes">
+							not natural, risky for the robot,
+							requires knowledge guided-learning
+						</aside>
+					</section>
+
+					<section>
+						<h3>Flappy Bird</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/QSe9yMcRwiFD9tx/download" controls></video>
+							</div>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<img src="images/q_learning/dqn_pirate_cover.png" alt="DQN cover" style="max-width:100%;">
+
+				</section>
+
+				<section>
+					<h4>RL 101 (1/2)</h4>
+					<img src="images/q_learning/rl_101.png" alt="RL 101" style="max-width:80%;">
+				</section>
+
+				<section>
+					<h4>RL 101 (2/2)</h4>
+					<ul>
+						<li class="fragment">Agent: the "boat", our main character</li>
+						<li class="fragment" style="color:#2b8a3e">State: Where are we? (position, speed, ...)</li>
+						<li class="fragment" style="color:#e67700">Action: What can we do? (steer left, right, ...)</li>
+						<li class="fragment" style="color:#a61e4d">Reward: How good are we doing?</li>
+						<li class="fragment">Policy: The "captain", defines the agent's behavior</li>
+					</ul>
+				</section>
+
+				<section>
+						 <h4>Value Functions</h4>
+						 <p>How good is it to be in this state?</p>
+						 <div class="row">
+								 <div class="col-xs-4 fragment" data-fragment-index="1">
+										 <img src="images/rl101/chess_draw.png" alt="chess draw" style="max-width: 80%">
+								 </div>
+								 <div class="col-xs-4 fragment" data-fragment-index="2">
+										 <img src="images/rl101/chess_win.png" alt="chess win" style="max-width: 80%">
+								 </div>
+								 <div class="col-xs-4 fragment" data-fragment-index="3">
+										 <img src="images/rl101/chess_magnus.png" alt="chess Magnus Carlsen" style="max-width: 80%">
+								 </div>
+						 </div>
+						 <div class="row">
+							 <div class="col-xs-4 fragment" data-fragment-index="1">
+								 <p class="small-text">Win: 1.0 | Draw: 0.5 | Lose: 0.0</p>
+							 </div>
+							 <div class="col-xs-4 fragment" data-fragment-index="2">
+								 <p class="small-text">Depends on the <b>state</b></p>
+							 </div>
+							 <div class="col-xs-4 fragment" data-fragment-index="3">
+								 <p class="small-text">Depends on the <b>policy</b></p>
+							 </div>
+
+						 </div>
+						 <p class="xsmall-text">Source: Freek Stulp - Master AIC</a></p>
+				 </section>
+				 <section>
+						 <h5>Action-Value Function: Q-Value</h5>
+						 <p>What if we have no model?</p>
+						 <p class="fragment"><b>Solution</b>: $Q(s, a)$ instead of $V(s)$</p>
+						 <p class="fragment">$\pi(s) = \argmax_{a \in A} Q(s, a)$</p>
+				 </section>
+
+				 <section>
+				 	<h4>Tabular Q-Learning: Discrete States</h4>
+					<img src="images/q_learning/discrete_state.png" alt="discrete state" style="max-width:80%;">
+				 </section>
+
+				 <section>
+				 	<h4>Tabular Q-Learning: Q-values</h4>
+					<div class="r-stack">
+						<img class="fragment current-visible" src="images/q_learning/rl_101.png" alt="RL 101" style="max-width:80%;">
+						<img class="fragment current-visible" src="images/q_learning/q_left.png" width="70%">
+						<img class="fragment current-visible" src="images/q_learning/q_straight.png" width="70%">
+						<img class="fragment" src="images/q_learning/q_right.png" width="70%">
+					</div>
+				 </section>
+
+				 <section>
+				 	<h4>Tabular Q-Learning: Q-table</h4>
+					<img class="fragment current-visible" src="images/fqi/tabular_limit_1.png" width="75%">
+				 </section>
+
+				 <section>
+					 <h4>Tabular Q-Learning: Update rule</h4>
+					 <div class="row">
+					 	<div class="col-xs-12 fragment">
+							<p>Bellman equation for optimal value function:</p>
+							<div style="font-size:70%; text-align:center">
+								\[\begin{aligned}
+								\textcolor{#1864ab}{Q^*(s_t, a_t)} = \mathop{\mathbb{E}}[\textcolor{#a61e4d}{r(s_t, a_t) + \gamma \max_{a'} Q^*(s_{t+1},a')}].
+								\end{aligned} \]
+							</div>
+					 	</div>
+						<div class="col-xs-12 fragment">
+							<p>Q-learning update rule</p>
+							<div style="font-size:70%; text-align:center">
+								\[\begin{aligned}
+								\textcolor{#1864ab}{Q^n(s_t, a_t)} \gets \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)} + \alpha \cdot (\textcolor{#a61e4d}{r_t + \gamma \cdot \max_{a'} Q(s_{t+1}, a')} - \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)})
+								\end{aligned} \]
+							</div>
+						</div>
+					 </div>
+
+				 </section>
+
+				 <section>
+					<section>
+						<h4>Tabular Q-Learning: Update explained</h4>
+						<div class="row">
+							<div class="col-xs-12 fragment">
+								<p class="small-text">$\alpha=1$ (learning rate)</p>
+								<div style="font-size:70%; text-align:center">
+									\[\begin{aligned}
+									\textcolor{#1864ab}{Q(s_t, a_t)} =  \textcolor{#a61e4d}{r_t + \gamma \cdot \max_{a'} Q(s_{t+1}, a')}
+									\end{aligned} \]
+								</div>
+							</div>
+							<div class="col-xs-12 fragment">
+								<img class="" src="images/q_learning/q_equa_1.png" width="100%">
+
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<h4>Reminder</h4>
+						<img class="" src="images/q_learning/q_equa_3.png" width="100%">
+						<hr />
+						<img class="" src="images/q_learning/q_equa_2.png" width="100%">
+
+					</section>
+					<section>
+						<h4>Tabular Q-Learning: Terminal State</h4>
+						<img src="images/q_learning/q_equa_terminal.png" alt="">
+					</section>
+
+				 </section>
+
+				 <section>
+				  <h3>Questions?</h3>
+				 </section>
+
+				 <section>
+				 	<h4>Tabular Q-Learning: Limitations</h4>
+					<ul>
+						<li class="fragment">Discrete states</li>
+						<li class="fragment">No generalization (lookup table)</li>
+						<li class="fragment">Discrete actions</li>
+					</ul>
+				 </section>
+
+				 <section>
+				 	<h4>How to go beyond tabular Q-Learning?</h4>
+					<div class="r-stack">
+						<img class="fragment current-visible" src="images/fqi/tabular_limit_1.png" width="75%">
+						<img class="fragment" src="images/fqi/tabular_limit_2.png" width="75%">
+					</div>
+				 </section>
+
+				 <section>
+					 <h3>Q-Value Estimator</h3>
+					 <div class="row">
+						 <div class="col-xs-6 fragment">
+							 <img src="images/q_learning/q_table.png" alt="q table" style="max-height: 80%">
+						 </div>
+						 <div class="col-xs-6 fragment">
+							 <img src="images/fqi/q_value_fqi.png" alt="q value" style="max-height: 80%">
+						 </div>
+					 </div>
+
+					 <aside class="notes">
+						 maybe give equation for linear estimator?
+					 </aside>
+				 </section>
+
+				 <section>
+				 	<h4>Q-Learning Regression (1/2)</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img class="fragment" src="images/fqi/fqi_regression.png" alt="">
+						</div>
+						<div class="col-xs-12">
+							<div class="fragment" style="font-size:100%; text-align:center">
+								\[\begin{aligned}
+								\textcolor{#1864ab}{Q_{\textcolor{black}{\theta}}(s_t, a_t)} = \textcolor{#a61e4d}{r_t + \gamma \cdot \max_{a' \in A}(Q_{\textcolor{black}{\theta}}(s_{t+1}, a'))}
+								\end{aligned} \]
+							</div>
+							<div class="fragment" style="font-size:100%; text-align:center">
+								\[\begin{aligned}
+								\textcolor{#1864ab}{f_{\textcolor{black}{\theta}}(x)} = \textcolor{#a61e4d}{y}
+								\end{aligned} \]
+							</div>
+							<div class="medium-text fragment">
+								$\theta$: parameters of the estimator
+							</div>
+
+						</div>
+
+					</div>
+					<!-- <p class="fragment">Idea: approximate the Q-value</p> -->
+
+				 </section>
+
+				 <section>
+				 	<h4 style="margin-bottom: 3em">One small detail...</h4>
+					<!-- <img class="fragment" src="images/fqi/fqi_loss.png" alt=""> -->
+					<p class="medium-text fragment">
+						$\textcolor{#1864ab}{Q_\theta(s_t, a_t)}$
+						depends on
+						$\textcolor{#a61e4d}{Q_\theta(s_{t+1}, a')}$...</p>
+					<p class="medium-text fragment">
+						What can we do about it?
+					</p>
+					<p class="medium-text fragment">
+						Iterate! &nbsp; &nbsp; Use $Q^{\textcolor{green}{n}}_\theta(s_t, a_t)$
+					</p>
+
+				 </section>
+
+				 <section>
+					 <section>
+					 	<h4>Fitted Q-Iteration (FQI) (1/2)</h4>
+						<ol class="medium-text">
+							<li class="fragment">Create the training set based on the previous iteration $ Q^{\textcolor{green}{n-1}}_\theta(s, a) $ and the transitions:
+								<ul>
+									<li class="fragment">input: <span style="margin-left:25%;">$\textcolor{#1864ab}{x = (s_t, a_t)}$</span></li>
+									<li class="fragment"><span>if $s_{t+1}$ is <b>non</b> terminal</span>: &nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q^{n-1}_\theta(s_{t+1}, a'))$</span></li>
+									<li class="fragment"><span>if $s_{t+1}$ is terminal</span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										$\textcolor{a61e4d}{y = r_t}$</span></li>
+								</ul>
+							</li>
+							<li class="fragment">Fit a model using a regression algorithm to obtain $ Q^{\textcolor{green}{n}}_\theta(s, a) $
+								<div style="font-size:100%; text-align:center">
+									\[\begin{aligned}
+									 \textcolor{#1864ab}{f_\theta(x)} = \textcolor{#a61e4d}{y}
+									\end{aligned} \]
+								</div>
+
+							</li>
+							<li class="fragment">Repeat, $\textcolor{green}{n = n + 1}$</li>
+						</ol>
+					 </section>
+
+					 <section>
+					 	<h4>Fitted Q-Iteration (2/2)</h4>
+						<div class="medium-text">
+							For $\textcolor{green}{n = 0}$, the initial training set is defined as:
+						</div>
+						<ul class="medium-text">
+							<li>$\textcolor{#1864ab}{x = (s_t, a_t)}$</li>
+							<li>$\textcolor{#a61e4d}{y = r_t}$</li>
+						</ul>
+
+					 </section>
+
+					 <section>
+					 	<h4>Fitted Q-Iteration (code)</h4>
+						<div class="row">
+	 						<div class="col-xs-12 medium-text">
+	 							<pre class="fragment"><code data-trim data-line-numbers="1-4|6|7-9|10-13|14-15|" class="python">
+									initial_targets = rewards
+									# Initial Q-value estimate
+									qf_input = np.concatenate((states, actions))
+									qf_model.fit(qf_input, initial_targets)
+
+									for _ in range(N_ITERATIONS):
+									    # Re-use Q-value model from previous iteration
+									    # to create the next targets
+									    next_q_values = get_max_q_values(qf_model, next_states)
+									    # Non-terminal states target
+									    targets[non_terminal_states] = rewards + gamma * next_q_values
+									    # Special case for terminal states
+									    targets[terminal_states] = rewards
+									    # Update Q-value estimate
+									    qf_model.fit(qf_input, targets)
+	 							</code></pre>
+
+	 						</div>
+	 					</div>
+
+					 </section>
+				 </section>
+
+				 <section>
+				 	<h3>FQI Limitations</h3>
+					<ul class="medium-text">
+						<li class="fragment">Offline RL</li>
+						<li class="fragment">Loop over all possible actions $A$ to get next best action
+							$\textcolor{#a61e4d}{a'}$:
+							 \[\begin{aligned}
+							 \max_{\textcolor{#a61e4d}{a' \in A}} Q_\theta(s_{t+1}, \textcolor{#a61e4d}{a'})
+							 \end{aligned} \]
+						 </li>
+						<li class="fragment">Instability (target depends on $Q^{n-1}_\theta(s_{t+1}, a')$)</li>
+					</ul>
+				 </section>
+
+			 <section>
+			 	<h3>From FQI to DQN</h3>
+				<ul class="medium-text">
+					<li><span class="fragment">Offline RL</span> <span class="fragment">→</span> <span class="fragment">Online RL</span></li>
+					<li><span class="fragment">Loop over actions</span> <span class="fragment">→</span> <span class="fragment">One forward pass to get all $Q_\theta(s, a)$</span></li>
+					<li><span class="fragment">Instability</span> <span class="fragment">→</span> <span class="fragment">Target Network $Q_{\textcolor{green}{\theta'}}(s, a)$</span></li>
+				</ul>
+			 </section>
+
+			 <section>
+			 	<h3>Questions?</h3>
+			 </section>
+
+			 <section>
+					<h3>Deep Q-Network (DQN)</h3>
+					<div class="row">
+						<div class="col-xs-7">
+							<img src="images/dqn_nature.png" alt="DQN" style="max-height: 80%">
+						</div>
+						<div class="col-xs-5">
+							  <!-- Note: DQN video is here but not long enough to show tunneling: https://huggingface.co/sb3/dqn-BreakoutNoFrameskip-v4/resolve/main/replay.mp4 -->
+								<video style="width: 80%" src="https://huggingface.co/sb3/a2c-BreakoutNoFrameskip-v4/resolve/main/replay.mp4" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>The training loop</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/dqn/dqn_loop.png" alt="DQN" style="max-height: 80%">
+						</div>
+					</div>
+				</section>
+
+
+				<section>
+				 <h3>Gym/Gymnasium API</h3>
+				 <div class="row">
+					 <div class="col-xs-12 medium-text">
+						 <pre class="fragment"><code data-trim data-line-numbers="1-4|5-6|8-10|12|13-17|18-20|" class="python">
+							 import gymnasium as gym
+
+							 # Create the environment
+							 env = gym.make("CartPole-v1", render_mode="human")
+							 # Reset env and get first observation
+							 obs, _ = env.reset()
+
+							 # Step in the env with random actions and display the env
+							 for _ in range(100):
+									 env.render() # Display the env
+
+									 action = env.action_space.sample()
+									 # Retrieve new observation, reward,
+									 # termination signal, truncation signal
+									 # and additional infos
+									 obs, reward, terminated, truncated, info = env.step(action)
+
+									 # End of an episode
+									 if terminated or truncated:
+											 obs, _ = env.reset()
+
+						 </code></pre>
+
+					 </div>
+				 </div>
+
+				</section>
+
+
+ 				<section>
+ 					<h3>Collecting Experience</h3>
+					<div class="row">
+						<div class="col-xs-12" style="font-size: 90%">
+							<pre><code data-noescape data-trim data-line-numbers="1-2|4-6|8-9|11-12|" class="python">
+								# Retrieve q values for the current observation
+								q_values = q_model(current_obs)
+
+								# Follow greedy-policy:
+								# take the action with the highest q_value
+								action = np.argmax(q_values)
+
+								# Do one step in the env
+								next_obs, reward, terminated, _, _ = env.step(action)
+
+								# Store transition in the replay buffer
+								replay_buffer.store(obs, action, reward, terminated, next_obs)
+							</code></pre>
+
+						</div>
+					</div>
+
+				</section>
+
+				<section>
+ 					<h3>Exploration / Exploitation</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/dqn/epsilon_greedy.png" alt="DQN" style="max-height: 70%">
+						</div>
+					</div>
+				</section>
+
+				<section>
+				 <h3>Epsilon-greedy Exploration</h3>
+				 <div class="row">
+					 <div class="col-xs-12" style="font-size: 90%">
+						 <pre><code data-noescape data-trim data-line-numbers="1-2|4-6|7-9|" class="python">
+							 # Flip a biased coin
+							 take_random_action = np.random.rand() < exploration_rate
+
+							 if take_random_action:
+							     # Random action
+							     action = action_space.sample()
+							 else:
+							     # Greedy action
+							     action = np.argmax(q_values)
+						 </code></pre>
+
+					 </div>
+				 </div>
+
+			 </section>
+
+			 <section>
+				 <h3>Exploration Schedule</h3>
+				 <div class="row">
+					 <div class="col-xs-12">
+						 <img src="images/dqn/linear_schedule.png" alt="Linear Schedule" style="max-height: 70%">
+					 </div>
+				 </div>
+			 </section>
+
+			 <section>
+				 <h3>Q-network</h3>
+				 <div class="row">
+					 <div class="col-xs-6 fragment">
+						 <img src="images/fqi/q_value_fqi.png" alt="q value" style="max-height: 70%">
+					 </div>
+					 <div class="col-xs-6 fragment">
+						 <img src="images/dqn/q_network.png" alt="q network" style="max-height: 100%">
+					 </div>
+				 </div>
+
+			 </section>
+
+				<section>
+					<h3>Replay Buffer</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/dqn/replay_buffer.png" alt="Replay" style="max-height: 90%">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h3>Replay Buffer Sampling</h3>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/dqn/replay_buffer_sampling.png" alt="Replay sampling" style="max-height: 60%">
+						</div>
+					</div>
+				</section>
+
+ 				<section>
+ 					<section>
+ 						<h3>Annotated DQN Algorithm</h3>
+						<div class="r-stack">
+							<img class="fragment current-visible" src="images/dqn/dqn_equa.png" alt="DQN" style="max-height:100%;">
+							<img class="fragment" src="images/dqn/annotated_dqn.png" style="max-height:100%;">
+						</div>
+ 					</section>
+ 				</section>
+				<section>
+ 					<h3>Target Q-Network</h3>
+ 					<div class="row">
+ 						<div class="col-xs-12">
+ 							<img src="images/dqn/target_q_network.png" alt="DQN" style="max-height: 100%">
+ 						</div>
+ 					</div>
+ 				</section>
+
+				<section>
+ 					<h3>DQN Overview</h3>
+ 					<div class="row">
+ 						<div class="col-xs-12">
+ 							<img src="images/dqn/dqn.png" alt="DQN" style="max-height: 80%">
+ 						</div>
+ 					</div>
+ 				</section>
+
+			 <section>
+ 			 	<h3>Questions?</h3>
+ 			 </section>
+
+
+				<section>
+					<h3>PyTorch API</h3>
+					<table>
+						<thead>
+							<tr>
+								<th>NumPy</th>
+								<th>PyTorch</th>
+							</tr>
+						</thead>
+						<tbody class="medium-text" style="font-size: 50%">
+							<tr>
+								<td><code>np.array([[1, 2], [3, 4]])</code></td>
+								<td><code>th.tensor([[1, 2], [3, 4]])</code></td>
+							</tr>
+							<tr>
+								<td><code>np.ones((2, 3))</code></td>
+								<td><code>th.ones(2, 3)</code></td>
+							</tr>
+							<tr>
+								<td><code>np.concatenate</code></td>
+								<td><code>th.cat</code></td>
+							</tr>
+							<tr>
+								<td><code>x.shape</code></td>
+								<td><code>x.shape</code></td>
+							</tr>
+							<tr>
+								<td><code>x.argmax(axis=...)</code></td>
+								<td><code>x.argmax(dim=...)</code></td>
+							</tr>
+							<tr>
+								<td><code>x.item()</code></td>
+								<td><code>x.item()</code></td>
+							</tr>
+							<tr>
+								<td>NumPy to PyTorch:</td>
+								<td><code>th.as_tensor</code></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="small-text">
+						See <a href="https://pytorch-for-numpy-users.wkentaro.com/">https://pytorch-for-numpy-users.wkentaro.com/</a>
+					</div>
+				</section>
+
+				<section>
+				 	<h2>Backup Slides</h2>
+				</section>
+
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
