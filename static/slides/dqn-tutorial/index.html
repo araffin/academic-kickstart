@@ -36,7 +36,7 @@
 								</div>
 							</div>
 							<div class="col-xs-7" style="background-color: rgba(255, 255, 255, 0.2);">
-								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+								<a target="_blank" href="https://github.com/araffin/rlss23-dqn-tutorial">
 									<img class="shadow" src="images/q_learning/dqn_pirate_cover.png" alt="DQN cover" style="max-width:100%;">
 								</a>
 							</div>
@@ -50,6 +50,15 @@
 						</div>
 					</div>
 
+				</section>
+
+				<section>
+					<h3>GitHub Repository</h3>
+					<p>
+						<a href="https://github.com/araffin/rlss23-dqn-tutorial">
+							https://github.com/araffin/rlss23-dqn-tutorial
+						</a>
+					</p>
 				</section>
 
 				<section>
@@ -186,8 +195,8 @@
 				 <section>
 						 <h5>Action-Value Function: Q-Value</h5>
 						 <p>What if we have no model?</p>
-						 <p class="fragment"><b>Solution</b>: $Q(s, a)$ instead of $V(s)$</p>
-						 <p class="fragment">$\pi(s) = \argmax_{a \in A} Q(s, a)$</p>
+						 <p class="fragment"><b>Solution</b>: $Q_\pi(s, a)$ instead of $V_\pi(s)$</p>
+						 <p class="fragment">$\pi(s) = \argmax_{a \in A} Q_\pi(s, a)$</p>
 				 </section>
 
 				 <section>
@@ -412,6 +421,53 @@
 				 </section>
 
 				 <section>
+				 	<h3>CartPole Env</h3>
+				 </section>
+
+				 <section>
+ 				 <h3>Gym/Gymnasium API</h3>
+ 				 <div class="row">
+ 					 <div class="col-xs-12 medium-text">
+ 						 <pre class="fragment"><code data-trim data-line-numbers="1-4|5-6|8-10|12|13-17|17-19|" class="python">
+							 import gymnasium as gym
+
+							 # Create the environment
+							 env = gym.make("CartPole-v1", render_mode="human")
+							 # Reset env and get first observation
+							 obs, _ = env.reset()
+
+							 # Step in the env with random actions and display the env
+							 for _ in range(100):
+							     env.render() # Display the env
+
+							     action = env.action_space.sample()
+							     # Retrieve new observation, reward,
+							     # termination signal, truncation signal
+							     # and additional infos
+							     next_obs, reward, terminated, truncated, info = env.step(action)
+							     # Update current observation
+							     obs = next_obs
+							     # End of an episode
+							     if terminated or truncated:
+							         obs, _ = env.reset()
+
+ 						 </code></pre>
+
+ 					 </div>
+ 				 </div>
+
+ 				</section>
+
+				<section>
+					<h3>FQI in practice (1st notebook)</h3>
+					<p>
+						<a href="https://github.com/araffin/rlss23-dqn-tutorial">
+							https://github.com/araffin/rlss23-dqn-tutorial
+						</a>
+					</p>
+				</section>
+
+				 <section>
 				 	<h3>FQI Limitations</h3>
 					<ul class="medium-text">
 						<li class="fragment">Offline RL</li>
@@ -459,41 +515,6 @@
 						</div>
 					</div>
 				</section>
-
-
-				<section>
-				 <h3>Gym/Gymnasium API</h3>
-				 <div class="row">
-					 <div class="col-xs-12 medium-text">
-						 <pre class="fragment"><code data-trim data-line-numbers="1-4|5-6|8-10|12|13-17|18-20|" class="python">
-							 import gymnasium as gym
-
-							 # Create the environment
-							 env = gym.make("CartPole-v1", render_mode="human")
-							 # Reset env and get first observation
-							 obs, _ = env.reset()
-
-							 # Step in the env with random actions and display the env
-							 for _ in range(100):
-									 env.render() # Display the env
-
-									 action = env.action_space.sample()
-									 # Retrieve new observation, reward,
-									 # termination signal, truncation signal
-									 # and additional infos
-									 obs, reward, terminated, truncated, info = env.step(action)
-
-									 # End of an episode
-									 if terminated or truncated:
-											 obs, _ = env.reset()
-
-						 </code></pre>
-
-					 </div>
-				 </div>
-
-				</section>
-
 
  				<section>
  					<h3>Collecting Experience</h3>
@@ -669,6 +690,13 @@
 				 	<h2>Backup Slides</h2>
 				</section>
 
+				<section>
+					<h3>Regression 101</h3>
+				</section>
+
+				<section>
+					<h3>Scikit-Learn API</h3>
+				</section>
 
 			</div>
 		</div>
