@@ -422,6 +422,12 @@
 
 				 <section>
 				 	<h3>CartPole Env</h3>
+					<img src="https://gymnasium.farama.org/_images/cart_pole.gif" alt="">
+					<p class="small-text">
+						<a href="https://gymnasium.farama.org/environments/classic_control/cart_pole/">
+							https://gymnasium.farama.org/environments/classic_control/cart_pole/
+						</a>
+					</p>
 				 </section>
 
 				 <section>
@@ -691,11 +697,50 @@
 				</section>
 
 				<section>
-					<h3>Regression 101</h3>
+					<section>
+						<h3>Regression 101</h3>
+						<img src="images/regression/regression.png" alt="">
+					</section>
+					<section data-transition="fade">
+						<h4>Linear model</h4>
+						<img src="images/regression/linear_model.png" alt="">
+					</section>
+					<section data-transition="fade">
+						<h4>Linear model(s)?</h4>
+						<div style="font-size:60%; text-align:center">
+							\[\begin{aligned}
+							 \textcolor{#a61e4d}{y} = \textcolor{#1864ab}{f_\theta(x)} \quad ; \quad
+							 \theta = \{\text{slope}, \text{bias}\}
+							\end{aligned} \]
+						</div>
+						<img width="80%" src="images/regression/linear_regression_models.png" alt="">
+					</section>
+					<section data-transition="fade">
+						<h4>Non Linear Model</h4>
+						<img src="images/regression/non_linear_model.png" alt="">
+					</section>
 				</section>
 
 				<section>
 					<h3>Scikit-Learn API</h3>
+					<div class="row">
+						<div class="col-xs-12" style="font-size: 100%">
+							<pre><code data-noescape data-trim data-line-numbers="1-2|3-5|6-8|9-10|" class="python">
+								import numpy as np
+								from sklearn.linear_model import LinearRegression
+								# Generate some data (noisy linear function)
+								x = np.linspace(0, 5, num=50).reshape(50, 1)
+								y = 2 * x + 10 + 0.1 * np.random.rand()
+								# Fit a linear model using least squares
+								model = LinearRegression().fit(x, y)
+								y_predict = model.predict(x)
+								# Retrieve the optimized parameters
+								slope, bias = model.coef_, model.intercept_
+							</code></pre>
+
+						</div>
+					</div>
+
 				</section>
 
 			</div>
