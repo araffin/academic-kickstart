@@ -196,7 +196,17 @@
 						 <h5>Action-Value Function: Q-Value</h5>
 						 <p>What if we have no model?</p>
 						 <p class="fragment"><b>Solution</b>: $Q_\pi(s, a)$ instead of $V_\pi(s)$</p>
-						 <p class="fragment">$\pi(s) = \argmax_{a \in A} Q_\pi(s, a)$</p>
+						 <div class="fragment" style="font-size:100%; text-align:center">
+							 \[\begin{aligned}
+							 Q_\pi(s, a) = \mathop{\mathbb{E}}[r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + ... | s_t=s, a_t=a].
+							 \end{aligned} \]
+						 </div>
+						 <p class="fragment">
+							 \[\begin{aligned}
+							 \pi(s) = \argmax_{a \in A} Q_\pi(s, a)
+							 \end{aligned} \]
+						 </p>
+
 				 </section>
 
 				 <section>
@@ -234,7 +244,7 @@
 							<p>Q-learning update rule</p>
 							<div style="font-size:70%; text-align:center">
 								\[\begin{aligned}
-								\textcolor{#1864ab}{Q^n(s_t, a_t)} \gets \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)} + \alpha \cdot (\textcolor{#a61e4d}{r_t + \gamma \cdot \max_{a'} Q(s_{t+1}, a')} - \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)})
+								\textcolor{#1864ab}{Q^n(s_t, a_t)} \gets \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)} + \alpha \cdot (\textcolor{#a61e4d}{r_t + \gamma \cdot \max_{a'} Q^{n-1}(s_{t+1}, a')} - \textcolor{#1864ab}{Q^{n-1}(s_t, a_t)})
 								\end{aligned} \]
 							</div>
 						</div>
