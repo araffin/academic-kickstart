@@ -1,16 +1,16 @@
 ---
-title: "DQN Tutorial"
-event: Reinforcement Learning Summer School 2023 Barcelona
-event_url: https://rlsummerschool.com/
+title: "Knowledge Guided Reinforcement Learning for Robotics"
+event: IRC UPC Seminar
+event_url: https://www.iri.upc.edu/index.php
 location: Barcelona
-summary: From tabular Q-learning to Deep Q-Network (DQN)
+summary:
 
 # abstract: ""
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2023-06-27T14:30:00Z"
-date_end: "2023-06-27T18:00:00Z"
+date: "2023-06-28T10:00:00Z"
+date_end: "2023-06-28T11:00:00Z"
 all_day: false
 
 # Schedule page publish date (NOT talk date).
@@ -24,8 +24,7 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
-url_slides: slides/dqn-tutorial/
-url_code: https://github.com/araffin/rlss23-dqn/
+url_slides: slides/knowledge-guided-rl/
 
 
 #image:
