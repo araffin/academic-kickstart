@@ -4,7 +4,7 @@ publishDate: 2021-09-14T00:00:00
 draft: false
 
 # Is this a selected publication? (true/false)
-featured: true
+featured: false
 
 authors:
 - admin
