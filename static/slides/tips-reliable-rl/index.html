@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Practical Tips for Reliable Reinforcement Learning</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+		<link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Practical Tips for Reliable RL &middot; Paris-Saclay &middot; 27.11.2023
+				</header>
+				<section data-background-image="images/bg_image.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-6">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Practical Tips for <br> Reliable RL</h3>
+								</div>
+							</div>
+							<div class="col-xs-6">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<img class="shadow" src="images/bert/real_bert.jpg" alt="DLR bert" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (
+							<a href="https://twitter.com/araffin2">@araffin2</a>
+							) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+				</section>
+				<section>
+					<div class="row">
+						<div class="col-xs-12">
+							<h4>Who am I?</h4>
+						</div>
+						<div class="col-xs-4">
+							<img src="https://araffin.github.io/slides/knowledge-guided-rl/images/sb_logo.png" alt="SB" style="max-width: 100%">
+							<p class="xsmall-text caption">Stable-Baselines</p>
+
+						</div>
+						<div class="col-xs-4">
+							<img src="https://araffin.github.io/slides/knowledge-guided-rl/images/antonin-bert.jpg" alt="ENSTAR" style="max-width: 100%">
+							<p class="xsmall-text caption">bert</p>
+						</div>
+						<div class="col-xs-4">
+							<img src="https://araffin.github.io/slides/knowledge-guided-rl/images/intro/david_robot.jpeg" alt="HASy" style="max-width: 50%">
+							<p class="xsmall-text caption">David (aka HASy)</p>
+						</div>
+						<div class="col-xs-12">
+							<img src="https://araffin.github.io/slides/knowledge-guided-rl/images/dlr_logo.png" alt="DLR" style="max-width: 15%">
+							<p class="xsmall-text caption">German Aerospace Center (DLR)</p>
+						</div>
+					</div>
+					<aside class="notes">
+						- researcher at DLR (German Aerospace Center) in Munich (doing a PhD) <br>
+						<p>- SB3 RL Zoo -> reliable software and proper RL experiments</p>
+
+						- current goal of PhD: bringing RL to real robots <br>
+						- simulation is not enough: all that I do should work on a real hardware <br>
+					</aside>
+				</section>
+
+				<section>
+					<h3>RL is Hard</h3>
+						<div class="row">
+							<div class="col-xs-6">
+								<img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/a2c.png" alt="A2C" style="max-width: 100%">
+								<p class="small-text caption">Which algorithm is better?</p>
+							</div>
+							<div class="col-xs-6">
+								<p class="medium-text fragment">
+									The only difference: the epsilon $\epsilon$ value to avoid division by zero in the optimizer<br>
+									(one is <code class="medium-text">$\epsilon$ = 1e-7</code>
+									the other <code class="medium-text">$\epsilon$ = 1e-5</code>)
+								</p>
+								<p class="medium-text fragment">
+									<a href="https://araffin.github.io/slides/rlvs-tips-tricks/">RL Tips and Tricks</a>
+								</p>
+							</div>
+						</div>
+						<aside class="notes">
+							A and B are actually the same RL algorithm (A2C),
+							sharing the exact same code, same hardware, same hyperparameters...
+							except the epsilon value to avoid division by zero in the optimizer
+						</aside>
+
+				</section>
+
+
+				<section>
+						<h3>Outline</h3>
+						<ol>
+								<li>SB3: Reliable RL Implementations</li>
+								<li>RL Zoo: Reproducible Experiments</li>
+								<li>Best Practices</li>
+								<li>Minimal Implementations</li>
+								<li>Questions?</li>
+						</ol>
+				</section>
+
+				<section>
+					<section>
+						<h4>Stable-Baselines3</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								Reliable RL Implementations
+							</div>
+
+						</div>
+						<div class="row">
+							<div class="col-xs-4">
+								<img src="images/sb3/sb_logo.png" alt="" style="max-width:100%">
+							</div>
+							<div class="col-xs-8">
+								<img src="images/sb3/sb3_train.jpeg" alt="" style="max-width:80%">
+							</div>
+						</div>
+
+						<p class="medium-text">
+							<a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+						</p>
+
+						<aside class="notes">
+							What it is? Why is it there?
+						</aside>
+					</section>
+					<section>
+						<h4>Reliable Implementations?</h4>
+
+						<ul class="medium-text">
+							<li class="fragment">Performance checked</li>
+							<li class="fragment">96% code coverage, type checked</li>
+							<li class="fragment">3 types of tests (run, unit tests, performance)</li>
+							<li class="fragment">Active community (6000+ stars, 1000+ citations, 3M+ downloads)</li>
+							<li class="fragment">Fully documented</li>
+						</ul>
+						<aside class="notes">
+							Maybe mention that we have different type of tests
+							(run, unittest, performance)
+						</aside>
+					</section>
+
+					<section>
+						<h4>SB3 Ecosystem</h4>
+						<ul class="medium-text">
+							<li class="fragment">
+								<a href="https://github.com/Stable-Baselines-Team/stable-baselines3-contrib/">
+									SB3-Contrib (more algorithms like QR-DQN, RecurrentPPO)
+								</a>
+							</li>
+							<li class="fragment">
+								<a href="https://github.com/araffin/sbx">
+									SBX: SB3 + Jax (fast implementations)
+								</a>
+							</li>
+							<li class="fragment">
+								<a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+									RL Baselines3 Zoo (for RL experiments)
+								</a>
+							</li>
+						</ul>
+						<aside class="notes">
+							All RL videos shown are done with SB3+RLZoo+SB3 contrib/SBX
+						</aside>
+					</section>
+
+					<section>
+						<h4>Smooth Exploration for RL</h4>
+						<div class="row">
+							<div class="col-xs-1">
+							</div>
+							<div class="col-xs-11">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=6&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h4>Benchmarking New Implementations</h4>
+
+						<div class="row">
+							<div class="col-xs-8 medium-text">
+								<ul>
+									<li class="fragment">Read the original paper several times</li>
+									<li class="fragment">Read existing implementations (if available)</li>
+									<li class="fragment">Try to have some "sign of life" on toy problems</li>
+									<li class="fragment">Step by step validation (<code class="medium-text">ipdb</code>, log useful values, visualize)</li>
+									<li class="fragment">Validation on known envs (might require tuning)</li>
+								</ul>
+							</div>
+							<div class="col-xs-4">
+								<img src="images/recurrent_ppo_bench.png" alt="">
+							</div>
+						</div>
+
+						<p class="small-text fragment">
+							<a href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">
+								The 37 Implementation Details of Proximal Policy Optimization
+							</a>
+							<br>
+							<a href="https://www.youtube.com/watch?v=8EcdaCk9KaQ">
+								Nuts and Bolts of Deep RL Experimentation
+							</a>
+						</p>
+
+						<aside class="notes">
+							how to ensure the implementation is correct
+							start simple, more and more complex problem, visualize
+							example toy: CartPole remove vel
+							More examples: backup slides (the ugly bugs stories)
+						</aside>
+					</section>
+					<section>
+						<h4>Some Examples</h4>
+						<ul>
+							<li class="fragment">SB2 PPO: broadcast error</li>
+							<li class="fragment">SB3 A2C: TF RMSProp ≠ PyTorch RMSProp</li>
+							<li class="fragment">SB3: proper timeout handling</li>
+							<li class="fragment">SBX DQN: target network not updated</li>
+						</ul>
+					</section>
+					<section>
+						<h3>RL from scratch in 10 minutes</h3>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls></video>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<p class="small-text">Using SB3 + Jax = SBX:
+									<a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+								</p>
+							</div>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>RL Zoo: Reproducible Experiments</h4>
+								<p class="medium-text">
+									<a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+										https://github.com/DLR-RM/rl-baselines3-zoo
+									</a>
+								</p>
+
+							</div>
+
+						</div>
+						<div class="row medium-text">
+							<div class="col-xs-8">
+								<ul>
+									<li class="fragment">Training, loading, plotting, hyperparameter optimization</li>
+									<li class="fragment">W&B and Huggingface integration</li>
+									<li class="fragment">200+ trained models with tuned hyperparameters</li>
+									<li class="fragment">
+										<a href="https://wandb.ai/openrlbenchmark/sb3">
+											OpenRL Benchmark
+										</a>
+									</li>
+									<li class="fragment">Compatible with SB3&SBX</li>
+								</ul>
+							</div>
+							<div class="col-xs-4">
+								<img src="https://github.com/DLR-RM/rl-baselines3-zoo/raw/master/images/car.jpg" alt="">
+							</div>
+						</div>
+
+					</section>
+					<section>
+						<h4>In practice</h4>
+						<div class="row medium-text">
+							<div class="col-xs-12">
+
+							<pre class="fragment" style="width:100%"><code class="bash" data-line-numbers="1-5|7-8|" data-trim>
+								# Train an SAC agent on Pendulum using tuned hyperparameters,
+								# evaluate the agent every 1k steps and save a checkpoint every 10k steps
+								# Pass custom hyperparams to the algo/env
+								python -m rl_zoo3.train --algo sac --env Pendulum-v1 --eval-freq 1000 \
+								    --save-freq 10000 -params train_freq:2 --env-kwargs g:9.8
+
+								# Plot the learning curve
+								python -m rl_zoo3.cli all_plots -a sac -e Pendulum-v1 -f logs/
+							</code></pre>
+
+							<pre class="fragment" style="width:100%"><code class="bash" data-trim>
+								sac/
+								└── Pendulum-v1_1 # One folder per experiment
+								    ├── 0.monitor.csv # episodic return
+								    ├── best_model.zip # best model according to evaluation
+								    ├── evaluations.npz # evaluation results
+								    ├── Pendulum-v1
+										│   ├── args.yml # custom cli arguments
+										│   ├── config.yml # hyperparameters
+								    │   └── vecnormalize.pkl # normalization
+								    ├── Pendulum-v1.zip # final model
+								    └── rl_model_10000_steps.zip # checkpoint
+
+							</code></pre>
+						</div>
+					</div>
+
+					</section>
+
+					<section>
+						<h4>Learning to Exploit Elastic Actuators</h4>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/cT7wMNmsC6nySkc/download" controls></video>
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion" In preparation, 2023.
+							</p>
+						</div>
+					</section>
+
+					<section>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<h4>Learning to race in an hour</h4>
+								</div>
+								<div class="col-xs-12">
+									<div class="videoWrapper">
+										<iframe src="https://www.youtube.com/embed/ngK33h00iBE?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+									</div>
+								</div>
+							</div>
+					</section>
+
+				</section>
+
+				<section>
+					<h4>Best Practices for Empirical RL</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<ul class="medium-text">
+								<li class="fragment">
+									<a href="https://arxiv.org/abs/2304.01315">
+										Empirical Design in Reinforcement Learning
+									</a>
+								</li>
+								<li class="fragment">
+									<a href="https://araffin.github.io/post/rliable/">
+										Rliable: Better Evaluation for Reinforcement Learning
+									</a>
+								</li>
+							</ul>
+						</div>
+
+						<div class="col-xs-12 fragment">
+							<img class="shadow" src="images/IQM.jpeg" style="max-width:60%" alt="">
+						</div>
+
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h4>Minimal Implementations</h4>
+						<div class="row">
+							<div class="col-xs-8">
+								<ul class="medium-text">
+									<li class="fragment">Standalone / minimal dependencies</li>
+									<li class="fragment">Reduce complexity</li>
+									<li class="fragment">Perfect for educational purposes (cleanRL, CORL)</li>
+									<li class="fragment">Find bugs</li>
+									<li class="fragment">Hard to maintain</li>
+								</ul>
+
+							</div>
+							<div class="col-xs-4">
+								<img src="images/minimal_swimmer.png" class="shadow" alt="">
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>A Simple Open-Loop Baseline for RL Locomotion Tasks</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="https://araffin.github.io/slides/open-loop-mujoco/images/side_by_side.png" class="shadow" alt="">
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin et al. "A Simple Open-Loop Baseline for RL Locomotion Tasks" In preparation, ICLR 2024.
+							</p>
+						</div>
+
+					</section>
+
+					<section>
+						<h4>35 lines of code</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<a href="https://gist.github.com/araffin/25159d668e9bad41bf31a595add22c27" target="_blank">
+									<img src="images/minimal_swimmer.png" class="shadow" style="max-width: 60%" alt="">
+								</a>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>Sim2real transfer</h4>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi/download" controls></video>
+							</div>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<h4>Conclusion</h4>
+					<ul class="">
+						<li class="fragment">Use reliable implementations</li>
+						<li class="fragment">Take it easy, RL is hard</li>
+						<li class="fragment">Follow best practices</li>
+						<li class="fragment">Minimal implementations to the rescue</li>
+					</ul>
+				</section>
+
+				<section>
+					<h4>Questions?</h4>
+				</section>
+
+				<section>
+					<h4>Backup Slides</h4>
+				</section>
+
+				<section>
+					<h4>Some bugs</h4>
+					<ul class="medium-text">
+						<li>
+							<a href="https://github.com/hill-a/stable-baselines/pull/76">PPO Broadcast error</a>
+						</li>
+						<li>
+							<a href="https://github.com/hill-a/stable-baselines/pull/42">Wrong clipping PPO</a>
+						</li>
+						<li>
+							<a href="https://github.com/DLR-RM/stable-baselines3/issues/633">Timeout handling</a>
+						</li>
+						<li>
+							<a href="https://github.com/DLR-RM/stable-baselines3/pull/375">Off-by-one GAE</a>
+						</li>
+						<li>
+							<a href="https://github.com/DLR-RM/stable-baselines3/pull/110">RMSProp</a>
+						</li>
+						<li>
+							<a href="https://github.com/araffin/sbx/pull/7/commits/ae0cb5989305cb681cb53b618e89302bb4ea1a55">DQN target update</a>
+						</li>
+						<li>
+							<a href="https://github.com/araffin/sbx/pull/6/commits/9b34266d01368b97ee442fffb02b4575a6091bb7">PPO gSDE not updated</a>
+						</li>
+						<li>
+							<a href="https://wandb.ai/sb3/no-vel-envs/reports/PPO-vs-RecurrentPPO-aka-PPO-LSTM-on-environments-with-masked-velocity--VmlldzoxOTI4NjE4">
+								RecurrentPPO benchmark
+							</a>
+						</li>
+					</ul>
+					<aside class="notes">
+						Showcase some examples/tricky bugs encountered (off-by-one, epsilon, rmsprop implementation, broadcast error, ...)
+						sbx: DQN implementation target network not updated
+						https://twitter.com/araffin2/status/1712144920532652074
+						https://twitter.com/araffin2/status/1716850761722736835
+					</aside>
+				</section>
+				<section>
+					<h4>Proper Handling of Timeouts</h4>
+
+					<div class="row">
+						<div class="col-xs-12 medium-text">
+							<pre class="fragment"><code data-trim data-line-numbers="1-6|8-10|" class="python">
+								# Note: done = terminated or truncated
+								# Offpolicy algorithms
+								# If the episode is terminated, set the target to the reward
+								should_bootstrap = np.logical_not(replay_data.terminateds)
+								# 1-step TD target
+								td_target = replay_data.rewards + should_bootstrap * (gamma * next_q_values)
+
+								# On-policy algorithms
+								if truncated:
+								    terminal_reward += gamma * next_value
+
+							</code></pre>
+
+						</div>
+					</div>
+
+					<aside class="notes">
+						Example use-case (move to backup?)
+						Impact on the results. How is it tested?
+						PPO Implementation details
+						show gSDE ablation
+					</aside>
+				</section>
+				<section>
+					<h4>35 lines of code</h4>
+					<div class="row">
+						<div class="col-xs-12 medium-text">
+							<pre class="fragment"><code data-trim data-line-numbers="1-15|16-18|22-23|24-30|31-35|" class="python">
+								import gymnasium as gym
+								import numpy as np
+								from gymnasium.envs.mujoco.mujoco_env import MujocoEnv
+
+								# Env initialization
+								env = gym.make("Swimmer-v4", render_mode="human")
+								# Wrap to have reward statistics
+								env = gym.wrappers.RecordEpisodeStatistics(env)
+								mujoco_env = env.unwrapped
+								n_joints = 2
+								assert isinstance(mujoco_env, MujocoEnv)
+								# PD Controller gains
+								kp, kd = 10, 0.5
+								# Reset the environment
+								t, _ = 0.0, env.reset(seed=0)
+								# Oscillators parameters
+								omega = 2 * np.pi * 0.62 * np.ones(n_joints)
+								phase = 2 * np.pi * np.array([0.00, 0.95])
+
+								while True:
+										env.render()
+										# Open-Loop Control using oscillators
+										desired_qpos = np.sin(omega * t + phase)
+										# PD Control: convert to torque, desired qvel is zero
+										desired_torques = (
+												kp * (desired_qpos - mujoco_env.data.qpos[-n_joints:])
+												- kd * mujoco_env.data.qvel[-n_joints:]
+										)
+										desired_torques = np.clip(desired_torques, -1.0, 1.0)  # clip to action bounds
+										_, reward, terminated, truncated, info = env.step(desired_torques)
+										t += mujoco_env.dt
+
+										if terminated or truncated:
+												print(f"Episode return: {float(info['episode']['r']):.2f}")
+												t, _ = 0.0, env.reset()
+
+							</code></pre>
+
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
