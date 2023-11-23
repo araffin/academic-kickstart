@@ -150,7 +150,7 @@
 
 						<ul class="medium-text">
 							<li class="fragment">Performance checked</li>
-							<li class="fragment">96% code coverage, type checked</li>
+							<li class="fragment">Software best practices (96% code coverage, type checked)</li>
 							<li class="fragment">3 types of tests (run, unit tests, performance)</li>
 							<li class="fragment">Active community (6000+ stars, 1000+ citations, 3M+ downloads)</li>
 							<li class="fragment">Fully documented</li>
@@ -192,49 +192,65 @@
 							</div>
 							<div class="col-xs-11">
 								<div class="videoWrapper">
-									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=6&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=176&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
 								</div>
 							</div>
 						</div>
+						<p class="xsmall-text">
+								Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+						</p>
 					</section>
 				</section>
 
 				<section>
 					<section>
-						<h4>Benchmarking New Implementations</h4>
+						<h3>Benchmarking New Implementations</h3>
+					</section>
 
-						<div class="row">
-							<div class="col-xs-8 medium-text">
-								<ul>
-									<li class="fragment">Read the original paper several times</li>
-									<li class="fragment">Read existing implementations (if available)</li>
-									<li class="fragment">Try to have some "sign of life" on toy problems</li>
-									<li class="fragment">Step by step validation (<code class="medium-text">ipdb</code>, log useful values, visualize)</li>
-									<li class="fragment">Validation on known envs (might require tuning)</li>
-								</ul>
-							</div>
-							<div class="col-xs-4">
-								<img src="images/recurrent_ppo_bench.png" alt="">
-							</div>
-						</div>
+					<section>
+						<h5>1. Read the original paper several times</h5>
+						<img class="shadow" style="max-width: 70%" src="images/bench/dqn.png" alt="">
+						<img class="shadow" style="max-width: 80%" src="images/bench/dqn_appendix.png" alt="">
+					</section>
 
-						<p class="small-text fragment">
+					<section>
+						<h5>2. Read existing implementations (if available)</h5>
+						<img class="shadow" style="max-width: 90%" src="images/bench/td_lambda.png" alt="">
+						<p class="small-text">
 							<a href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">
 								The 37 Implementation Details of Proximal Policy Optimization
 							</a>
-							<br>
+						</p>
+
+					</section>
+
+					<section>
+						<h5>3. Try to have some "sign of life" on toy problems</h5>
+						<p class="medium-text">Iterate quickly!</p>
+
+						<img class="shadow" style="max-width: 75%" src="images/bench/recurrent_ppo_bench.png" alt="">
+						<img class="shadow" style="max-width: 20%" src="images/bench/pendulum.png" alt="">
+						<p class="small-text">
 							<a href="https://www.youtube.com/watch?v=8EcdaCk9KaQ">
 								Nuts and Bolts of Deep RL Experimentation
 							</a>
 						</p>
-
-						<aside class="notes">
-							how to ensure the implementation is correct
-							start simple, more and more complex problem, visualize
-							example toy: CartPole remove vel
-							More examples: backup slides (the ugly bugs stories)
-						</aside>
 					</section>
+
+					<section>
+						<h5>4. Step by step validation</h5>
+						<p class="medium-text">Log useful values, <code class="medium-text">ipdb</code>, visualize</p>
+						<img class="shadow" style="max-width: 75%" src="images/bench/broadcasting.png" alt="">
+					</section>
+
+					<section>
+						<h5>5. Validation on known environments</h5>
+						<p>Easy ➤ Medium ➤ Hard </p>
+						<img class="shadow" style="max-width: 20%" src="images/bench/pendulum.png" alt="">
+						<img class="shadow" style="max-width: 25%" src="images/bench/cheetah.png" alt="">
+						<img class="shadow" style="max-width: 45%" src="images/bench/walker_hard.png" alt="">
+					</section>
+
 					<section>
 						<h4>Some Examples</h4>
 						<ul>
@@ -243,6 +259,10 @@
 							<li class="fragment">SB3: proper timeout handling</li>
 							<li class="fragment">SBX DQN: target network not updated</li>
 						</ul>
+						<p class="small-text fragment">
+							More in the backup slides |
+							<a href="https://twitter.com/araffin2/status/1331928661159657473" target="_blank">7 mistakes challenge</a>
+						</p>
 					</section>
 					<section>
 						<h3>RL from scratch in 10 minutes</h3>
@@ -272,7 +292,6 @@
 										https://github.com/DLR-RM/rl-baselines3-zoo
 									</a>
 								</p>
-
 							</div>
 
 						</div>
@@ -301,15 +320,12 @@
 						<div class="row medium-text">
 							<div class="col-xs-12">
 
-							<pre class="fragment" style="width:100%"><code class="bash" data-line-numbers="1-5|7-8|" data-trim>
+							<pre class="fragment" style="width:100%"><code class="bash" data-line-numbers="1-5" data-trim>
 								# Train an SAC agent on Pendulum using tuned hyperparameters,
 								# evaluate the agent every 1k steps and save a checkpoint every 10k steps
 								# Pass custom hyperparams to the algo/env
 								python -m rl_zoo3.train --algo sac --env Pendulum-v1 --eval-freq 1000 \
 								    --save-freq 10000 -params train_freq:2 --env-kwargs g:9.8
-
-								# Plot the learning curve
-								python -m rl_zoo3.cli all_plots -a sac -e Pendulum-v1 -f logs/
 							</code></pre>
 
 							<pre class="fragment" style="width:100%"><code class="bash" data-trim>
@@ -335,7 +351,7 @@
 						<h4>Learning to Exploit Elastic Actuators</h4>
 						<div class="row middle-xs">
 							<div class="col-xs-12">
-								<video src="https://b2drop.eudat.eu/s/cT7wMNmsC6nySkc/download" controls></video>
+								<video src="https://b2drop.eudat.eu/s/CYyZ3faNxz98jZy/download" controls></video>
 							</div>
 						</div>
 						<div class="col-xs-12 xsmall-text">
@@ -423,9 +439,21 @@
 					<section>
 						<h4>35 lines of code</h4>
 						<div class="row">
+							<div class="col-xs-12 small-text">
+								<div>
+									\[\begin{aligned}
+									q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
+									\dot{\theta_i}(t)  &amp;= \begin{cases}
+										\textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+										\textcolor{#862e9c}{\omega_\text{stance}}  &amp;\text{otherwise.}
+									\end{cases}
+
+									\end{aligned} \]
+								</div>
+							</div>
 							<div class="col-xs-12">
 								<a href="https://gist.github.com/araffin/25159d668e9bad41bf31a595add22c27" target="_blank">
-									<img src="images/minimal_swimmer.png" class="shadow" style="max-width: 60%" alt="">
+									<img src="images/minimal_swimmer.png" class="shadow" style="max-width: 50%" alt="">
 								</a>
 							</div>
 						</div>
@@ -445,7 +473,7 @@
 				<section>
 					<h4>Conclusion</h4>
 					<ul class="">
-						<li class="fragment">Use reliable implementations</li>
+						<li class="fragment">Tips for reliable implementations</li>
 						<li class="fragment">Take it easy, RL is hard</li>
 						<li class="fragment">Follow best practices</li>
 						<li class="fragment">Minimal implementations to the rescue</li>
@@ -461,8 +489,47 @@
 				</section>
 
 				<section>
+					<h4>Benchmarking New Implementations</h4>
+
+					<div class="row">
+						<div class="col-xs-8 medium-text">
+							<ol>
+								<li>Read the original paper several times</li>
+								<li>Read existing implementations (if available)</li>
+								<li>Try to have some "sign of life" on toy problems</li>
+								<li>Step by step validation (<code class="medium-text">ipdb</code>, log useful values, visualize)</li>
+								<li>Validation on known envs (might require tuning)</li>
+							</ol>
+						</div>
+						<div class="col-xs-4">
+							<img src="images/bench/recurrent_ppo_bench.png" alt="">
+						</div>
+					</div>
+
+					<p class="small-text fragment">
+						<a href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">
+							The 37 Implementation Details of Proximal Policy Optimization
+						</a>
+						<br>
+						<a href="https://www.youtube.com/watch?v=8EcdaCk9KaQ">
+							Nuts and Bolts of Deep RL Experimentation
+						</a>
+					</p>
+
+					<aside class="notes">
+						how to ensure the implementation is correct
+						start simple, more and more complex problem, visualize
+						example toy: CartPole remove vel
+						More examples: backup slides (the ugly bugs stories)
+					</aside>
+				</section>
+
+				<section>
 					<h4>Some bugs</h4>
 					<ul class="medium-text">
+						<li>
+							<a href="https://twitter.com/araffin2/status/1331928661159657473">7 mistakes challenge</a>
+						</li>
 						<li>
 							<a href="https://github.com/hill-a/stable-baselines/pull/76">PPO Broadcast error</a>
 						</li>
