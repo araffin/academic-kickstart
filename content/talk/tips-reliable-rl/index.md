@@ -1,15 +1,15 @@
 ---
 title: "Practical Tips for Reliable Reinforcement Learning"
-event: Industrial RL Workshop
-# event_url: https://www.icra2022.org/
-location: Paris
-summary: Talk at the Industrial RL Workshop in Saclay about the lessons learned while developping Stable-Baselines3 to have reliable implementations and reproducible experiments.
+event: CDC 2023 Workshop on Benchmarking, Reproducibility, and Open-Source Code in Controls
+event_url: https://www.dynsyslab.org/cdc-2023-workshop-on-benchmarking-reproducibility-and-open-source-code-in-controls/
+location: Singapour
+summary: Talk at the CDC 2023 Workshop on Benchmarking, Reproducibility, and Open-Source Code in Controls, about the lessons learned while developping Stable-Baselines3 to have reliable implementations and reproducible experiments.
 abstract:
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
-date: "2023-11-27T11:00:00Z"
-date_end: "2023-11-27T12:00:00Z"
+date: "2023-12-12T8:00:00Z"
+date_end: "2023-12-12T12:00:00Z"
 all_day: false
 
 # Schedule page publish date (NOT talk date).
@@ -23,9 +23,9 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
-# url_project: https://araffin.github.io/tools-for-robotic-rl-icra2022/
+url_project: https://www.dynsyslab.org/cdc-2023-workshop-on-benchmarking-reproducibility-and-open-source-code-in-controls/
 url_slides: slides/tips-reliable-rl/
-# url_video: https://www.youtube.com/playlist?list=PL42jkf1t1F7etDiYXWC5Q77yIuVYhXNoy
+url_video: https://www.youtube.com/watch?v=Mu4VTK8swxU
 
 
 #image:
@@ -51,3 +51,5 @@ projects:
 # Enable math on this page?
 math: false
 ---
+
+This talk was also given at the Industrial RL Workshop organized in Paris Saclay in November 2023.

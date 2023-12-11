@@ -24,7 +24,7 @@
 		<div class="reveal">
 			<div class="slides">
 				<header>
-					www.dlr.de &middot; Antonin RAFFIN &middot; Practical Tips for Reliable RL &middot; Paris-Saclay &middot; 27.11.2023
+					www.dlr.de &middot; Antonin RAFFIN &middot; Practical Tips for Reliable RL &middot; CDC 2023 Workshop on Benchmarking, Reproducibility &middot; 12.12.2023
 				</header>
 				<section data-background-image="images/bg_image.jpg">
 					<div class="row bottom-xs">
@@ -82,29 +82,38 @@
 				</section>
 
 				<section>
-					<h3>RL is Hard</h3>
-						<div class="row">
-							<div class="col-xs-6">
-								<img class="shadow" src="https://araffin.github.io/slides/rlvs-tips-tricks/images/a2c.png" alt="A2C" style="max-width: 100%">
-								<p class="medium-text">Which algorithm is better?</p>
+					<section>
+						<h3>RL is Hard</h3>
+							<div class="row">
+								<div class="col-xs-6">
+									<img class="shadow" src="https://araffin.github.io/slides/rlvs-tips-tricks/images/a2c.png" alt="A2C" style="max-width: 100%">
+									<p class="medium-text">Which algorithm is better?</p>
+								</div>
+								<div class="col-xs-6">
+									<p class="medium-text fragment">
+										The only difference: the epsilon $\epsilon$ value to avoid division by zero in the optimizer<br>
+										(one is <code class="medium-text">$\epsilon$ = 1e-7</code>
+										the other <code class="medium-text">$\epsilon$ = 1e-5</code>)
+									</p>
+									<!-- <p class="medium-text fragment">
+										<a ref="https://araffin.github.io/slides/rlvs-tips-tricks/">RL Tips and Tricks</a>
+									</p> -->
+								</div>
 							</div>
-							<div class="col-xs-6">
-								<p class="medium-text fragment">
-									The only difference: the epsilon $\epsilon$ value to avoid division by zero in the optimizer<br>
-									(one is <code class="medium-text">$\epsilon$ = 1e-7</code>
-									the other <code class="medium-text">$\epsilon$ = 1e-5</code>)
-								</p>
-								<p class="medium-text fragment">
-									<a href="https://araffin.github.io/slides/rlvs-tips-tricks/">RL Tips and Tricks</a>
-								</p>
-							</div>
-						</div>
-						<aside class="notes">
-							A and B are actually the same RL algorithm (A2C),
-							sharing the exact same code, same hardware, same hyperparameters...
-							except the epsilon value to avoid division by zero in the optimizer
-						</aside>
+							<aside class="notes">
+								A and B are actually the same RL algorithm (A2C),
+								sharing the exact same code, same hardware, same hyperparameters...
+								except the epsilon value to avoid division by zero in the optimizer
+							</aside>
+					</section>
 
+					<section>
+						<h4>Reproducibility Findings</h4>
+						<img src="images/reported.svg" alt="">
+						<p class="small-text">
+							Agarwal, Rishabh, et al. "Deep reinforcement learning at the edge of the statistical precipice." Neurips (2021)
+						</p>
+					</section>
 				</section>
 
 
@@ -162,6 +171,26 @@
 							Maybe mention that we have different type of tests
 							(run, unittest, performance)
 						</aside>
+					</section>
+
+					<section>
+						<h4>Performance Test Example</h4>
+						<div class="row">
+							<div class="col-xs-12 medium-text">
+								<pre class="fragment"><code data-trim data-line-numbers="1-7|8-9|" class="python">
+		# Training budget (cap the max number of iterations)
+		N_STEPS = 1000
+
+		def test_ppo():
+			agent = PPO("MlpPolicy", "CartPole-v1").learn(N_STEPS)
+			# Evaluate the trained agent
+			episodic_return = evaluate_policy(agent, n_eval_episodes=20)
+			# check that the performance is above a given threshold
+			assert episodic_return > 90
+								</code></pre>
+						
+							</div>
+						</div>
 					</section>
 
 					<section>
@@ -234,7 +263,6 @@
 											OpenRL Benchmark
 										</a>
 									</li>
-									<li class="fragment">Compatible with SB3&SBX</li>
 								</ul>
 							</div>
 							<div class="col-xs-4">
@@ -291,6 +319,17 @@
 					</div>
 
 					</section>
+
+					<section>
+						<h4>Open RL Benchmark</h4>
+						<div class="col-xs-12">
+							<a href="https://wandb.ai/openrlbenchmark/sb3/workspace?workspace=user-araffin" target="_blank">
+								<img src="images/rl_zoo/wandb.png" style="max-width: 60%;" class="shadow" alt="">
+							</a>
+						</div>
+					</section>
+
+
 
 					<section>
 						<h4>Learning to Exploit Elastic Actuators</h4>
@@ -418,7 +457,7 @@
 								<ul class="medium-text">
 									<li class="fragment">Standalone / minimal dependencies</li>
 									<li class="fragment">Reduce complexity</li>
-									<li class="fragment">Perfect for educational purposes (cleanRL, CORL)</li>
+									<li class="fragment">Perfect for educational purposes (cleanRL)</li>
 									<li class="fragment">Find bugs</li>
 									<li class="fragment">Hard to maintain</li>
 								</ul>
@@ -511,7 +550,8 @@
 					<ul class="">
 						<li class="fragment">Tips for reliable implementations</li>
 						<li class="fragment">Reproducible experiments</li>
-						<li class="fragment">Take it easy, RL is hard</li>
+						<!-- <li class="fragment">Take it easy, RL is hard</li> -->
+						<li class="fragment">Implementing a new algorithm</li>
 						<li class="fragment">Minimal implementations to the rescue</li>
 						<li class="fragment">Follow best practices</li>
 					</ul>
@@ -523,6 +563,15 @@
 
 				<section>
 					<h4>Backup Slides</h4>
+				</section>
+
+				<section>
+					<h4>Huggingface Integration</h4>
+					<div class="col-xs-12">
+						<a href="https://huggingface.co/sb3/trpo-LunarLander-v2" target="_blank">
+							<img src="images/rl_zoo/hugginface.png" style="max-width: 90%;" class="shadow" alt="">
+						</a>
+					</div>
 				</section>
 
 				<section>
