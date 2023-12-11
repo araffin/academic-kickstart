@@ -74,10 +74,8 @@
 					</div>
 					<aside class="notes">
 						- researcher at DLR (German Aerospace Center) in Munich (doing a PhD) <br>
-						<p>- SB3 RL Zoo -> reliable software and proper RL experiments</p>
-
-						- current goal of PhD: bringing RL to real robots <br>
-						- simulation is not enough: all that I do should work on a real hardware <br>
+						- Maintainer of SB3</p>
+						- RL directly on real robots, no simulation<br>
 					</aside>
 				</section>
 
@@ -188,7 +186,7 @@
 			# check that the performance is above a given threshold
 			assert episodic_return > 90
 								</code></pre>
-						
+
 							</div>
 						</div>
 					</section>
@@ -270,6 +268,12 @@
 							</div>
 						</div>
 
+						<aside class="notes">
+							RL Zoo: log everything that is needed to reproduce/compare automatically <br>
+							Minimize potential mistake when running experiments <br>
+
+						</aside>
+
 					</section>
 					<section>
 						<h4>In practice</h4>
@@ -301,6 +305,12 @@
 						</div>
 					</div>
 
+					<aside class="notes">
+						Simple command in the terminal to launch an experiment
+						and change some parameters
+
+					</aside>
+
 					</section>
 
 					<section>
@@ -317,6 +327,11 @@
 							<img src="images/rl_zoo/rl_metrics.png" class="shadow" alt="">
 						</div>
 					</div>
+					<aside class="notes">
+						All experiments are formatted the same,
+						makes it easy to plot/compare/follow best practices
+
+					</aside>
 
 					</section>
 
@@ -327,9 +342,12 @@
 								<img src="images/rl_zoo/wandb.png" style="max-width: 60%;" class="shadow" alt="">
 							</a>
 						</div>
+						<aside class="notes">
+							We benchmarked all algorithms on many tasks
+							and the logs/results are available online
+						</aside>
+
 					</section>
-
-
 
 					<section>
 						<h4>Learning to Exploit Elastic Actuators</h4>
@@ -343,6 +361,11 @@
 								Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion" In preparation, 2023.
 							</p>
 						</div>
+						<aside class="notes">
+							SB3 + RL Zoo: learning directly on a real robot,
+							continue training/compare experiments quickly
+						</aside>
+
 					</section>
 
 					<section>
@@ -447,6 +470,11 @@
 				<section>
 					<h4>From complex codebase to minimal implementation</h4>
 					<img src="images/outlook/outlook_minimal.png" style="max-width: 70%" alt="">
+					<aside class="notes">
+					 	a technique I'm using more and more recently,
+						both for learning but also help for many other cases (i.e., thinking about how to simplify the codebase)
+					</aside>
+
 				</section>
 
 				<section>
@@ -457,6 +485,7 @@
 								<ul class="medium-text">
 									<li class="fragment">Standalone / minimal dependencies</li>
 									<li class="fragment">Reduce complexity</li>
+									<li class="fragment">Easier to share/reproduce</li>
 									<li class="fragment">Perfect for educational purposes (cleanRL)</li>
 									<li class="fragment">Find bugs</li>
 									<li class="fragment">Hard to maintain</li>
@@ -467,6 +496,9 @@
 								<img src="images/minimal_impl.png" class="" alt="">
 							</div>
 						</div>
+						<aside class="notes">
+						 	do not have to look into 10 different to understand what is happening
+						</aside>
 					</section>
 
 					<section>
@@ -482,7 +514,10 @@
 								Raffin et al. "A Simple Open-Loop Baseline for RL Locomotion Tasks" In preparation, ICLR 2024.
 							</p>
 						</div>
-
+						<aside class="notes">
+						 	Searching for the simplest baseline.
+							Wanted to share the idea and check that it worked as intended.
+						</aside>
 					</section>
 
 					<section>
@@ -500,12 +535,16 @@
 									\end{aligned} \]
 								</div>
 							</div>
-							<div class="col-xs-12">
+							<div class="col-xs-12 fragment">
 								<a href="https://gist.github.com/araffin/25159d668e9bad41bf31a595add22c27" target="_blank">
 									<img src="images/minimal_swimmer.png" class="shadow" style="max-width: 50%" alt="">
 								</a>
 							</div>
 						</div>
+						<aside class="notes">
+						 	Core idea: one oscillator per joint,
+							share frequency between joints.
+						</aside>
 					</section>
 
 					<section>
@@ -515,6 +554,11 @@
 								<video src="https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi/download" controls></video>
 							</div>
 						</div>
+						<aside class="notes">
+						 	highlight shortcomings of RL using simple baseline,
+							no randomization, no reward engineering -> why?
+						</aside>
+
 					</section>
 
 				</section>
@@ -542,6 +586,11 @@
 						</div>
 
 					</div>
+					<aside class="notes">
+						Recommended resources for going further,
+						how to do better science (not only RL),
+						better evaluations, CI and etc.
+					</aside>
 				</section>
 
 
