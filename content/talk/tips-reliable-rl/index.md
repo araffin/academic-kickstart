@@ -25,7 +25,7 @@ featured: false
 
 url_project: https://www.dynsyslab.org/cdc-2023-workshop-on-benchmarking-reproducibility-and-open-source-code-in-controls/
 url_slides: slides/tips-reliable-rl/
-url_video: https://www.youtube.com/watch?v=Mu4VTK8swxU
+url_video: https://www.youtube.com/watch?v=7-PUg9EAa3Y
 
 
 #image:
