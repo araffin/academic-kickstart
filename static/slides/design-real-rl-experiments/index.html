@@ -153,6 +153,20 @@
 				</section>
 
 				<section>
+					<h4>RL in Practice: Tips and Tricks - Video</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<a href="https://youtu.be/Ikngt0_DXJg?si=PSbr1_cxqMk5Mxhq" target="_blank">
+								<img src="https://i.ytimg.com/vi/Ikngt0_DXJg/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGGUgVShTMA8=&rs=AOn4CLAwrsQswSBJrPCJ9eB2dxCL0VkPGQ"
+								 alt=""
+								 class="shadow"
+								 style="max-width:70%">
+							</a>
+						</div>
+					</div>
+				</section>
+
+				<section>
 					<h3>Task design</h3>
 					<ul>
 						<li class="fragment">Observation space</li>
@@ -168,20 +182,6 @@
 					</aside>
 				</section>
 
-				<section>
-					<h4>RL in Practice: Tips and Tricks - Video</h4>
-					<div class="row">
-						<div class="col-xs-12">
-							<a href="https://youtu.be/Ikngt0_DXJg?si=PSbr1_cxqMk5Mxhq" target="_blank">
-								<img src="https://i.ytimg.com/vi/Ikngt0_DXJg/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGGUgVShTMA8=&rs=AOn4CLAwrsQswSBJrPCJ9eB2dxCL0VkPGQ"
-								 alt=""
-								 class="shadow"
-								 style="max-width:70%">
-							</a>
-						</div>
-					</div>
-					<p class="medium-text">Today: about proper handling of truncations for infinite horizon tasks</p>
-				</section>
 
 				<section>
 					<section>
@@ -201,6 +201,30 @@
 							should not be penalized <br>
 							should pretend there are no time/space limits here
 						</aside>
+					</section>
+
+					<section>
+					 <h4>Example</h4>
+					 <div class="medium-text">
+						 <div class="fragment" style="font-size:100%; text-align:center">
+							 \[\begin{aligned}
+								 \forall t, \quad r_t = 1, \quad
+								 \gamma = 0.98
+							 \end{aligned} \]
+						 </div>
+						 <p class="fragment">Timeout: <code>max_episode_steps=4</code></p>
+						 <ul>
+							 <li class="fragment">
+								 <span style="color:#a61e4d">Without truncation handling</span>: <br>
+								 $V_\pi(s_0) = \mathop{\sum^{\textcolor{a61e4d}{3}}_{t=0}}[\gamma^t r_t] = 1 + 1 \cdot 0.98 + 0.98^2 + 0.98^3 \approx 3.9 $
+							 </li>
+							 <li class="fragment" style="margin-top: 5%">
+								 <span style="color:green">With truncation handling</span>: <br>
+								 $V_\pi(s_0) = \mathop{\sum^{\textcolor{green}{\infty}}_{t=0}}[\gamma^t r_t] = \sum^{\textcolor{green}{\infty}}_{t=0}[\gamma^t] = \frac{1}{1 - \gamma} \approx 50 $
+							 </li>
+						 </ul>
+					 </div>
+
 					</section>
 
 					<section>
@@ -229,6 +253,7 @@
  							</li>
  						</ol>
  					 </section>
+
 
 					<section>
 						<h4>In Practice</h4>
@@ -327,6 +352,9 @@
 								<img src="images/droq_vs_sac.png" alt="DroQ vs SAC" style="max-width: 80%">
 							</div>
 						</div>
+
+						<p class="fragment medium-text">Also have a look at TQC, TD7 and CrossQ.</p>
+
 						<aside class="notes">
 							Jax faster, more gradient steps, more sample efficient <br>
 							Also take a look at TQC, TD7 and CrossQ
@@ -395,6 +423,23 @@
 					</section>
 
 					<section>
+						<h4>Elastic Neck</h4>
+
+						<div class="row">
+							<div class="col-xs-1">
+							</div>
+							<div class="col-xs-11">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=50&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+						<p class="xsmall-text">
+							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+						</p>
+					</section>
+
+					<section>
 						<h4>2. Hard Constraints, safety layers</h4>
 						<div class="col-xs-12">
 							<a href="https://youtu.be/EoER_5vYZsU?si=y56aGSYSU4SfWR5G&t=185" target="_blank">
@@ -412,30 +457,31 @@
 					</section>
 
 					<section>
-						<h4>3. Leverage Prior Knowledge</h4>
-						<div class="col-xs-12">
-							<img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
-						</div>
-						<aside class="notes">
-							Reduces search space<br>
-							Other example: CPG/oscillator (part of the task design too)
-						</aside>
-					</section>
-
-					<section>
-						<h4>Smooth Exploration for RL</h4>
+						<h4>Cybathlon Challenge</h4>
 						<div class="row">
 							<div class="col-xs-1">
 							</div>
 							<div class="col-xs-11">
 								<div class="videoWrapper">
-									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=176&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+									<iframe src="https://www.youtube.com/embed/EoER_5vYZsU?start=185&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
 								</div>
 							</div>
 						</div>
 						<p class="xsmall-text">
-							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+							Quere, Gabriel, et al. "Shared control templates for assistive robotics."  ICRA, 2020.
 						</p>
+					</section>
+
+					<section>
+						<h4>3. Leverage Prior Knowledge</h4>
+						<div class="col-xs-12">
+							<img src="images/cpg_rl.png" class="shadow" alt="CPG RL" style="max-width:70%;"/>
+						</div>
+						<aside class="notes">
+							Reduces search space<br>
+							RL only a delta, safer, also about action space<br>
+							more on cost of generality later
+						</aside>
 					</section>
 
 					<section>
@@ -455,6 +501,33 @@
 						</aside>
 
 					</section>
+
+					<section>
+						<h4>4. Safer Exploration</h4>
+						<div class="col-xs-12">
+							<img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
+						</div>
+						<aside class="notes">
+							alternative: low-pass filter
+						</aside>
+					</section>
+
+					<section>
+						<h4>Smooth Exploration for RL</h4>
+						<div class="row">
+							<div class="col-xs-1">
+							</div>
+							<div class="col-xs-11">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=176&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+						<p class="xsmall-text">
+							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+						</p>
+					</section>
+
 
 				</section>
 
@@ -754,6 +827,7 @@
 							<ul class="medium-text">
 								<li class="fragment">Ingredients for task design</li>
 								<li class="fragment">Safety layers</li>
+								<li class="fragment">Leverage prior knowledge</li>
 								<li class="fragment">Reproducible experiments</li>
 								<!-- <li class="fragment">Follow best practices</li> -->
 								<li class="fragment">Start simple + minimal implementations</li>
