@@ -23,10 +23,15 @@ publication_types: ["3"]
 
 # Publication name and optional abbreviated version.
 publication: ""
-publication_short: "ICLR 2024"
+publication_short: "RLC 2024"
 
 # Abstract and optional shortened version.
-abstract: "In search of the simplest baseline capable of competing with Deep Reinforcement Learning on locomotion tasks, we propose a biologically inspired model-free open-loop strategy. Drawing upon prior knowledge and harnessing the elegance of simple oscillators to generate periodic joint motions, it achieves respectable performance in five different locomotion environments, with a number of tunable parameters that is a tiny fraction of the thousands typically required by RL algorithms. Unlike RL methods, which are prone to performance degradation when exposed to sensor noise or failure, our open-loop oscillators exhibit remarkable robustness due to their lack of reliance on sensors. Furthermore, we showcase a successful transfer from simulation to reality using an elastic quadruped, all without the need for randomization or reward engineering. "
+abstract: "In search of the simplest baseline for Deep Reinforcement Learning in locomotion tasks, we propose a model-free open-loop strategy.
+By leveraging prior knowledge and the elegance of simple oscillators to generate periodic joint motions, it achieves respectable performance in five different locomotion environments, with a number of tunable parameters that is a tiny fraction of the thousands typically required by DRL algorithms.
+We conduct two additional experiments using open-loop oscillators to identify current shortcomings of these algorithms.
+Our results show that, compared to the baseline, DRL is more prone to performance degradation when exposed to sensor noise or failure.
+Furthermore, we demonstrate a successful transfer from simulation to reality using an elastic quadruped, where RL fails without randomization or reward engineering.
+Overall, the proposed baseline and associated experiments highlight the existing limitations of DRL for robotic applications, provide insights on how to address them, and encourage reflection on the costs of complexity and generality."
 
 summary: ""
 
