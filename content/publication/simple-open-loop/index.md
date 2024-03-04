@@ -1,5 +1,5 @@
 ---
-title: "A Simple Open-Loop Baseline for Reinforcement Learning Locomotion Tasks"
+title: "An Open-Loop Baseline for Reinforcement Learning Locomotion Tasks"
 publishDate: 2023-10-04T00:00:00
 draft: false
 
@@ -26,7 +26,7 @@ publication: ""
 publication_short: "RLC 2024"
 
 # Abstract and optional shortened version.
-abstract: "In search of the simplest baseline for Deep Reinforcement Learning in locomotion tasks, we propose a model-free open-loop strategy.
+abstract: "In search of a simple baseline for Deep Reinforcement Learning in locomotion tasks, we propose a model-free open-loop strategy.
 By leveraging prior knowledge and the elegance of simple oscillators to generate periodic joint motions, it achieves respectable performance in five different locomotion environments, with a number of tunable parameters that is a tiny fraction of the thousands typically required by DRL algorithms.
 We conduct two additional experiments using open-loop oscillators to identify current shortcomings of these algorithms.
 Our results show that, compared to the baseline, DRL is more prone to performance degradation when exposed to sensor noise or failure.
@@ -55,11 +55,11 @@ tags:
 # Links (optional).
 url_pdf: ""
 url_preprint: "https://arxiv.org/abs/2310.05808"
-url_code: ""
+url_code: "https://gist.github.com/araffin/1fb77a8f290ac248b2e76e01164f21e0"
 url_dataset: ""
 url_project: ""
 url_slides: "slides/open-loop-mujoco"
-url_video: "https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi"
+url_video: "https://youtu.be/7-PUg9EAa3Y?si=3cSQOuNfkuVfOFVR&t=1343"
 url_poster: ""
 url_source: ""
 
