@@ -25,7 +25,7 @@ featured: false
 
 url_project:
 url_slides: slides/design-real-rl-experiments//
-url_video:
+url_video: https://youtu.be/eZ6ZEpCi6D8
 
 
 #image:
