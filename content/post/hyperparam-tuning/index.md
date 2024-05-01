@@ -4,12 +4,15 @@ title: "Automatic Hyperparameter Tuning - A Visual Guide (Part 1)"
 date: 2023-05-15
 ---
 
-Selecting the right hyperparameters can make or break your machine learning model. But who has time for endless trial and error or manual guesswork?
-Luckily, automatic hyperparameter tuning is there to the rescue.
+When you're building a machine learning model, you want to find the best hyperparameters to make it shine. But who has the luxury of trying out every possible combination?
 
-By cleverly sampling the search space and pruning unpromising trials early, automatic tuning can help you find the best hyperparameter settings quickly and effortlessly.
-Plus, it frees you up to focus on other important tasks, like drinking coffee or napping ;).
-As a personal and concrete example, I used this technique on a [real elastic quadruped](https://arxiv.org/abs/2209.07171) to optimize the parameters of a controller directly on the real robot.
+The good news is that automatic hyperparameter tuning can save the day. By trying out a bunch of configurations and stopping the least promising ones early, you can find the perfect hyperparameters without breaking a sweat.
+
+The trick is to allocate your "budget" (aka time and resources) wisely. You want to try out as many combinations as possible, but you don't have an infinite amount of time.
+
+By pruning the bad trials early and focusing on the promising ones, you can find the best hyperparameters quickly and efficiently. And the best part? You can focus on more important things... like drinking coffee or taking a nap.
+
+As a personal and concrete example, I used this technique on a [real elastic quadruped](https://arxiv.org/abs/2209.07171) to optimize the parameters of a controller directly on the real robot (it can also be good [baseline](https://arxiv.org/abs/2310.05808) for locomotion).
 
 In this blog post, I'll explore some of the techniques for automatic hyperparameter tuning, using reinforcement learning as a concrete example.
 I'll discuss the challenges of hyperparameter optimization, and introduce different samplers and schedulers for exploring the hyperparameter space.
