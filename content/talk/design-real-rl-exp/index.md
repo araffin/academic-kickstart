@@ -24,7 +24,7 @@ tags:
 featured: false
 
 url_project:
-url_slides: slides/design-real-rl-experiments//
+url_slides: slides/design-real-rl-experiments/
 url_video: https://youtu.be/eZ6ZEpCi6D8
 
 
@@ -51,3 +51,5 @@ projects:
 # Enable math on this page?
 math: false
 ---
+
+This talk was also given at the RL Symposium organized by [Boston University](https://www.bu.edu/hic/frp-reinforcement-learning-symposium/) on May 10, 2024.
