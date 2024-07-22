@@ -53,11 +53,11 @@ tags:
   - Robotics
 
 # Links (optional).
-url_pdf: ""
+url_pdf: "https://rlj.cs.umass.edu/2024/papers/RLJ_RLC_2024_18.pdf"
 url_preprint: "https://arxiv.org/abs/2310.05808"
 url_code: "https://gist.github.com/araffin/1fb77a8f290ac248b2e76e01164f21e0"
 url_dataset: ""
-url_project: ""
+url_project: "https://rlj.cs.umass.edu/2024/papers/RLJ_RLC_2024_18_supp.zip"
 url_slides: "slides/open-loop-mujoco"
 url_video: "https://youtu.be/7-PUg9EAa3Y?si=3cSQOuNfkuVfOFVR&t=1343"
 url_poster: ""
