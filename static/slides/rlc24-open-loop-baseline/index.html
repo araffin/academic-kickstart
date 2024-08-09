@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>An Open-Loop Baseline for Reinforcement Learning Locomotion Tasks</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+		<link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Open-Loop Baseline for RL Locomotion &middot; RLC 2024 &middot; 10.08.2024
+				</header>
+				<section data-background-image="images/bg_image.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-7">
+								<div class="col-xs-12">
+									<h3 id='main-title'>An Open-Loop Baseline for <br> RL Locomotion Tasks</h3>
+								</div>
+							</div>
+							<div class="col-xs-5">
+								<a target="_blank" href="https://github.com/DLR-RM/stable-baselines3">
+									<!-- <img class="shadow" src="images/bert/optimized_crop_2.jpg" alt="DLR bert" style="max-width:100%;"> -->
+									<img class="shadow" src="images/bert/real_bert.jpg" alt="DLR bert" style="max-width:100%;">
+								</a>
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (
+							<a href="https://twitter.com/araffin2">@araffin2</a>
+							) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+				</section>
+				
+				<section>
+					<h3>Motivation</h3>
+					<ul>
+						<li class="fragment">Current trend: increasingly complex algorithms</li>
+						<li class="fragment">SOTA RL struggle with seemingly simple problems</li>
+						<li class="fragment">Baseline for locomotion: periodic policy</li>
+					</ul>
+				</section>
+
+				<section>
+					<h4>Open-Loop Oscillators</h4>
+					<div class="row">
+
+						<div class="col-xs-12 medium-text fragment">
+								<div>
+									\[\begin{aligned}
+									q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
+									\dot{\theta_i}(t)  &amp;= \begin{cases}
+										\textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+										\textcolor{#862e9c}{\omega_\text{stance}}  &amp;\text{otherwise.}
+									\end{cases}
+
+									\end{aligned} \]
+
+								</div>
+						</div>
+						<div class="col-xs-12 medium-text fragment">
+							One oscillator per joint and the frequency is shared between the joints
+						</div>
+					</div>
+
+				</section>
+
+				<section>
+					<h4>35 lines of code</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<a href="https://gist.github.com/araffin/25159d668e9bad41bf31a595add22c27" target="_blank">
+								<img src="https://araffin.github.io/slides/design-real-rl-experiments/images/minimal_swimmer.png" class="shadow" style="max-width: 50%" alt="">
+							</a>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h3>Simulation Results</h3>
+				</section>
+
+				<section>
+					<h4>Parameter efficiency?</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/param_efficiency.png" style="max-width: 70%;" alt="">
+						</div>
+						<div class="col-xs-12 medium-text">
+							27000x fewer parameters than SAC
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Runtime?</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/runtime.png" alt="">
+						</div>
+					</div>
+				</section>
+				<section>
+					<h4>Robustness to noise</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/robustness.png" alt="">
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<section>
+						<h4>Real Robot Experiments</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="images/side_by_side.png" alt="">
+							</div>
+							<div class="col-xs-12 medium-text">
+								Sim2real transfer without randomization or reward engineering
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>Cost of generality vs prior knowledge</h4>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi/download" controls></video>
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>ISS Mission</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/5yzbPCf4ocqSEEE/download/turn_right.mp4" controls></video>
+							</div>
+							<div class="medium-text col-xs-12">
+								Training directly on the robot in 30 minutes.
+							</div>
+						</div>
+						<aside class="notes">
+							30 minutes training, one day before.
+						</aside>
+					</section>
+					
+					<section>
+						<h4>Additional Video</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/fDcGigLqjkCZeiW/download/avatar_close_up.mp4" controls></video>
+							</div>
+						</div>
+					</section>
+
+				</section>
+
+				<section>
+					<h4>Conclusion</h4>
+					<ul>
+						<li class="fragment">Minimal prior knowledge</li>
+						<li class="fragment">DRL pitfalls</li>
+						<li class="fragment">Cost of generality</li>
+						<li class="fragment">Limitations</li>
+					</ul>
+					<aside class="notes">
+
+					</aside>
+
+				</section>
+
+				<section>
+					<h4>Questions?</h4>
+				</section>
+
+				<section>
+					<h4>Backup slides</h4>
+					<!-- Reviews? -->
+				</section>
+
+				<section>
+					<h4>35 lines of code</h4>
+					<div class="row">
+						<div class="col-xs-12 medium-text">
+							<pre class="fragment"><code data-trim data-line-numbers="1-15|16-18|22-23|24-30|31-35|" class="python">
+												import gymnasium as gym
+												import numpy as np
+												from gymnasium.envs.mujoco.mujoco_env import MujocoEnv
+
+												# Env initialization
+												env = gym.make("Swimmer-v4", render_mode="human")
+												# Wrap to have reward statistics
+												env = gym.wrappers.RecordEpisodeStatistics(env)
+								mujoco_env = env.unwrapped
+								n_joints = 2
+								assert isinstance(mujoco_env, MujocoEnv)
+								# PD Controller gains
+								kp, kd = 10, 0.5
+								# Reset the environment
+								t, _ = 0.0, env.reset(seed=0)
+								# Oscillators parameters
+								omega = 2 * np.pi * 0.62 * np.ones(n_joints)
+								phase = 2 * np.pi * np.array([0.00, 0.95])
+
+								while True:
+								    env.render()
+								    # Open-Loop Control using oscillators
+								    desired_qpos = np.sin(omega * t + phase)
+								    # PD Control: convert to torque, desired qvel is zero
+								    desired_torques = (
+								        kp * (desired_qpos - mujoco_env.data.qpos[-n_joints:])
+								        - kd * mujoco_env.data.qvel[-n_joints:]
+								    )
+								    desired_torques = np.clip(desired_torques, -1.0, 1.0)  # clip to action bounds
+								    _, reward, terminated, truncated, info = env.step(desired_torques)
+								    t += mujoco_env.dt
+
+								    if terminated or truncated:
+								        print(f"Episode return: {float(info['episode']['r']):.2f}")
+								        t, _ = 0.0, env.reset()
+
+							</code></pre>
+
+						</div>
+					</div>
+				<section>
+				<section>
+					<h4>Performance?</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/performance.png" alt="">
+						</div>
+					</div>
+					<div class="col-xs-12 medium-text">
+						on-par with PPO
+					</div>
+
+				</section>
+				<section>
+					<h4>Performance? (2/2)</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/perf_profiles.png" alt="">
+						</div>
+					</div>
+				
+				</section>
+
+
+				<section>
+					<h4>Ablation Study</h4>
+					<div class="row">
+				
+						<div class="col-xs-12 small-text fragment">
+							<div>
+								\[\begin{aligned}
+								q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) +
+								\textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
+								\dot{\theta_i}(t) &amp;= \begin{cases}
+								\textcolor{#0b7285}{\omega_\text{swing}} &amp;\text{if $\sin(\theta_i(t) +
+								\textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+								\textcolor{#862e9c}{\omega_\text{stance}} &amp;\text{otherwise.}
+								\end{cases}
+				
+								\end{aligned} \]
+				
+							</div>
+						</div>
+						<div class="col-xs-12 fragment">
+							<img src="images/ablation_equa.png" alt="" style="max-width:60%">
+						</div>
+						<div class="col-xs-12 fragment">
+							<img src="images/ablation_result.png" alt="">
+						</div>
+					</div>
+				
+				</section>
+
+
+				<section>
+					<h4>Results</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/sim2real_table.png" alt="">
+						</div>
+					</div>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Use local version of katex
+				katex: {
+			    local: 'dist/katex',
+			  },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>

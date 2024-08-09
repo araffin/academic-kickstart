@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Stable-Baselines3 (SB3): Reliable RL Implementations</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+		<link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Stable-Baselines3 (SB3): Reliable RL Implementations &middot; RLC 2024 &middot; 10.08.2024
+				</header>
+				<section>
+					<h4>Stable-Baselines3</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							Reliable RL Implementations
+						</div>
+				
+					</div>
+					<div class="row">
+						<div class="col-xs-4">
+							<img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb_logo.png" class="shadow" alt="" style="max-width:100%">
+						</div>
+						<div class="col-xs-8">
+							<img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb3_train.jpeg" alt="" style="max-width:80%">
+						</div>
+					</div>
+				
+					<p class="medium-text">
+						<a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+					</p>
+				
+					<aside class="notes">
+						What it is? Why is it there?
+					</aside>
+				</section>
+				<section>
+					<h4>SBX (SB3 + Jax): A Faster Version of SB3</h4>
+					<img src="https://araffin.github.io/slides/design-real-rl-experiments/images/sb3_vs_sbx.png" alt="SB3 vs SBX" style="max-width: 80%">
+					<p class="medium-text">Up to 20x faster than SB3!</p>
+					<p class="medium-text">
+						<a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+					</p>
+				</section>
+
+				<section>
+					<h4>RL Zoo: Reproducible Experiments</h4>
+					<img src="https://araffin.github.io/slides/tips-reliable-rl/images/outlook/sb3_rl_zoo.png" alt="">
+					<p class="medium-text">
+						<a href="https://github.com/DLR-RM/rl-baselines3-zoo">https://github.com/DLR-RM/rl-baselines3-zoo</a>
+					</p>
+				</section>
+
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Use local version of katex
+				katex: {
+			    local: 'dist/katex',
+			  },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
