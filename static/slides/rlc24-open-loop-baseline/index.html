@@ -58,6 +58,11 @@
 						<li class="fragment">SOTA RL struggle with seemingly simple problems</li>
 						<li class="fragment">Baseline for locomotion: periodic policy</li>
 					</ul>
+					<aside class="notes">
+						the goal is not to replace RL
+						but to highlight limitations, provide insights
+						and ask for reflexion about the cost of generality <br>
+					</aside>
 				</section>
 
 				<section>
@@ -81,7 +86,12 @@
 							One oscillator per joint and the frequency is shared between the joints
 						</div>
 					</div>
-
+					<aside class="notes">
+						Inspired by biology,
+						surprising how far you can get with this simple strategy. <br>
+						Parameters optimized with BBO (CMA-ES) <br>
+						what is the minimal knowledge that you need to have something acceptable?
+					</aside>
 				</section>
 
 				<section>
@@ -93,6 +103,12 @@
 							</a>
 						</div>
 					</div>
+					<aside class="notes">
+						because it is simple,
+						it can be easily reproduced (minimal implementation),
+						but simple doesn't mean useless/trivial
+					</aside>
+
 				</section>
 
 				<section>
@@ -120,15 +136,6 @@
 					</div>
 				</section>
 				<section>
-					<h4>Robustness to noise</h4>
-					<div class="row">
-						<div class="col-xs-12">
-							<img src="images/robustness.png" alt="">
-						</div>
-					</div>
-				</section>
-
-				<section>
 					<section>
 						<h4>Real Robot Experiments</h4>
 						<div class="row">
@@ -151,7 +158,7 @@
 					</section>
 
 					<section>
-						<h4>ISS Mission</h4>
+						<h4>International Space Station Mission</h4>
 						<div class="row">
 							<div class="col-xs-12">
 								<video src="https://b2drop.eudat.eu/s/5yzbPCf4ocqSEEE/download/turn_right.mp4" controls></video>
@@ -266,7 +273,14 @@
 					</div>
 				
 				</section>
-
+				<section>
+					<h4>Robustness to noise</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="images/robustness.png" alt="">
+						</div>
+					</div>
+				</section>
 
 				<section>
 					<h4>Ablation Study</h4>
