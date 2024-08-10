@@ -22,7 +22,7 @@ authors:
 publication_types: ["3"]
 
 # Publication name and optional abbreviated version.
-publication: ""
+publication: "RL Conference"
 publication_short: "RLC 2024"
 
 # Abstract and optional shortened version.
@@ -58,7 +58,7 @@ url_preprint: "https://arxiv.org/abs/2310.05808"
 url_code: "https://gist.github.com/araffin/1fb77a8f290ac248b2e76e01164f21e0"
 url_dataset: ""
 url_project: "https://rlj.cs.umass.edu/2024/papers/RLJ_RLC_2024_18_supp.zip"
-url_slides: "slides/open-loop-mujoco"
+url_slides: "slides/rlc24-open-loop-baseline"
 url_video: "https://youtu.be/7-PUg9EAa3Y?si=3cSQOuNfkuVfOFVR&t=1343"
 url_poster: ""
 url_source: ""
