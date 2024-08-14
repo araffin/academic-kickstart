@@ -26,7 +26,8 @@ publication: "RL Conference"
 publication_short: "RLC 2024"
 
 # Abstract and optional shortened version.
-abstract: "In search of a simple baseline for Deep Reinforcement Learning in locomotion tasks, we propose a model-free open-loop strategy.
+abstract: "*Outstanding Paper Award on Empirical Resourcefulness in RL* <br>
+In search of a simple baseline for Deep Reinforcement Learning in locomotion tasks, we propose a model-free open-loop strategy.
 By leveraging prior knowledge and the elegance of simple oscillators to generate periodic joint motions, it achieves respectable performance in five different locomotion environments, with a number of tunable parameters that is a tiny fraction of the thousands typically required by DRL algorithms.
 We conduct two additional experiments using open-loop oscillators to identify current shortcomings of these algorithms.
 Our results show that, compared to the baseline, DRL is more prone to performance degradation when exposed to sensor noise or failure.
