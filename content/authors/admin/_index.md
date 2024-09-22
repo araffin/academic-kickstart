@@ -15,7 +15,7 @@ role: Research Engineer in Robotics and Machine Learning
 # Organizations/Affiliations
 organizations:
 - name: German Aerospace Center (DLR)
-  url: "https://www.dlr.de/rmc/"
+  url: "https://www.dlr.de/en/rm"
 
 # Short bio (displayed in user profile at end of posts)
 bio: Robots. Machine Learning. Blues Dance.
@@ -53,6 +53,10 @@ social:
   icon_pack: fab
   link: https://twitter.com/araffin2
 
+- icon: bluesky
+  icon_pack: fab
+  link: https://bsky.app/profile/araffin.bsky.social
+
 - icon: google-scholar
   icon_pack: ai
   link: https://scholar.google.fr/citations?user=kik4AwIAAAAJ&hl=fr
@@ -61,16 +65,16 @@ social:
   icon_pack: fab
   link: https://github.com/araffin
 
-- icon: twitch
-  icon_pack: fab
-  link: https://www.twitch.tv/givethatrobotacookie
+#- icon: twitch
+#  icon_pack: fab
+#  link: https://www.twitch.tv/givethatrobotacookie
 
 - icon: youtube
   icon_pack: fab
   link: https://www.youtube.com/user/atooo57
 
 # Link to a PDF of your resume/CV from the About widget.
-# To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.  
+# To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
 # - icon: cv
 #   icon_pack: ai
 #   link: files/cv.pdf
@@ -79,7 +83,7 @@ social:
 email: ""
 
 # Organizational groups that you belong to (for People widget)
-#   Set this to `[]` or comment out if you are not using People widget.  
+#   Set this to `[]` or comment out if you are not using People widget.
 # user_groups:
 # - Researchers
 # - Visitors
