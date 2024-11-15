@@ -103,14 +103,6 @@ You have to start over, beginning with a simple system. -->
 				</section>
 
 				<section>
-					<h4>Simulation is all you need?</h4>
-					<div class="row">
-						<div class="col-xs-12 fragment">
-							<video src="https://araffin.github.io/slides/real-robots-dresden/images/flying_robot.mp4" controls></video>
-						</div>
-					</div>
-				</section>
-				<section>
 					<section>
 						<h4>ISS Experiment (1)</h4>
 						<div class="row bottom-xs medium-text">
@@ -180,14 +172,39 @@ You have to start over, beginning with a simple system. -->
 							</div>
 						</div>
 					</section>
+					<section>
+						<h4>2nd Mission</h4>
+						<div class="row bottom-xs medium-text">
+							<!-- <div class="col-xs-12">
+								<img src="images/marcus.jpg" class="shadow" style="max-width: 50%"  alt="">
+								<p class="xsmall-text">Credit: ESA/NASA</p>
+							</div> -->
+							<div class="col-xs-6 fragment">
+									<img class="shadow" src="images/bert/bert_avatar.jpg" alt="DLR bert" style="max-width:87%;">
+									<p>Before</p>
+							</div>
+							<div class="col-xs-6 fragment">
+									<img class="shadow" src="images/bert/surface_bert_1.jpg" alt="DLR bert" style="max-width:100%;">
+									<p>After, new arm position + magnet</p>
+							</div>
+						</div>
+						<aside class="notes">
+						   New position for the arm + magnet at the tip
+						</aside>
+					</section>
+
+
+
 				</section>
 
 				<section>
 				    <h3>Challenges of real robot training</h3>
 					<ol>
                		   <li class="fragment">(Exploration-induced) wear and tear</li>
-               		   <li class="fragment">Sample efficiency</li>
-               		   <li class="fragment">Real-time constraints (one robot, manual resets)</li>
+               		   <li class="fragment">Sample efficiency<br>
+                        <span class="medium-text">➜ one robot, manual resets</span></li>
+               		   <li class="fragment">Real-time constraints<br>
+                        <span class="medium-text">➜ no pause, no acceleration, multi-day training</span></li>
                		   <li class="fragment">Computational resource constraints</li>
 					</ol>
 
@@ -196,13 +213,29 @@ You have to start over, beginning with a simple system. -->
 				<section>
 						<h4>Outline</h4>
 						<ol>
-								<li style="font-weight: bold;">Careful Task Design</li>
-								<li style="color:lightgrey;">Using Prior Knowledge</li>
-								<li style="color:lightgrey;">Safety Layers</li>
-								<li style="color:lightgrey;">Robust Hardware</li>
-								<li style="color:lightgrey;">RL Software</li>
+							<li style="font-weight: bold;">Careful Task Design</li>
+							<li style="color:lightgrey;">Using Prior Knowledge</li>
+							<li style="color:lightgrey;">Safety Layers</li>
+							<li style="color:lightgrey;">Robust Hardware</li>
+							<li style="color:lightgrey;">RL Software</li>
 						</ol>
 				</section>
+
+				<section>
+					<h4>RL 101</h4>
+					<!-- <p class="medium-text">truncation vs termination</p> -->
+
+					<div class="r-stack">
+						<img class="fragment shadow" src="images/rl101/bert_surface.png">
+						<img class="fragment" src="images/rl101/bert_agent_text.png">
+						<img class="fragment" src="images/rl101/bert_env_text.png">
+						<img class="fragment" src="images/rl101/bert_rl_full.png">
+					</div>
+					<aside class="notes">
+
+					</aside>
+				</section>
+
 
 				<section>
 					<h4>RL in Practice: Tips and Tricks - Video</h4>
@@ -392,7 +425,7 @@ You have to start over, beginning with a simple system. -->
 					</section>
 
 					<section>
-						<h4>35 lines of code</h4>
+						<h4>Periodic Policy</h4>
 						<div class="row">
 							<div class="col-xs-12 small-text">
 								<div>
@@ -491,38 +524,7 @@ You have to start over, beginning with a simple system. -->
 					</section>
 
 					<section>
-						<h4>1. Task Design (action space)</h4>
-						<div class="col-xs-12">
-							<img src="https://araffin.github.io/slides/real-robots-dresden/images/neck/david_neck_highlight.jpg" class="shadow" style="max-width:70%;"/>
-						</div>
-						<p class="medium-text">Ex: Controlling tendons forces instead of motor positions</p>
-
-						<aside class="notes">
-							Designing the task right to be safe by design <br>
-							other example: racing car <br>
-							Other example: CPG/residual learning
-						</aside>
-					</section>
-
-					<section>
-						<h4>Elastic Neck</h4>
-
-						<div class="row">
-							<div class="col-xs-1">
-							</div>
-							<div class="col-xs-11">
-								<div class="videoWrapper">
-									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=50&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
-								</div>
-							</div>
-						</div>
-						<p class="xsmall-text">
-							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
-						</p>
-					</section>
-
-					<section>
-						<h4>2. Hard Constraints, safety layers</h4>
+						<h4>1. Hard Constraints, safety layers</h4>
 						<div class="col-xs-12">
 							<a href="https://youtu.be/EoER_5vYZsU?si=y56aGSYSU4SfWR5G&t=185" target="_blank">
 								<img src="images/edan_sct.png" class="shadow" style="max-width:50%;"/>
@@ -556,7 +558,7 @@ You have to start over, beginning with a simple system. -->
 
 
 					<section>
-						<h4>3. Safer Exploration</h4>
+						<h4>2. Safer Exploration</h4>
 						<div class="col-xs-12">
 							<img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
 						</div>
@@ -806,22 +808,22 @@ You have to start over, beginning with a simple system. -->
 				</section> -->
 				<section>
 				    <h4>Challenges of real robot training (2)</h4>
-					<ol class="medium-text">
+					<ol>
                		   <li class="fragment">
-                        (Exploration-induced) wear and tear
-                        ➜ <b>smooth exploration</b>
+                        (Exploration-induced) wear and tear <br>
+                        <span class="medium-text fragment">➜ <b>smooth exploration</b></span>
                         </li>
                		   <li class="fragment">
-                        Sample efficiency
-                         ➜ <b>prior knowledge, recent algorithms</b>
+                        Sample efficiency <br>
+                        <span class="medium-text fragment">➜ <b>prior knowledge, recent algorithms</b></span>
                         </li>
                		   <li class="fragment">
-                        Real-time constraints (one robot, manual resets)
-                       ➜ <b>fast implementations, reproducible experiments</b>
+                        Real-time constraints <br>
+                        <span class="medium-text fragment">➜ <b>fast implementations, reproducible experiments</b></span>
                        </li>
                		   <li class="fragment">
-                        Computational resource constraints
-                        ➜ <b>simple controller, deploy with ONNX</b>
+                        Computational resource constraints <br>
+                        <span class="medium-text fragment">➜ <b>simple controller, deploy with ONNX</b></span>
                         </li>
 					</ol>
 
@@ -836,6 +838,7 @@ You have to start over, beginning with a simple system. -->
 								<li class="fragment">Leverage prior knowledge</li>
 								<li class="fragment">Safety layers</li>
 								<li class="fragment">Robust hardware</li>
+								<li class="fragment">Reliable and fast software</li>
 								<!-- <li class="fragment">Follow best practices</li> -->
 								<li class="fragment">Start simple</li>
 							</ul>
@@ -856,6 +859,38 @@ You have to start over, beginning with a simple system. -->
 				<section>
 					<h4>Backup Slides</h4>
 				</section>
+
+				<section>
+					<h4>1. Task Design (action space)</h4>
+					<div class="col-xs-12">
+						<img src="https://araffin.github.io/slides/real-robots-dresden/images/neck/david_neck_highlight.jpg" class="shadow" style="max-width:70%;"/>
+					</div>
+					<p class="medium-text">Ex: Controlling tendons forces instead of motor positions</p>
+
+					<aside class="notes">
+						Designing the task right to be safe by design <br>
+						other example: racing car <br>
+						Other example: CPG/residual learning
+					</aside>
+				</section>
+
+				<section>
+					<h4>Elastic Neck</h4>
+
+					<div class="row">
+						<div class="col-xs-1">
+						</div>
+						<div class="col-xs-11">
+							<div class="videoWrapper">
+								<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=50&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+							</div>
+						</div>
+					</div>
+					<p class="xsmall-text">
+						Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+					</p>
+				</section>
+
 
 				<section>
 					<div class="row">
@@ -885,6 +920,14 @@ You have to start over, beginning with a simple system. -->
 						- Maintainer of SB3</p>
 						- RL directly on real robots, no simulation<br>
 					</aside>
+				</section>
+				<section>
+					<h4>Simulation is all you need?</h4>
+					<div class="row">
+						<div class="col-xs-12 fragment">
+							<video src="https://araffin.github.io/slides/real-robots-dresden/images/flying_robot.mp4" controls></video>
+						</div>
+					</div>
 				</section>
 
 				<section>
