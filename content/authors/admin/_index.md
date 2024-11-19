@@ -49,9 +49,9 @@ social:
 #  icon_pack: fab
 #  link: https://sigmoid.social/@araffin
 
-- icon: twitter
-  icon_pack: fab
-  link: https://twitter.com/araffin2
+# - icon: twitter
+#  icon_pack: fab
+#  link: https://twitter.com/araffin2
 
 - icon: bluesky
   icon_pack: fab
@@ -65,9 +65,9 @@ social:
   icon_pack: fab
   link: https://github.com/araffin
 
-#- icon: twitch
-#  icon_pack: fab
-#  link: https://www.twitch.tv/givethatrobotacookie
+- icon: twitch
+  icon_pack: fab
+  link: https://www.twitch.tv/givethatrobotacookie
 
 - icon: youtube
   icon_pack: fab
