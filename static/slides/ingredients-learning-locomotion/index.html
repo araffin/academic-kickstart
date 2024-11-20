@@ -726,26 +726,6 @@ You have to start over, beginning with a simple system. -->
 				</section>
 
 				<section>
-					<h4>Recent Off-policy RL Algorithms</h4>
-					<div class="row">
-						<div class="col-xs-12">
-							<ul>
-                              	 <li class="fragment">TQC: distributional critic</li>
-                              	 <li class="fragment">DroQ: ensembling with dropout, higher replay ratio</li>
-                              	 <li class="fragment">CrossQ: with BN, without target net</li>
-                              	 <li class="fragment">Simba, BRO: bigger, residual net</li>
-							</ul>
-						</div>
-					</div>
-					<aside class="notes">
-						- Which algorithm should I use? depends on the env and on what matters for you
-						action space + multiprocessing (wall clock time vs sample efficiency)? <br>
-						- w.r.t. performance,	for continuous control, use DroQ <br>
-						- even more parallel: ES
-					</aside>
-				</section>
-
-				<section>
 					<section>
 						<h4>Recent Advances: Jax and JIT</h4>
 						<p class="medium-text">Up to 20x faster!</p>
@@ -765,6 +745,26 @@ You have to start over, beginning with a simple system. -->
 							JAX: DL lib with functional prog design<br>
 							JIT: huge boost if written correctly<br>
 							Here, same algo/task/hyperparams, Jax JIT is the difference.
+						</aside>
+					</section>
+
+					<section>
+						<h4>Recent Off-policy RL Algorithms</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<ul>
+                              	 <li class="fragment">TQC: distributional critic</li>
+                              	 <li class="fragment">DroQ: ensembling with dropout, higher replay ratio</li>
+                              	 <li class="fragment">CrossQ: with BN, without target net</li>
+                              	 <li class="fragment">Simba, BRO: bigger, residual net</li>
+								</ul>
+							</div>
+						</div>
+						<aside class="notes">
+							- Which algorithm should I use? depends on the env and on what matters for you
+							action space + multiprocessing (wall clock time vs sample efficiency)? <br>
+							- w.r.t. performance,	for continuous control, use DroQ <br>
+							- even more parallel: ES
 						</aside>
 					</section>
 
@@ -854,6 +854,11 @@ You have to start over, beginning with a simple system. -->
 
 				<section>
 					<h3>Questions?</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" autoplay controls muted></video>
+						</div>
+					</div>
 				</section>
 
 				<section>
