@@ -1,0 +1,923 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Enabling Reinforcement Learning on Real Robots</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/theme/white.css" id="theme">
+		<!-- Add DLR logo -->
+		<link rel="stylesheet" href="css/dlr.css">
+		<!-- Grid system: http://flexboxgrid.com/ -->
+		<link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+		<link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+	</head>
+	<body>
+		<div class="side-block">
+		</div>
+		<div class="reveal">
+			<div class="slides">
+				<header>
+					www.dlr.de &middot; Antonin RAFFIN &middot; Enabling Reinforcement Learning on Real Robots &middot; PhD Defense &middot; 31.01.2025
+				</header>
+				<section data-background-image="images/bg_image.jpg">
+					<div class="row bottom-xs">
+						<div class="row middle-xs">
+							<div class="col-xs-6">
+								<div class="col-xs-12">
+									<h3 id='main-title'>Enabling Reinforcement Learning <br> on Real Robots</h3>
+								</div>
+							</div>
+							<div class="col-xs-6">
+							 <img class="shadow" src="images/mosaic.jpg" alt="all robots" style="max-width:100%;">
+							</div>
+						</div>
+						<div class="col-xs-6 xsmall-text">
+							Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
+							<span class="italic">German Aerospace Center (DLR)</span><br>
+							<a href="https://araffin.github.io/">https://araffin.github.io/</a>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>RL 101</h4>
+
+					<div class="r-stack">
+						<img class="fragment shadow" src="images/rl101/bert_surface.png">
+						<img class="fragment" src="images/rl101/bert_agent_text.png">
+						<img class="fragment" src="images/rl101/bert_env_text.png">
+						<img class="fragment" src="images/rl101/bert_rl_full.png">
+					</div>
+					<aside class="notes">
+					   LIVE DEMO! (at least in simulation with gui)
+						Note: can use bore cli <br>
+						Explain the goal of RL too
+					</aside>
+				</section>
+
+
+
+				<section>
+					<h3>Motivation</h3>
+					<p class="subtitle">Learning directly on real robots</p>
+				</section>
+				<section>
+					<h4>Simulation to reality</h4>
+					<p class="small-text">In the papers...</p>
+					<div class="row">
+						<div class="col-xs-1">
+						</div>
+						<div class="col-xs-11">
+							<div class="videoWrapper">
+								<iframe src="https://www.youtube.com/embed/8sO7VS3q8d0?start=6&rel=0&mute=1" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+							</div>
+						</div>
+					</div>
+					<p class="xsmall-text">
+					    Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." CoRL, 2021.
+					</p>
+				</section>
+				<section>
+					<h4>Simulation to reality (2)</h4>
+					<p class="small-text">...in reality.</p>
+
+					<div class="row bottom-xs medium-text">
+						<div class="col-xs-12">
+							<img src="images/rhoban_rl.jpg" style="max-width: 80%;" class="shadow">
+							<p class="small-text">Duclusaud, Marc, et al. "Extended Friction Models for the Physics Simulation of Servo Actuators." (2024)</p>
+						</div>
+					</div>
+					<aside class="notes">
+					Sim2real gap, tedious modeling <br>
+					Not model free anymore <br>
+					No garantee that it will work on the robot <br>
+					Domain randomization.
+					</aside>
+				</section>
+				<section>
+					<section>
+						<h4>ISS Experiment (1)</h4>
+						<div class="row bottom-xs medium-text">
+							<div class="col-xs-12">
+								<img src="images/marcus.jpg" class="shadow">
+								<p class="xsmall-text">Credit: ESA/NASA</p>
+							</div>
+						</div>
+						<aside class="notes">
+							Robot controlled from space by an astronaut
+						</aside>
+					</section>
+
+					<section>
+						<h4>ISS Experiment (2)</h4>
+						<div class="row bottom-xs medium-text">
+							<!-- <div class="col-xs-12">
+								<img src="images/marcus.jpg" class="shadow" style="max-width: 50%"  alt="">
+								<p class="xsmall-text">Credit: ESA/NASA</p>
+							</div> -->
+							<div class="col-xs-6 fragment">
+									<img class="shadow" src="https://araffin.github.io/slides/tips-reliable-rl/images/bert/real_bert.jpg" alt="DLR bert" style="max-width:100%;">
+									<p>Before</p>
+							</div>
+							<div class="col-xs-6 fragment">
+									<img class="shadow" src="images/bert/bert_avatar.jpg" alt="DLR bert" style="max-width:80%;">
+									<p>After, with the 1kg arm</p>
+							</div>
+						</div>
+						<aside class="notes">
+							Existing controllers didn't work anymore!<br>
+							Hard to model the exact new mass distribution (only a week)<br>
+							Missing a hip to turn -> learn on real robot
+						</aside>
+					</section>
+
+					<section>
+						<h4>Can it turn?</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/4Z4nJK8bCKLgziX/download/gravel_long.mp4" controls></video>
+							</div>
+						</div>
+						<aside class="notes">
+						Missing a hip joint.
+						</aside>
+					</section>
+
+
+					<section>
+						<h4>Can it still turn?</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/5yzbPCf4ocqSEEE/download/turn_right.mp4" controls></video>
+							</div>
+						</div>
+						<aside class="notes">
+							30 minutes training, one day before.
+						</aside>
+					</section>
+
+
+				</section>
+
+				<section>
+				    <h3>Challenges of real robot training</h3>
+					<ol>
+               		   <li class="fragment">(Exploration-induced) wear and tear</li>
+               		   <li class="fragment">Sample efficiency<br>
+                        <span class="medium-text">➜ one robot, manual resets</span></li>
+               		   <li class="fragment">Real-time constraints<br>
+                        <span class="medium-text">➜ no pause, no acceleration, multi-day training</span></li>
+               		   <li class="fragment">Computational resource constraints</li>
+					</ol>
+
+				</section>
+
+				<!-- TODO: better organize things/highlight contributions, update texts to match conclusion/remarks -->
+				<section>
+					<h4>Outline</h4>
+					<ol>
+						<li style="font-weight: bold;">Reliable RL Implementations</li>
+						<li style="color:lightgrey;">Smooth Exploration</li>
+						<li style="color:lightgrey;">Integrating Pose Estimation</li>
+						<li style="color:lightgrey;">Combining Oscillators and RL</li>
+					</ol>
+					<aside class="notes">
+					To address those challenges, the contributions. <br>
+					Explore different ways to address them.<br>
+					Using prior knowledge/expert knowledge
+					</aside>
+				</section>
+
+				<section>
+                    <section>
+        				<h4>Stable-Baselines3 (SB3)</h4>
+        				<div class="row">
+       					<div class="col-xs-12">
+      						Reliable RL Implementations
+       					</div>
+
+        				</div>
+        				<div class="row">
+       					<div class="col-xs-4">
+      						<img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb_logo.png" class="shadow" alt="" style="max-width:100%">
+       					</div>
+       					<div class="col-xs-8">
+      						<img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb3_train.jpeg" alt="" style="max-width:80%">
+       					</div>
+        				</div>
+
+        				<p class="medium-text">
+       					<a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+        				</p>
+                        <p class="xsmall-text">
+                            Raffin, Antonin, et al. "Stable-baselines3: Reliable reinforcement learning implementations." JMLR (2021)
+						</p>
+
+        				<aside class="notes">
+       					What it is? Why is it there? <br>
+       					Trusted implementations <br>
+               	        Software used throughout the thesis
+        				</aside>
+                    </section>
+                    <section>
+						<h4>Reliable Implementations?</h4>
+
+						<img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/all_green.png" style="max-width: 50%" alt="">
+
+						<ul class="medium-text">
+							<li class="fragment">Performance checked</li>
+							<li class="fragment">Software best practices (96% code coverage, type checked, ...)</li>
+							<li class="fragment">3 types of tests (run, unit tests, performance)</li>
+							<li class="fragment">Active community (9000+ stars, 2600+ citations, 6M+ downloads)</li>
+							<li class="fragment">Fully documented</li>
+						</ul>
+						<aside class="notes">
+							Maybe mention that we have different type of tests
+							(run, unittest, performance)
+						</aside>
+					</section>
+    			</section>
+
+    			<section>
+    				<h4>Reproducible Reliable RL: SB3 + RL Zoo</h4>
+    				<img src="images/outlook/sb3_rl_zoo.png" alt="">
+    				<aside class="notes">
+    					What am I using to run RL experiment?<br>
+    					why? features?
+    				</aside>
+    			</section>
+
+    			<section>
+    				<div class="row">
+    					<div class="col-xs-12">
+    						<h4>RL Zoo: Reproducible Experiments</h4>
+    						<p class="medium-text">
+    							<a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+    								https://github.com/DLR-RM/rl-baselines3-zoo
+    							</a>
+    						</p>
+    					</div>
+
+    				</div>
+    				<div class="row medium-text">
+    					<div class="col-xs-8">
+    						<ul>
+    							<li class="fragment">Training, loading, plotting, hyperparameter optimization</li>
+    							<!-- <li class="fragment">W&B integration</li> -->
+    							<li class="fragment">Everything that is needed to reproduce the experiment is logged</li>
+    							<li class="fragment">200+ trained models with tuned hyperparameters</li>
+    						</ul>
+    					</div>
+    					<div class="col-xs-4">
+    						<img src="https://github.com/DLR-RM/rl-baselines3-zoo/raw/master/images/car.jpg" class="shadow" alt="">
+    					</div>
+    				</div>
+
+    				<aside class="notes">
+    					RL Zoo: log everything that is needed to reproduce/compare automatically <br>
+    					Minimize potential mistake when running experiments <br>
+    				</aside>
+
+    			</section>
+
+    			<section>
+    				<section>
+    					<h4>SBX: A Faster Version of SB3</h4>
+    					<div class="row fragment">
+    						<div class="col-xs-12">
+    							<img src="images/sb3_vs_sbx.png" alt="SB3 vs SBX" style="max-width: 80%">
+    						</div>
+    					</div>
+    					<div class="row">
+    						<div class="col-xs-12">
+    							<p class="medium-text">
+    								Stable-Baselines3 (PyTorch) vs SBX (Jax)
+    							</p>
+    						</div>
+    					</div>
+    					<aside class="notes">
+    						JAX: DL lib with functional prog design<br>
+    						JIT: huge boost if written correctly<br>
+    						Here, same algo/task/hyperparams, Jax JIT is the difference.
+    					</aside>
+    				</section>
+
+    				<section>
+    					<h4>Recent Advances: <code>DroQ</code></h4>
+    					<p class="medium-text">More gradient steps: 4x more sample efficient!</p>
+
+    					<div class="row fragment">
+    						<div class="col-xs-12">
+    							<img src="images/droq_vs_sac.png" alt="DroQ vs SAC" style="max-width: 80%">
+    						</div>
+    					</div>
+    					<aside class="notes">
+    						Jax faster, more gradient steps, more sample efficient <br>
+    						Also take a look at TQC, TD7 and CrossQ
+    					</aside>
+    				</section>
+
+    				<section>
+    					<h4>RL from scratch in 10 minutes</h4>
+    					<div class="row middle-xs">
+    						<div class="col-xs-12">
+    							<video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls></video>
+    						</div>
+    					</div>
+    					<div class="row">
+    						<div class="col-xs-12">
+    							<p class="small-text">Using SB3 + Jax = SBX:
+    								<a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+    							</p>
+    						</div>
+    					</div>
+    				</section>
+    			</section>
+
+                <section>
+					<ol>
+                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="font-weight:bold;">Smooth Exploration</li>
+                        <li style="color:lightgrey;">Integrating Pose Estimation</li>
+                        <li style="color:lightgrey;">Combining Oscillators and RL</li>
+					</ol>
+				</section>
+
+				<section>
+					<section>
+						<h4>Smooth Exploration for Robotic RL</h4>
+						<div class="col-xs-12">
+							<img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
+						</div>
+						<p class="xsmall-text">
+							Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+						</p>
+						<aside class="notes">
+							alternative: low-pass filter
+						</aside>
+					</section>
+					<section>
+						<h4>generalized State-Dependent Exploration (gSDE)</h4>
+						<div class="row medium-text">
+								<div class="col-xs-6 fragment">
+									Independent Gaussian noise:
+									\[ \epsilon_t \sim \mathcal{N}(0, \sigma) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t \]
+								</div>
+								<div class="col-xs-6 fragment">
+									State dependent exploration:
+									\[ \theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) \]
+									\[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(s_t; \theta_{\epsilon}) \]
+								</div>
+								<!-- <div class="col-xs-4">
+									Linear case:
+									\[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+								</div> -->
+							<div class="col-xs-12">
+							 <img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
+							</div>
+						</div>
+					</section>
+					<section>
+						<h4>Trade-off between <br> return and continuity cost</h4>
+						<div class="col-xs-12">
+							<img src="images/pareto_gsde.svg" style="max-width:60%;"/>
+						</div>
+					</section>
+
+					<section>
+						<h4>Results</h4>
+						<div class="row">
+							<div class="col-xs-1">
+							</div>
+							<div class="col-xs-11">
+								<div class="videoWrapper">
+									<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=26&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+								</div>
+							</div>
+						</div>
+					</section>
+				</section>
+
+				<section>
+				    <ol>
+                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="color:grey;">Smooth Exploration</li>
+                        <li style="font-weight:bold;">Integrating Pose Estimation</li>
+                        <li style="color:lightgrey;">Combining Oscillators and RL</li>
+                    </ol>
+				</section>
+
+				<section>
+    				<section>
+    					<h4>Fault-tolerant Pose Estimation</h4>
+    					<div class="col-xs-12">
+    						<img src="https://araffin.github.io/slides/real-robots-dresden/images/neck/david_neck_highlight.jpg" class="shadow" style="max-width:70%;"/>
+    					</div>
+    					<p class="xsmall-text">
+                            Raffin, Antonin, Bastian Deutschmann, and Freek Stulp. "Fault-tolerant six-DoF pose estimation for tendon-driven continuum mechanisms." Frontiers in Robotics and AI, 2021.
+    					</p>
+    					<aside class="notes">
+                        learning from scratch is usually not the best option<br>
+                        need pose estimation
+
+    					</aside>
+    				</section>
+				    <section>
+    					<h4>Method</h4>
+    					<div class="row middle-xs">
+    						<div class="col-xs-12">
+    							<video src="https://b2drop.eudat.eu/s/mqnqPEZxzTJmbPi/download/neck_pose_explanation.mp4#t=67" controls muted></video>
+    						</div>
+    					</div>
+    					<aside class="notes">
+    					</aside>
+    				</section>
+
+    				<section>
+    					<h4>Integrating Pose Estimation with RL</h4>
+    					<div class="col-xs-12">
+    						<img src="images/ff_rl_neck.png" class="shadow" alt="FF + RL" style="max-width:70%;"/>
+    					</div>
+    					<aside class="notes">
+    						Reduces search space<br>
+    						Safer exploration, most of the task is solved<br>
+    					</aside>
+    				</section>
+
+    				<section>
+    					<h4>Neck Control Results</h4>
+    					<div class="col-xs-12">
+    						<img src="images/neck/Training_Success_Rate.svg" style="max-width:70%;"/>
+    					</div>
+    					<aside class="notes">
+    					</aside>
+    				</section>
+
+    				<section>
+    					<h4>Pose Prediction Results</h4>
+    					<div class="row middle-xs">
+    						<div class="col-xs-12">
+    							<video src="https://b2drop.eudat.eu/s/DD95Eys9NLyYff9/download/neck_pose.mp4" controls></video>
+    						</div>
+    					</div>
+    					<aside class="notes">
+    					</aside>
+    				</section>
+				</section>
+
+
+
+				<section>
+				    <ol>
+                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="color:grey;">Smooth Exploration</li>
+                        <li style="color:grey;">Integrating Pose Estimation</li>
+                        <li style="font-weight:bold;">Combining Oscillators and RL</li>
+                    </ol>
+				</section>
+
+				<section>
+					<!-- <section>
+						<h4>Prior knowledge?</h4>
+						<div class="row">
+							<ul>
+    						 <li class="fragment">Generality in algo vs specifity in task design</li>
+    						 <li class="fragment">Reduce search space</li>
+    						 <li class="fragment">Safer</li>
+							</ul>
+						</div>
+						<aside class="notes">
+						No need to re-discover what is known
+						</aside>
+					</section> -->
+
+					<section>
+						<h4>An Open-Loop Baseline for RL Locomotion Tasks</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="https://araffin.github.io/slides/open-loop-mujoco/images/side_by_side.png" class="shadow" alt="">
+							</div>
+						</div>
+						<div class="col-xs-12 xsmall-text">
+							<p>
+								Raffin et al. "An Open-Loop Baseline for Reinforcement Learning Locomotion Tasks",  RLJ 2024.
+							</p>
+						</div>
+						<aside class="notes">
+						 	Searching for the simplest baseline for locomotion.<br>
+							highlight strengths/weaknesses of RL.<br>
+							Show the use of prior knowledge
+						</aside>
+					</section>
+
+					<section>
+						<h4>Periodic Policy</h4>
+						<div class="row">
+							<div class="col-xs-12 small-text">
+								<div>
+									\[\begin{aligned}
+									q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
+									\dot{\theta_i}(t)  &amp;= \begin{cases}
+										\textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+										\textcolor{#862e9c}{\omega_\text{stance}}  &amp;\text{otherwise.}
+									\end{cases}
+
+									\end{aligned} \]
+								</div>
+							</div>
+							<div class="col-xs-12 fragment">
+								<a href="https://gist.github.com/araffin/25159d668e9bad41bf31a595add22c27" target="_blank">
+									<img src="images/minimal_swimmer.png" class="shadow" style="max-width: 50%" alt="">
+								</a>
+							</div>
+						</div>
+						<!-- TODO: add latex explaining each letter? -->
+						<aside class="notes">
+						 	Core idea: one oscillator per joint,
+							share frequency between joints.<br>
+							more specialized by still model free and simple, optimize with BBO
+						</aside>
+					</section>
+
+					<section>
+						<h4>Parameter efficiency?</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<img src="https://araffin.github.io/slides/open-loop-mujoco/images/param_efficiency.png" style="max-width: 70%" alt="">
+							</div>
+						</div>
+					</section>
+
+					<section>
+						<h4>Cost of generality vs prior knowledge</h4>
+						<div class="row middle-xs">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi/download" controls></video>
+							</div>
+						</div>
+						<aside class="notes">
+						 	highlight shortcomings of RL using simple baseline,
+							no randomization, no reward engineering -> why?
+						</aside>
+
+					</section>
+
+				</section>
+
+				<section>
+					<h4>Combining Open-Loop Oscillators with RL</h4>
+					<div class="col-xs-12">
+						<img src="images/cpg_rl.png" class="shadow" alt="CPG RL" style="max-width:70%;"/>
+					</div>
+					<aside class="notes">
+						Reduces search space<br>
+						RL only a delta, safer, also about action space<br>
+						more on cost of generality later
+					</aside>
+				</section>
+
+				<section>
+					<h4>Learning to Exploit Elastic Actuators</h4>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/CYyZ3faNxz98jZy/download" controls></video>
+						</div>
+					</div>
+					<div class="col-xs-12 xsmall-text">
+						<p>
+							Raffin et al. "Learning to Exploit Elastic Actuators for Quadruped Locomotion" 2023.
+						</p>
+					</div>
+					<aside class="notes">
+						from scratch vs with prior knowledge
+					</aside>
+
+				</section>
+
+				<section>
+				    <h4>Challenges of real robot training (2)</h4>
+					<ol>
+               		   <li class="fragment">
+                        (Exploration-induced) wear and tear <br>
+                        <span class="medium-text fragment">➜ <b>smooth exploration, feedforward controller, open-loop oscillators</b></span>
+                        </li>
+               		   <li class="fragment">
+                        Sample efficiency <br>
+                        <span class="medium-text fragment">➜ <b>prior knowledge, recent algorithms</b></span>
+                        </li>
+               		   <li class="fragment">
+                        Real-time constraints <br>
+                        <span class="medium-text fragment">➜ <b>fast implementations, reproducible experiments</b></span>
+                       </li>
+               		   <li class="fragment">
+                        Computational resource constraints <br>
+                        <span class="medium-text fragment">➜ <b>open-loop oscillators, deploy with ONNX, fast pose estimation</b></span>
+                        </li>
+					</ol>
+
+				</section>
+
+				<section>
+					<h4>Conclusion</h4>
+					<div class="row">
+						<div class="col-xs-6">
+							<ul class="medium-text">
+								<li class="fragment">High quality software</li>
+								<!-- <li class="fragment">Reliable and fast software</li> -->
+								<li class="fragment">Safer exploration</li>
+								<li class="fragment">Leverage prior knowledge</li>
+								<li class="fragment">Future: pre-train in sim, fine-tune on real hardware?</li>
+								<!-- <li class="fragment">Future: improvement in hardware</li> -->
+							</ul>
+
+						</div>
+						<div class="col-xs-6">
+							<div class="front-video-container">
+							    <video src="https://b2drop.eudat.eu/s/bZBnBGPaYpBCfwf/download/gravel_jump_crop.mp4" controls autoplay loop muted></video>
+							</div>
+						</div>
+					</div>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h3>Questions?</h3>
+					<div class="row middle-xs">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Backup Slides</h4>
+				</section>
+
+				<section>
+					<h4>Additional Video</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/fDcGigLqjkCZeiW/download/avatar_close_up.mp4" controls></video>
+						</div>
+					</div>
+				</section>
+				<section>
+					<h4>2nd Mission</h4>
+					<div class="row bottom-xs medium-text">
+						<div class="col-xs-6 fragment">
+								<img class="shadow" src="images/bert/bert_avatar.jpg" alt="DLR bert" style="max-width:87%;">
+								<p>Before</p>
+						</div>
+						<div class="col-xs-6 fragment">
+								<img class="shadow" src="images/bert/surface_bert_1.jpg" alt="DLR bert" style="max-width:100%;">
+								<p>After, new arm position + magnet</p>
+						</div>
+					</div>
+					<aside class="notes">
+					   New position for the arm + magnet at the tip
+					</aside>
+				</section>
+				<section>
+					<h4>Outdoor</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/gGDmQXF7YMpdtg8/download/bert_outdoor.mp4" controls></video>
+						</div>
+					</div>
+					<aside class="notes">
+						10 minutes retraining on gravel only.
+					</aside>
+				</section>
+				<section>
+					<h4>Broken leg</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<video src="https://b2drop.eudat.eu/s/nXbDTbsJrk24ddq/download/broken_leg.mp4" controls></video>
+						</div>
+					</div>
+					<aside class="notes">
+						10 minutes retraining, optimizing phase-shifts too.
+					</aside>
+				</section>
+
+				<section>
+					<h4>Elastic Neck</h4>
+
+					<div class="row">
+						<div class="col-xs-1">
+						</div>
+						<div class="col-xs-11">
+							<div class="videoWrapper">
+								<iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=50&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+							</div>
+						</div>
+					</div>
+					<p class="xsmall-text">
+						Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+					</p>
+				</section>
+
+				<section>
+                    <h4>Pose Estimation Results</h4>
+                    <div class="row">
+    				    <div class="col-xs-6">
+        				    <img src="images/neck/Box_plot_Euler_angles.svg"/>
+        				</div>
+    				    <div class="col-xs-6">
+        				    <img src="images/neck/Box_plot_positions.svg"/>
+        				</div>
+                    </div>
+				</section>
+
+				<section>
+					<h4>Simulation is all you need?</h4>
+					<div class="row">
+						<div class="col-xs-12 fragment">
+							<video src="https://araffin.github.io/slides/real-robots-dresden/images/flying_robot.mp4" controls></video>
+						</div>
+					</div>
+				</section>
+
+				<section>
+					<h4>Plotting</h4>
+					<div class="row medium-text">
+						<div class="col-xs-12">
+
+						<pre style="width:100%"><code class="bash" data-line-numbers="|" data-trim>
+							python -m rl_zoo3.cli all_plots -a sac -e HalfCheetah Ant -f logs/ -o sac_results
+							python -m rl_zoo3.cli plot_from_file -i sac_results.pkl -latex -l SAC --rliable
+						</code></pre>
+					</div>
+					<div class="col-xs-12">
+						<img src="images/rl_zoo/rl_metrics.png" class="shadow" alt="">
+					</div>
+				</div>
+				<aside class="notes">
+					All experiments are formatted the same,
+					makes it easy to plot/compare/follow best practices
+
+				</aside>
+
+				</section>
+
+				<section>
+					<section>
+						<div class="row">
+							<div class="col-xs-12">
+								<h4>RL Zoo: Reproducible Experiments</h4>
+								<p class="medium-text">
+									<a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+										https://github.com/DLR-RM/rl-baselines3-zoo
+									</a>
+								</p>
+							</div>
+
+						</div>
+						<div class="row medium-text">
+							<div class="col-xs-8">
+								<ul>
+									<li class="fragment">Training, loading, plotting, hyperparameter optimization</li>
+									<li class="fragment">W&B integration</li>
+									<li class="fragment">200+ trained models with tuned hyperparameters</li>
+								</ul>
+							</div>
+							<div class="col-xs-4">
+								<img src="https://github.com/DLR-RM/rl-baselines3-zoo/raw/master/images/car.jpg" class="shadow" alt="">
+							</div>
+						</div>
+
+						<aside class="notes">
+							RL Zoo: log everything that is needed to reproduce/compare automatically <br>
+							Minimize potential mistake when running experiments <br>
+
+						</aside>
+
+					</section>
+					<section>
+						<h4>In practice</h4>
+						<div class="row medium-text">
+							<div class="col-xs-12">
+
+							<pre class="fragment" style="width:100%"><code class="bash" data-line-numbers="1-5" data-trim>
+								# Train an SAC agent on Pendulum using tuned hyperparameters,
+								# evaluate the agent every 1k steps and save a checkpoint every 10k steps
+								# Pass custom hyperparams to the algo/env
+								python -m rl_zoo3.train --algo sac --env Pendulum-v1 --eval-freq 1000 \
+								    --save-freq 10000 -params train_freq:2 --env-kwargs g:9.8
+							</code></pre>
+
+							<pre class="fragment" style="width:100%"><code class="bash" data-trim>
+								sac/
+								└── Pendulum-v1_1 # One folder per experiment
+								    ├── 0.monitor.csv # episodic return
+								    ├── best_model.zip # best model according to evaluation
+								    ├── evaluations.npz # evaluation results
+								    ├── Pendulum-v1
+										│   ├── args.yml # custom cli arguments
+										│   ├── config.yml # hyperparameters
+								    │   └── vecnormalize.pkl # normalization
+								    ├── Pendulum-v1.zip # final model
+								    └── rl_model_10000_steps.zip # checkpoint
+
+							</code></pre>
+						</div>
+					</div>
+
+					<aside class="notes">
+						Simple command in the terminal to launch an experiment
+						and change some parameters <br>
+						save everything for you
+					</aside>
+
+					</section>
+
+					<section>
+							<div class="row middle-xs">
+								<div class="col-xs-12">
+									<h4>Learning to race in an hour</h4>
+								</div>
+								<div class="col-xs-12">
+									<div class="videoWrapper">
+										<iframe src="https://www.youtube.com/embed/ngK33h00iBE?start=0&rel=0" allowfullscreen width="100%" height="auto" frameborder="0"></iframe>
+									</div>
+								</div>
+							</div>
+					</section>
+
+					<section>
+						<h4>Hyperparameters Study - Learning To Race</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<a href="https://wandb.ai/araffin/donkeycar/reports/DonkeyCar-RL-Hyperparameters-Study--VmlldzoxODIyMDQx" target="_blank">
+									<img src="images/wandb_study.png"
+									 alt=""
+									 class="shadow"
+									 style="max-width:70%">
+								</a>
+							</div>
+						</div>
+
+						<aside class="notes">
+							what matters to solve this task?<br>
+							how to isolate/keep track of changes?<br>
+							RL Zoo very helpful
+						</aside>
+
+					</section>
+
+
+				</section>
+
+				<section>
+					<h3>Questions?</h3>
+				</section>
+			</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				// Display the page number of the current slide
+				slideNumber: true,
+
+				// Add the current slide number to the URL hash so that reloading the
+				// page/copying the URL will return you to the same slide
+				hash: true,
+
+				// Push each slide change to the browser history. Implies `hash: true`
+				// history: false,
+
+				// math: {
+				// 	mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+				// 	config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+				// 	// pass other options into `MathJax.Hub.Config()`
+				// 	// TeX: { Macros: macros }
+				// },
+
+				// Use local version of katex
+				katex: {
+			    local: 'dist/katex',
+			  },
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+			});
+		</script>
+	</body>
+</html>
