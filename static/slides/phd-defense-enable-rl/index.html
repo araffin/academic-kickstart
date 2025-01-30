@@ -162,7 +162,17 @@
 							30 minutes training, one day before.
 						</aside>
 					</section>
-
+					<section>
+						<h4>Outdoor</h4>
+						<div class="row">
+							<div class="col-xs-12">
+								<video src="https://b2drop.eudat.eu/s/gGDmQXF7YMpdtg8/download/bert_outdoor.mp4" controls></video>
+							</div>
+						</div>
+						<aside class="notes">
+							10 minutes retraining on gravel only.
+						</aside>
+					</section>
 
 				</section>
 
@@ -183,7 +193,7 @@
 				<section>
 					<h4>Outline</h4>
 					<ol>
-						<li style="font-weight: bold;">Reliable RL Implementations</li>
+						<li style="font-weight: bold;">Reliable Software Tools for RL</li>
 						<li style="color:lightgrey;">Smooth Exploration</li>
 						<li style="color:lightgrey;">Integrating Pose Estimation</li>
 						<li style="color:lightgrey;">Combining Oscillators and RL</li>
@@ -234,8 +244,8 @@
 						<ul class="medium-text">
 							<li class="fragment">Performance checked</li>
 							<li class="fragment">Software best practices (96% code coverage, type checked, ...)</li>
-							<li class="fragment">3 types of tests (run, unit tests, performance)</li>
-							<li class="fragment">Active community (9000+ stars, 2600+ citations, 6M+ downloads)</li>
+							<!-- <li class="fragment">3 types of tests (run, unit tests, performance)</li> -->
+							<li class="fragment">Active community (9000+ stars, 2700+ citations, 7M+ downloads)</li>
 							<li class="fragment">Fully documented</li>
 						</ul>
 						<aside class="notes">
@@ -343,7 +353,7 @@
 
                 <section>
 					<ol>
-                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="color:grey;">Reliable Software Tools for RL</li>
                         <li style="font-weight:bold;">Smooth Exploration</li>
                         <li style="color:lightgrey;">Integrating Pose Estimation</li>
                         <li style="color:lightgrey;">Combining Oscillators and RL</li>
@@ -408,7 +418,7 @@
 
 				<section>
 				    <ol>
-                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="color:grey;">Reliable Software Tools for RL</li>
                         <li style="color:grey;">Smooth Exploration</li>
                         <li style="font-weight:bold;">Integrating Pose Estimation</li>
                         <li style="color:lightgrey;">Combining Oscillators and RL</li>
@@ -477,7 +487,7 @@
 
 				<section>
 				    <ol>
-                        <li style="color:grey;">Reliable RL Implementations</li>
+                        <li style="color:grey;">Reliable Software Tools for RL</li>
                         <li style="color:grey;">Smooth Exploration</li>
                         <li style="color:grey;">Integrating Pose Estimation</li>
                         <li style="font-weight:bold;">Combining Oscillators and RL</li>
@@ -548,15 +558,6 @@
 					</section>
 
 					<section>
-						<h4>Parameter efficiency?</h4>
-						<div class="row">
-							<div class="col-xs-12">
-								<img src="https://araffin.github.io/slides/open-loop-mujoco/images/param_efficiency.png" style="max-width: 70%" alt="">
-							</div>
-						</div>
-					</section>
-
-					<section>
 						<h4>Cost of generality vs prior knowledge</h4>
 						<div class="row middle-xs">
 							<div class="col-xs-12">
@@ -565,7 +566,8 @@
 						</div>
 						<aside class="notes">
 						 	highlight shortcomings of RL using simple baseline,
-							no randomization, no reward engineering -> why?
+							no randomization, no reward engineering -> why? <br>
+							open-loop oscillators good starting point for locomotion
 						</aside>
 
 					</section>
@@ -687,17 +689,6 @@
 					</aside>
 				</section>
 				<section>
-					<h4>Outdoor</h4>
-					<div class="row">
-						<div class="col-xs-12">
-							<video src="https://b2drop.eudat.eu/s/gGDmQXF7YMpdtg8/download/bert_outdoor.mp4" controls></video>
-						</div>
-					</div>
-					<aside class="notes">
-						10 minutes retraining on gravel only.
-					</aside>
-				</section>
-				<section>
 					<h4>Broken leg</h4>
 					<div class="row">
 						<div class="col-xs-12">
@@ -746,7 +737,14 @@
 						</div>
 					</div>
 				</section>
-
+				<section>
+					<h4>Parameter efficiency?</h4>
+					<div class="row">
+						<div class="col-xs-12">
+							<img src="https://araffin.github.io/slides/open-loop-mujoco/images/param_efficiency.png" style="max-width: 70%" alt="">
+						</div>
+					</div>
+				</section>
 				<section>
 					<h4>Plotting</h4>
 					<div class="row medium-text">
