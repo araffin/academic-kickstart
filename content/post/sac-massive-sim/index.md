@@ -1,6 +1,6 @@
 ---
 draft: true
-title: "Getting Sac to Work on a Massive Parallel Simulator: An RL Journey"
+title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey"
 date: 2025-02-10
 ---
 
@@ -84,6 +84,7 @@ Affected envs:
 - [Agile But Robust](https://github.com/LeCAR-Lab/ABS/blob/9b95329ffb823c15dead02be620ff96938e4d0a3/training/legged_gym/legged_gym/envs/base/legged_robot_config.py#L169)
 - [Rapid Locomotion](https://github.com/Improbable-AI/rapid-locomotion-rl/blob/f5143ef940e934849c00284e34caf164d6ce7b6e/mini_gym/envs/base/legged_robot_config.py#L209)
 - [Deep Whole Body Control](https://github.com/MarkFzp/Deep-Whole-Body-Control/blob/8159e4ed8695b2d3f62a40d2ab8d88205ac5021a/legged_gym/legged_gym/envs/widowGo1/widowGo1_config.py#L114)
+- [Robot Parkour Learning](https://github.com/ZiwenZhuang/parkour/blob/789e83c40b95fdd49fda7c1725c8c573df42d2a9/legged_gym/legged_gym/envs/base/legged_robot_config.py#L169)
 
 Probably many more looking at [works that cite ETH paper](https://scholar.google.com/scholar?cites=8503164023891275626&as_sdt=2005&sciodt=0,5)
 
@@ -93,6 +94,7 @@ Almost fixed in [Walk this way](https://github.com/Improbable-AI/walk-these-ways
 Links:
 
 - https://forums.developer.nvidia.com/t/poor-performance-of-soft-actor-critic-sac-in-omniverseisaacgym/266970
+- https://www.reddit.com/r/reinforcementlearning/comments/lcx0cm/scaling_up_sac_with_parallel_environments/
 
 Related:
 - [Parallel Q Learning (PQL)](https://github.com/Improbable-AI/pql) but only tackles classic MuJoCo locomotion envs
@@ -102,7 +104,7 @@ Related:
 
 ```bibtex
 @article{raffin2025isaacsim,
-  title   = "Getting Sac to Work on a Massive Parallel Simulator: An RL Journey",
+  title   = "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey",
   author  = "Raffin, Antonin",
   journal = "araffin.github.io",
   year    = "2025",
