@@ -1,35 +1,74 @@
 ---
 draft: true
-title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey"
+title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With Off-Policy Algorithms"
 date: 2025-02-10
 ---
 
-Story:
-curious/suspicious about all the work that use massive parallel simulation (need list of ref) and use PPO all the time,
-never SAC/TQC/... which have good perf on classic control benchmark/real robot training too.
+This is the story of how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
+If you follow the journey, you will learn about overlooked details in task design and algorithm implementation that can have a big impact on performance.
 
-Hypothesis:
-- PPO fast to train and tuned for those envs
-- lazyness (tuned for one env, re-use)
-- env design
-- SAC/TQC need to be tuned
-- SAC tuned for sample efficiency, different from fast training
+TODO: video/gif of massively parallel sim
 
-Why does it matter:
-- maybe better perf
-- better understanding of what work/what not/why
-- continue training on robot with same algorithm
+
+##  A Suspicious Trend: PPO, PPO, PPO, ...
+
+The story begins a few months ago when I saw another paper using the same recipe for success for learning locomotion: train a PPO agent in simulation using thousands of environments in parallel and domain randomization, then deploy it on the real robot.
+This recipe has become the standard since 2021, when ETH Zurich and NVIDIA (:ref: walk_in_minutes) showed that it was possible to learn locomotion in minutes on a single workstation.
+The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work (:ref: google_scholar_walk_in_minutes, example Disney robot).
+
+As an RL researcher focused on learning directly on real robots (no simulation, :ref: paper smooth), I was curious and suspicious about one aspect of this trend: why is no one trying an algorithm other than PPO?
+PPO is not the only deep reinforcement learning (DRL) algorithm for continuous control tasks and there are alternatives like SAC or TQC that can lead to better performance (:ref: paper SAC/TQC/open rl bench).
+
+So I decided to investigate why these off-policy algorithms are not used by practitioners, and maybe why they don't work with massively parallel simulators.
+
+## Why It Matters? - Fine Tuning on Real Robots
+
+If we could make SAC work with these simulators, then it would be possible to train in simulation and fine-tune on the real robot using the same algorithm (PPO is too sample-inefficient to train on a single robot), which is the vision I have for RL and robotics.
+
+By using other algorithms it might be possible to get better performance.
+Finally, it is also good to have a better understanding of what works or does not work and why.
+As researchers, we tend to publish only positive results, but I think a lot of valuable insights are lost in our unpublished failures.
+
+TODO: image of bert
+
+## (The Lazy Researcher) Hypothesis
+
+Before digging any further, I had some hypotheses as to why PPO was the only algorithm used:
+- PPO is fast to train (in terms of computation time) and was tuned for the massively parallel environment.
+- Researchers tend to be lazy, so we tend to reuse things that work and build on them (the original training code is open source and the simulator is freely available).
+- There may be some peculiarities in the environment design that favor PPO over algorithms.
+- SAC/TQC and derivatives are tuned for sample efficiency, not fast wall clock time. In the case of massively parallel simulation, what matters is how long it takes to train, not how many samples are used. They probably need to be tuned/adjusted for this new setting.
+
+Note: during my journey, I will obviously be using [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3) and its fast Jax version [SBX](https://github.com/araffin/sbx).
 
 ## The Hunt Begins
 
+There are now many massively parallel simulators available (Isaac Sim, Brax, MJX, Genesis, ...), I chose to focus on Isaac Lab with Isaac Sim because it was one of the first and probably the most influential.
 
-IsaacLab simple but representative env: A1 on flat ground.
-Plug SAC, doesn't work, as expected, even with a lot of training steps.
-Visualization: vary random movements.
+As with any RL problem, starting simple is the key to success.
+
+I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomotion task first, because it is simple but representative.
+The goal is to learn a policy that can move the Unitree A1 quadruped in any direction on a flat ground, following a commanded velocity (the same way you would control a robot with a joystick).
+The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
+The robot is rewarded for following the correct desired velocity (linear and angular) and for other secondary tasks (feet air time, smooth control, ...).
+An episode ends when the robot falls over and is timed out (truncation) after 1000 steps (TODO: check control frequency).
+
+After some quick optimizations (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
+First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to solve the task: in 5 minutes, it gets an average episode return of ~30 (above an episode return of 15, the task is almost solved).
+Then I tried SAC and TQC, with default hyperparameters (and observation normalization), and it didn't work as expected.
+No matter how much training time was left, there was no sign of improvement.
+
+Looking at the simulation GUI, I noticed something: the robots were making very large random movements.
+Something was wrong.
+
+TODO: video of the large random movements
+
+
 Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
 Some more digging: very large action space compared to PPO initialization.
 Quick fix: use 2% of the action space: first sign of life.
 Reduce initial value of entropy coeff for faster convergence.
+TODO: talk about handling truncation properly, and link to video
 
 Note: entropy coeff is inverse reward scale in maximum entropy RL
 
@@ -95,6 +134,7 @@ Links:
 
 - https://forums.developer.nvidia.com/t/poor-performance-of-soft-actor-critic-sac-in-omniverseisaacgym/266970
 - https://www.reddit.com/r/reinforcementlearning/comments/lcx0cm/scaling_up_sac_with_parallel_environments/
+- https://www.reddit.com/r/reinforcementlearning/comments/12h1faq/isaac_gym_with_offpolicy_algorithms/
 
 Related:
 - [Parallel Q Learning (PQL)](https://github.com/Improbable-AI/pql) but only tackles classic MuJoCo locomotion envs
