@@ -7,12 +7,15 @@ date: 2025-02-10
 This is the story of how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
 If you follow the journey, you will learn about overlooked details in task design and algorithm implementation that can have a big impact on performance.
 
-TODO: video/gif of massively parallel sim
+<!-- <video controls>
+ <source src="./tb_video.mp4" type="video/mp4">
+Your browser does not support the video tag.
+</video> -->
 
 
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
 
-The story begins a few months ago when I saw another paper using the same recipe for success for learning locomotion: train a PPO agent in simulation using thousands of environments in parallel and domain randomization, then deploy it on the real robot.
+The story begins a few months ago when I saw another paper using the same recipe for learning locomotion: train a PPO agent in simulation using thousands of environments in parallel and domain randomization, then deploy it on the real robot.
 This recipe has become the standard since 2021, when ETH Zurich and NVIDIA (:ref: walk_in_minutes) showed that it was possible to learn locomotion in minutes on a single workstation.
 The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work (:ref: google_scholar_walk_in_minutes, example Disney robot).
 
@@ -23,10 +26,10 @@ So I decided to investigate why these off-policy algorithms are not used by prac
 
 ## Why It Matters? - Fine Tuning on Real Robots
 
-If we could make SAC work with these simulators, then it would be possible to train in simulation and fine-tune on the real robot using the same algorithm (PPO is too sample-inefficient to train on a single robot), which is the vision I have for RL and robotics.
+If we could make SAC work with these simulators, then it would be possible to train in simulation and fine-tune on the real robot using the same algorithm (PPO is too sample-inefficient to train on a single robot) (footnote: which is the vision I have for RL and robotics).
 
-By using other algorithms it might be possible to get better performance.
-Finally, it is also good to have a better understanding of what works or does not work and why.
+By using other algorithms it might also be possible to get better performance.
+Finally, it is always good to have a better understanding of what works or not and why.
 As researchers, we tend to publish only positive results, but I think a lot of valuable insights are lost in our unpublished failures.
 
 TODO: image of bert
@@ -36,29 +39,30 @@ TODO: image of bert
 Before digging any further, I had some hypotheses as to why PPO was the only algorithm used:
 - PPO is fast to train (in terms of computation time) and was tuned for the massively parallel environment.
 - Researchers tend to be lazy, so we tend to reuse things that work and build on them (the original training code is open source and the simulator is freely available).
-- There may be some peculiarities in the environment design that favor PPO over algorithms.
+- There may be some peculiarities in the environment design that favor PPO over algorithms. In other words, the massively parallel environments might be optimized for PPO.
 - SAC/TQC and derivatives are tuned for sample efficiency, not fast wall clock time. In the case of massively parallel simulation, what matters is how long it takes to train, not how many samples are used. They probably need to be tuned/adjusted for this new setting.
 
-Note: during my journey, I will obviously be using [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3) and its fast Jax version [SBX](https://github.com/araffin/sbx).
+Note: during my journey, I will (obviously) be using [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3) and its fast Jax version [SBX](https://github.com/araffin/sbx).
 
 ## The Hunt Begins
 
-There are now many massively parallel simulators available (Isaac Sim, Brax, MJX, Genesis, ...), I chose to focus on Isaac Lab with Isaac Sim because it was one of the first and probably the most influential.
+There are now many massively parallel simulators available (Isaac Sim, Brax, MJX, Genesis, ...), here, I chose to focus on Isaac Lab with Isaac Sim because it was one of the first and probably the most influential one.
 
 As with any RL problem, starting simple is the key to success.
 
-I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomotion task first, because it is simple but representative.
+Therefore, I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomotion task first, because it is simple but representative.
 The goal is to learn a policy that can move the Unitree A1 quadruped in any direction on a flat ground, following a commanded velocity (the same way you would control a robot with a joystick).
 The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
 The robot is rewarded for following the correct desired velocity (linear and angular) and for other secondary tasks (feet air time, smooth control, ...).
-An episode ends when the robot falls over and is timed out (truncation) after 1000 steps (TODO: check control frequency).
+An episode ends when the robot falls over and is timed out (truncation) after 1000 steps (60 Hz, 15s, https://github.com/isaac-sim/IsaacLab/blob/b1133e0591c2ef3a788c1ca148bb25a3f42562a9/source/isaaclab/isaaclab/sim/simulation_cfg.py#L227).
 
 After some quick optimizations (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
-First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to solve the task: in 5 minutes, it gets an average episode return of ~30 (above an episode return of 15, the task is almost solved).
-Then I tried SAC and TQC, with default hyperparameters (and observation normalization), and it didn't work as expected.
-No matter how much training time was left, there was no sign of improvement.
+First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to quickly solve the task.
+In 5 minutes, it gets an average episode return of ~30 (above an episode return of 15, the task is almost solved).
+Then I tried SAC and TQC, with default hyperparameters (and observation normalization), and, as expected, it didn't work.
+No matter how long it was training, there was no sign of improvement.
 
-Looking at the simulation GUI, I noticed something: the robots were making very large random movements.
+Looking at the simulation GUI, something struck me: the robots were making very large random movements.
 Something was wrong.
 
 TODO: video of the large random movements
