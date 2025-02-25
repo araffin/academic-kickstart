@@ -55,6 +55,7 @@ The goal is to learn a policy that can move the Unitree A1 quadruped in any dire
 The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
 The robot is rewarded for following the correct desired velocity (linear and angular) and for other secondary tasks (feet air time, smooth control, ...).
 An episode ends when the robot falls over and is timed out (truncation) after 1000 steps (60 Hz, 15s, https://github.com/isaac-sim/IsaacLab/blob/b1133e0591c2ef3a788c1ca148bb25a3f42562a9/source/isaaclab/isaaclab/sim/simulation_cfg.py#L227).
+Or 200Hz? https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L302
 
 After some quick optimizations (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
 First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to quickly solve the task.
@@ -66,6 +67,42 @@ Looking at the simulation GUI, something struck me: the robots were making very 
 Something was wrong.
 
 TODO: video of the large random movements
+
+Because of the very large movements, my suspicious was towards what action is the robot allowed to do.
+Looking at the code, the RL agent commands a delta with respect to a default joint position:
+```python
+# Note desired_joint_pos is of dimension 12 (3 joints per leg)
+desired_joint_pos = default_joint_pos + action
+```
+Note: in some other env, the RL action is scaled by some factor `desired_joint_pos = default_joint_pos + scale * action`.
+TODO: in rad?
+https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab/isaaclab/envs/mdp/actions/joint_actions.py#L134
+
+Then, let's look at the action space itself (I'm using `ipdb` to have an interactive debugger):
+```python
+import ipdb; ipdb.set_trace()
+>> vec_env.action_space
+Box(-100.0, 100.0, (12,), float32)
+```
+Ah ah!
+The action space defines continuous actions of dimension 12 (nothing wrong here) but the limits $$[-100, 100]$$ are suprisingly large.
+To understand why normalizing the action space matters (usually a bounded space in $$[-1, 1]$$), we have to dig more into how PPO works.
+
+
+Unitree action scale: https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/a1/rough_env_cfg.py#L30
+
+Joint pos for action:
+https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L112
+
+
+## PPO Gaussian Distribution
+
+[RL Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html)
+[RLVS Video](https://www.youtube.com/watch?v=Ikngt0_DXJg)
+[Designing and running real world rl experiments](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)
+
+
+Note: if in rad, 3 rad is already 171 degrees.
 
 
 Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
