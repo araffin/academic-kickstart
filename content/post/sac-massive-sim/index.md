@@ -1,11 +1,14 @@
 ---
 draft: true
-title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With Off-Policy Algorithms"
+title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With Off-Policy Algorithms (Part I)"
 date: 2025-02-10
 ---
 
 This is the story of how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
 If you follow the journey, you will learn about overlooked details in task design and algorithm implementation that can have a big impact on performance.
+
+Part I is about identifying the problem and trying out quick fixes on SAC.
+Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
 
 <!-- <video controls>
  <source src="./tb_video.mp4" type="video/mp4">
@@ -85,8 +88,8 @@ import ipdb; ipdb.set_trace()
 Box(-100.0, 100.0, (12,), float32)
 ```
 Ah ah!
-The action space defines continuous actions of dimension 12 (nothing wrong here) but the limits $$[-100, 100]$$ are suprisingly large.
-To understand why normalizing the action space matters (usually a bounded space in $$[-1, 1]$$), we have to dig more into how PPO works.
+The action space defines continuous actions of dimension 12 (nothing wrong here) but the limits $[-100, 100]$ are suprisingly large.
+To understand why normalizing the action space matters (usually a bounded space in $[-1, 1]$), we have to dig more into how PPO works.
 
 
 Unitree action scale: https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/a1/rough_env_cfg.py#L30
@@ -101,9 +104,78 @@ https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73
 [RLVS Video](https://www.youtube.com/watch?v=Ikngt0_DXJg)
 [Designing and running real world rl experiments](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)
 
+Like many RL algorithms, PPO relies on a probability distribution to select actions.
+During training, at each timestep, it samples an action $a_t \sim N(\mu_\theta(s_t), \sigma^2)$ from a Gaussian distribution in the case of continuous actions.
+The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural network (with parameters $\theta$) and the standard deviation is a learnable parameter $\sigma$, usually initialized with $\sigma_0 = 1.0$.
 
-Note: if in rad, 3 rad is already 171 degrees.
+This means that at the beginning of training, most of the sampled actions will be in $[-3, 3]$ (from the [Three Sigma Rule](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule)):
 
+TODO: image of Gaussian
+
+Back to our original topic, because of the way $\sigma$ is initialized, if the action space has large bounds ($>>1$), PPO will almost never sample actions near the limits.
+In practice, the actions taken by PPO will even be far away from them.
+Now let's put the initial PPO action distribution into perspective with the Unitree A1 action space:
+
+TODO: image of same initial Gaussian but with limits =-100, 100.
+
+For reference, we can plot the action distribution of PPO after training:
+
+TODO: image of the distribution of the first 3 actions (or even the 12?)
+
+Again, most of the actions are centered around zero (which makes sense at it corresponds to the quadruped initial position, normally chosen to be stable) and there is no actions outside $[-5, 5]$: PPO is using less that 5% of the action space!
+
+Now that we know we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in that case.
+
+Note: too small action spaces are also a problem
+Note: if in rad, 3 rad is already 171 degrees (but action scale = 0.25, so ~40 deg, action scale = 0.5 for Anymal).
+
+## SAC Squashed Gaussian
+
+SAC and other off-policy algorithms for continous actions (like DDPG, TD3 or TQC) have an additional transformation at the end of the actor network.
+SAC squashes the action sampled from an unbounded Gaussian distribution using a $tanh()$ function:
+TODO: image of tanh() from -10 to 10?
+
+Therefore the sampled action is always in $[-1, 1]$.
+SAC then linearly rescale the sampled action to match the action space definition, i.e. it transform the action from $[-1, 1]$ to $[low, high]$ using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
+
+What does that mean?
+Assuming we start with a standard deviation similar to PPO, this is how the sampled action distribution look like after squashing:
+
+TODO: squashed gaussian
+
+And after rescaling to the environment limits (with PPO distribution to put in perspective):
+
+TODO: squashed Gaussian in [-100, 100] with PPO Gaussian dist
+
+As you can see, those are two completely different initial distributions at the beginning of training!
+The fact that action are rescaled to match the action space bounds explains the very large movements seen during training, and also explain why it was impossible for SAC to learn anything useful.
+
+## Quick Fix
+
+When I discovered that the action limits were way too large, my first reflex was to re-train SAC but with only 3% of the action space, to match more or less PPO effective action space.
+Although it didn't reach PPO performance, there was finally some sign of life (an average episodic return slightly positive after a while).
+
+What I tried next was to reduce SAC exploration by having a smaller entropy coefficient at the beginning of training.
+Bingo!
+SAC finally learned to solve the task!
+
+TODO: image learning curve
+
+Note: the entropy coeff is the coeff that does the trade-off between RL objective and entropy maximization
+
+## That's all folks?
+
+SAC works but not as fast as PPO, performance slightly below, weird movements (leg up in the air), not reliably.
+Part II will explore those aspects (and more envs), SAC design decision (trying to remove the squashed Gaussian), but for now let's see what this mean for the RL community.
+
+## Outro: What Does That Mean for the RL Community?
+
+Other affected papers/envs.
+Brax not affected but special PPO implementation too.
+PPO worked by accident?
+Recommendation: use the action dist plotter (link to gist), define proper action bounds.
+
+TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose?
 
 Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
 Some more digging: very large action space compared to PPO initialization.
