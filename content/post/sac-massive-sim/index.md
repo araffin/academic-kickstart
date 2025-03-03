@@ -19,7 +19,7 @@ Your browser does not support the video tag.
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
 
 The story begins a few months ago when I saw another paper using the same recipe for learning locomotion: train a PPO agent in simulation using thousands of environments in parallel and domain randomization, then deploy it on the real robot.
-This recipe has become the standard since 2021, when ETH Zurich and NVIDIA (:ref: walk_in_minutes) showed that it was possible to learn locomotion in minutes on a single workstation.
+This recipe has become the standard since 2021, when ETH Zurich and NVIDIA[^rudin21] showed that it was possible to learn locomotion in minutes on a single workstation.
 The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work (:ref: google_scholar_walk_in_minutes, example Disney robot).
 
 As an RL researcher focused on learning directly on real robots (no simulation, :ref: paper smooth), I was curious and suspicious about one aspect of this trend: why is no one trying an algorithm other than PPO?
@@ -123,13 +123,16 @@ The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural net
 
 This means that at the beginning of training, most of the sampled actions will be in $[-3, 3]$ (from the [Three Sigma Rule](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule)):
 
-TODO: image of Gaussian
+<img style="max-width:70%" src="./img/gaussian.svg"/>
+<p style="font-size: 14pt; text-align:center;">The initial Gaussian distribution used by PPO for sampling actions.</p>
 
-Back to our original topic, because of the way $\sigma$ is initialized, if the action space has large bounds ($>>1$), PPO will almost never sample actions near the limits.
+
+Back to our original topic, because of the way $\sigma$ is initialized, if the action space has large bounds (upper/lower bounds >> 1), PPO will almost never sample actions near the limits.
 In practice, the actions taken by PPO will even be far away from them.
 Now let's put the initial PPO action distribution into perspective with the Unitree A1 action space:
 
-TODO: image of same initial Gaussian but with limits =-100, 100.
+<img style="max-width:70%" src="./img/gaussian_large_bounds.svg"/>
+<p style="font-size: 14pt; text-align:center;">The same initial Gaussian distribution but with the perspective of the Unitree A1 action space $[-100, 100]$</p>
 
 For reference, we can plot the action distribution of PPO after training:
 
@@ -144,10 +147,8 @@ Note: if in rad, 3 rad is already 171 degrees (but action scale = 0.25, so ~40 d
 
 ## SAC Squashed Gaussian
 
-SAC and other off-policy algorithms for continous actions (like DDPG, TD3 or TQC) have an additional transformation at the end of the actor network.
-SAC squashes the action sampled from an unbounded Gaussian distribution using a $tanh()$ function:
-TODO: image of tanh() from -10 to 10?
-
+SAC and other off-policy algorithms for continous actions (like DDPG, TD3 or [TQC](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html)) have an additional transformation at the end of the actor network.
+SAC squashes the action sampled from an unbounded Gaussian distribution using a [$tanh()$](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) function.
 Therefore the sampled action is always in $[-1, 1]$.
 SAC then linearly rescale the sampled action to match the action space definition, i.e. it transform the action from $[-1, 1]$ to $[low, high]$ using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
 
@@ -243,12 +244,12 @@ but not really defined explicitly in the env (for the limits)
 Note: rescale action doesn't work for PPO, need retuning? need tanh normal?
 
 Affected envs:
-- [IsaacLab](https://github.com/isaac-sim/IsaacLab/blob/c4bec8fe01c2fd83a0a25da184494b37b3e3eb61/source/isaaclab_rl/isaaclab_rl/sb3.py#L154)
-<!-- https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot.py#L85 -->
-- [Learning to Walk in Minutes](https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot_config.py#L164 )
-- [One Policy to Run Them All](https://github.com/nico-bohlinger/one_policy_to_run_them_all/blob/d9d166c348496c9665dd3ebabc20efb6d8077161/one_policy_to_run_them_all/environments/unitree_a1/environment.py#L140)
 <!-- - [MuJoCo Playground](https://github.com/google-deepmind/mujoco_playground/blob/0f3adda84f2a2ab55e9d9aaf7311c917518ec25c/mujoco_playground/_src/locomotion/go1/joystick.py#L239) -->
 <!-- https://github.com/Argo-Robot/quadrupeds_locomotion/blob/45eec904e72ff6bafe1d5378322962003aeff88d/src/go2_env.py#L173 -->
+<!-- https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot.py#L85 -->
+- [IsaacLab](https://github.com/isaac-sim/IsaacLab/blob/c4bec8fe01c2fd83a0a25da184494b37b3e3eb61/source/isaaclab_rl/isaaclab_rl/sb3.py#L154)
+- [Learning to Walk in Minutes](https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot_config.py#L164 )
+- [One Policy to Run Them All](https://github.com/nico-bohlinger/one_policy_to_run_them_all/blob/d9d166c348496c9665dd3ebabc20efb6d8077161/one_policy_to_run_them_all/environments/unitree_a1/environment.py#L140)
 - [Genesis env](https://github.com/Argo-Robot/quadrupeds_locomotion/blob/45eec904e72ff6bafe1d5378322962003aeff88d/src/go2_train.py#L104)
 - [ASAP Humanoid](https://github.com/LeCAR-Lab/ASAP/blob/c78664b6d2574f62bd2287e4b54b4f8c2a0a47a5/humanoidverse/config/robot/g1/g1_29dof_anneal_23dof.yaml#L161)
 - [Agile But Robust](https://github.com/LeCAR-Lab/ABS/blob/9b95329ffb823c15dead02be620ff96938e4d0a3/training/legged_gym/legged_gym/envs/base/legged_robot_config.py#L169)
@@ -273,9 +274,9 @@ Related:
 
 ## Citation
 
-```bibtex
+```
 @article{raffin2025isaacsim,
-  title   = "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey",
+  title   = "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With Off-Policy Algorithms",
   author  = "Raffin, Antonin",
   journal = "araffin.github.io",
   year    = "2025",
@@ -290,3 +291,7 @@ All the graphics were made using [excalidraw](https://excalidraw.com/).
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
+
+## References
+
+[^rudin21]: Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." Conference on Robot Learning. PMLR, 2022.
