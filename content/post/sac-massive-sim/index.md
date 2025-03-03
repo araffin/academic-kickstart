@@ -35,7 +35,10 @@ By using other algorithms it might also be possible to get better performance.
 Finally, it is always good to have a better understanding of what works or not and why.
 As researchers, we tend to publish only positive results, but I think a lot of valuable insights are lost in our unpublished failures.
 
-TODO: image of bert
+<a href="https://araffin.github.io/slides/design-real-rl-experiments/">
+  <img style="max-width: 50%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bert/real_bert.jpg" alt="The DLR bert quadruped robot, standing on a stone." />
+</a>
+  <p style="font-size: 12pt; text-align:center;">The DLR bert elastic quadruped</p>
 
 ## (The Lazy Researcher) Hypothesis
 
@@ -53,6 +56,14 @@ There are now many massively parallel simulators available (Isaac Sim, Brax, MJX
 
 As with any RL problem, starting simple is the key to success.
 
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/ppo_trained.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">A PPO agent trained on the <code>Isaac-Velocity-Flat-Unitree-A1-v0</code> locomotion task.
+  <br>
+  Green arrow is the desired velocity, blue arrow represents the current velocity
+</p>
+
+
 Therefore, I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomotion task first, because it is simple but representative.
 The goal is to learn a policy that can move the Unitree A1 quadruped in any direction on a flat ground, following a commanded velocity (the same way you would control a robot with a joystick).
 The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
@@ -69,7 +80,9 @@ No matter how long it was training, there was no sign of improvement.
 Looking at the simulation GUI, something struck me: the robots were making very large random movements.
 Something was wrong.
 
-TODO: video of the large random movements
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/limits_train.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">SAC out of the box on Isaac Sim during training.</p>
 
 Because of the very large movements, my suspicious was towards what action is the robot allowed to do.
 Looking at the code, the RL agent commands a delta with respect to a default joint position:
@@ -162,6 +175,11 @@ SAC finally learned to solve the task!
 TODO: image learning curve
 
 Note: the entropy coeff is the coeff that does the trade-off between RL objective and entropy maximization
+
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/sac_trained_cut_1.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">Trained SAC agent after the quick fix.</p>
+
 
 ## That's all folks?
 
