@@ -10,11 +10,6 @@ If you follow the journey, you will learn about overlooked details in task desig
 Part I is about identifying the problem and trying out quick fixes on SAC.
 Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
 
-<!-- <video controls>
- <source src="./tb_video.mp4" type="video/mp4">
-Your browser does not support the video tag.
-</video> -->
-
 
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
 
@@ -155,11 +150,13 @@ SAC then linearly rescale the sampled action to match the action space definitio
 What does that mean?
 Assuming we start with a standard deviation similar to PPO, this is how the sampled action distribution look like after squashing:
 
-TODO: squashed gaussian
+<img style="max-width:70%" src="./img/squashed_vs_gaussian.svg"/>
+<p style="font-size: 14pt; text-align:center;">The equivalent initial squashed Gaussian distribution.</p>
 
 And after rescaling to the environment limits (with PPO distribution to put in perspective):
 
-TODO: squashed Gaussian in [-100, 100] with PPO Gaussian dist
+<img style="max-width:70%" src="./img/squashed_rescaled.svg"/>
+<p style="font-size: 14pt; text-align:center;">The same initial squashed Gaussian distribution but rescaled to the Unitree A1 action space $[-100, 100]$</p>
 
 As you can see, those are two completely different initial distributions at the beginning of training!
 The fact that action are rescaled to match the action space bounds explains the very large movements seen during training, and also explain why it was impossible for SAC to learn anything useful.
