@@ -47,9 +47,9 @@ Note: during my journey, I will (obviously) be using [Stable-Baselines3](https:/
 
 ## The Hunt Begins
 
-There are now many massively parallel simulators available (Isaac Sim, Brax, MJX, Genesis, ...), here, I chose to focus on Isaac Lab with Isaac Sim because it was one of the first and probably the most influential one.
+There are now many massively parallel simulators available (Isaac Sim, Brax, MJX, Genesis, ...), here, I chose to focus on Isaac Sim because it was one of the first and is probably the most influential one.
 
-As with any RL problem, starting simple is the key to success.
+As with any RL problem, starting simple is the [key to success](https://www.youtube.com/watch?v=eZ6ZEpCi6D8).
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/ppo_trained.mp4">
 </video>
@@ -63,10 +63,9 @@ Therefore, I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomot
 The goal is to learn a policy that can move the Unitree A1 quadruped in any direction on a flat ground, following a commanded velocity (the same way you would control a robot with a joystick).
 The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
 The robot is rewarded for following the correct desired velocity (linear and angular) and for other secondary tasks (feet air time, smooth control, ...).
-An episode ends when the robot falls over and is timed out (truncation) after 1000 steps (60 Hz, 15s, https://github.com/isaac-sim/IsaacLab/blob/b1133e0591c2ef3a788c1ca148bb25a3f42562a9/source/isaaclab/isaaclab/sim/simulation_cfg.py#L227).
-Or 200Hz? https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L302
+An episode ends when the robot falls over and is timed out ([truncation]((https://www.youtube.com/watch?v=eZ6ZEpCi6D8))) after 1000 steps[^control-freq].
 
-After some quick optimizations (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
+After some [quick optimizations](https://github.com/isaac-sim/IsaacLab/pull/2022) (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
 First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to quickly solve the task.
 In 5 minutes, it gets an average episode return of ~30 (above an episode return of 15, the task is almost solved).
 Then I tried SAC and TQC, with default hyperparameters (and observation normalization), and, as expected, it didn't work.
@@ -79,15 +78,12 @@ Something was wrong.
 </video>
 <p style="font-size: 14pt; text-align:center;">SAC out of the box on Isaac Sim during training.</p>
 
-Because of the very large movements, my suspicious was towards what action is the robot allowed to do.
-Looking at the code, the RL agent commands a delta with respect to a default joint position:
+Because of the very large movements, my suspicion was towards what action the robot is allowed to do.
+Looking at the code, the RL agent commands a (scaled) [delta](https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab/isaaclab/envs/mdp/actions/joint_actions.py#L134) with respect to a default [joint position](https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L112):
 ```python
 # Note desired_joint_pos is of dimension 12 (3 joints per leg)
-desired_joint_pos = default_joint_pos + action
+desired_joint_pos = default_joint_pos + scale * action
 ```
-Note: in some other env, the RL action is scaled by some factor `desired_joint_pos = default_joint_pos + scale * action`.
-TODO: in rad?
-https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab/isaaclab/envs/mdp/actions/joint_actions.py#L134
 
 Then, let's look at the action space itself (I'm using `ipdb` to have an interactive debugger):
 ```python
@@ -96,24 +92,13 @@ import ipdb; ipdb.set_trace()
 Box(-100.0, 100.0, (12,), float32)
 ```
 Ah ah!
-The action space defines continuous actions of dimension 12 (nothing wrong here) but the limits $[-100, 100]$ are suprisingly large.
-To understand why normalizing the action space matters (usually a bounded space in $[-1, 1]$), we have to dig more into how PPO works.
-
-
-Unitree action scale: https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/a1/rough_env_cfg.py#L30
-
-Joint pos for action:
-https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L112
-
+The action space defines continuous actions of dimension 12 (nothing wrong here), but the limits $[-100, 100]$ are surprisingly large, e.g., it allows a delta of +/- 1432 deg!! in joint angle when [scale=0.25](https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/config/a1/rough_env_cfg.py#L30), like for the Unitree A1 robot.
+To understand why [normalizing](https://www.youtube.com/watch?v=Ikngt0_DXJg) the action space [matters](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html) (usually a bounded space in $[-1, 1]$), we need to dig deeper into how PPO works.
 
 ## PPO Gaussian Distribution
 
-[RL Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html)
-[RLVS Video](https://www.youtube.com/watch?v=Ikngt0_DXJg)
-[Designing and running real world rl experiments](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)
-
-Like many RL algorithms, PPO relies on a probability distribution to select actions.
-During training, at each timestep, it samples an action $a_t \sim N(\mu_\theta(s_t), \sigma^2)$ from a Gaussian distribution in the case of continuous actions.
+Like many RL algorithms, [PPO](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) relies on a probability distribution to select actions.
+During training, at each timestep, it samples an action $a_t \sim N(\mu_\theta(s_t), \sigma^2)$ from a Gaussian distribution in the case of continuous actions[^brax-ppo].
 The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural network (with parameters $\theta$) and the standard deviation is a learnable parameter $\sigma$, usually initialized with $\sigma_0 = 1.0$.
 
 This means that at the beginning of training, most of the sampled actions will be in $[-3, 3]$ (from the [Three Sigma Rule](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule)):
@@ -124,7 +109,7 @@ This means that at the beginning of training, most of the sampled actions will b
 
 Back to our original topic, because of the way $\sigma$ is initialized, if the action space has large bounds (upper/lower bounds >> 1), PPO will almost never sample actions near the limits.
 In practice, the actions taken by PPO will even be far away from them.
-Now let's put the initial PPO action distribution into perspective with the Unitree A1 action space:
+Now, let's compare the initial PPO action distribution with the Unitree A1 action space:
 
 <img style="max-width:70%" src="./img/gaussian_large_bounds.svg"/>
 <p style="font-size: 14pt; text-align:center;">The same initial Gaussian distribution but with the perspective of the Unitree A1 action space $[-100, 100]$</p>
@@ -133,37 +118,36 @@ For reference, we can plot the action distribution of PPO after training:
 
 TODO: image of the distribution of the first 3 actions (or even the 12?)
 
-Again, most of the actions are centered around zero (which makes sense at it corresponds to the quadruped initial position, normally chosen to be stable) and there is no actions outside $[-5, 5]$: PPO is using less that 5% of the action space!
+Again, most of the actions are centered around zero (which makes sense, since it corresponds to the quadruped initial position, which is usually chosen to be stable), and there are no actions outside $[-5, 5]$: PPO uses less than 5% of the action space!
 
-Now that we know we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in that case.
+Now that we know that we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in this[^rl-tips].
 
-Note: too small action spaces are also a problem
-Note: if in rad, 3 rad is already 171 degrees (but action scale = 0.25, so ~40 deg, action scale = 0.5 for Anymal).
+<!-- Note: if in rad, 3 rad is already 171 degrees (but action scale = 0.25, so ~40 deg, action scale = 0.5 for Anymal). -->
 
 ## SAC Squashed Gaussian
 
-SAC and other off-policy algorithms for continous actions (like DDPG, TD3 or [TQC](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html)) have an additional transformation at the end of the actor network.
+SAC and other off-policy algorithms for continuous actions (such as DDPG, TD3 or [TQC](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html)) have an additional transformation at the end of the actor network.
 SAC squashes the action sampled from an unbounded Gaussian distribution using a [$tanh()$](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) function.
-Therefore the sampled action is always in $[-1, 1]$.
-SAC then linearly rescale the sampled action to match the action space definition, i.e. it transform the action from $[-1, 1]$ to $[low, high]$ using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
+Therefore, the sampled actions are always in $[-1, 1]$.
+SAC then linearly rescales the sampled action to match the action space definition, i.e. it transforms the action from $[-1, 1]$ to $[\text{low}, \text{high}]$[^rescale].
 
-What does that mean?
-Assuming we start with a standard deviation similar to PPO, this is how the sampled action distribution look like after squashing:
+What does this mean?
+Assuming we start with a standard deviation similar to PPO, this is what the sampled action distribution looks like after squashing[^clipping]:
 
 <img style="max-width:70%" src="./img/squashed_vs_gaussian.svg"/>
 <p style="font-size: 14pt; text-align:center;">The equivalent initial squashed Gaussian distribution.</p>
 
-And after rescaling to the environment limits (with PPO distribution to put in perspective):
+And after rescaling to the environment limits (with PPO distribution to put it in perspective):
 
 <img style="max-width:70%" src="./img/squashed_rescaled.svg"/>
 <p style="font-size: 14pt; text-align:center;">The same initial squashed Gaussian distribution but rescaled to the Unitree A1 action space $[-100, 100]$</p>
 
-As you can see, those are two completely different initial distributions at the beginning of training!
-The fact that action are rescaled to match the action space bounds explains the very large movements seen during training, and also explain why it was impossible for SAC to learn anything useful.
+As you can see, these are two completely different initial distributions at the beginning of training!
+The fact that the actions are rescaled to fit the action space boundaries explains the very large movements seen during training, and also explains why it was impossible for SAC to learn anything useful.
 
 ## Quick Fix
 
-When I discovered that the action limits were way too large, my first reflex was to re-train SAC but with only 3% of the action space, to match more or less PPO effective action space.
+When I discovered that the action limits were way too large, my first reflex was to re-train SAC, but with only 3% of the action space, to more or less match the effective action space of PPO.
 Although it didn't reach PPO performance, there was finally some sign of life (an average episodic return slightly positive after a while).
 
 What I tried next was to reduce SAC exploration by having a smaller entropy coefficient at the beginning of training.
@@ -191,46 +175,33 @@ Brax not affected but special PPO implementation too.
 PPO worked by accident?
 Recommendation: use the action dist plotter (link to gist), define proper action bounds.
 
+
 TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose?
 
-Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
-Some more digging: very large action space compared to PPO initialization.
-Quick fix: use 2% of the action space: first sign of life.
-Reduce initial value of entropy coeff for faster convergence.
-TODO: talk about handling truncation properly, and link to video
+<!-- Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
 
-Note: entropy coeff is inverse reward scale in maximum entropy RL
+Note: entropy coeff is inverse reward scale in maximum entropy RL -->
 
-## Tuning for speed
+<!-- ## Tuning for speed
 
 Automatic hyperparameter optimization with Optuna.
 Good and fast results (not as fast as PPO but more sample efficient).
 Try schedule of action space (start small and make it bigger over time): not so satifying,
-looking into unbounded action space.
+looking into unbounded action space. -->
 
-
-## PPO Gaussian dist vs Squashed Gaussian
-
-How PPO samples action vs SAC implementation (Note: not true for brax, footnote needed)
-and why it is bad to have unbounded/wrong limits.
-
-Need to plot distribution of actions over time (start of training, mid-training, end)
-and show difference between squashed Gaussian samples (the boundaries are more samples) and clipped Gaussian.
+<!-- ## PPO Gaussian dist vs Squashed Gaussian
 
 Difference between log std computation (state-dependent with clipping vs independent global param).
 
 Trying to make SAC looks like PPO, move to unbounded Gaussian dist, instabilities.
 Fixes: clip max action, l2 loss (like [SAC original implementation](https://github.com/haarnoja/sac/blob/8258e33633c7e37833cc39315891e77adfbe14b2/sac/distributions/normal.py#L69-L70))
-Replace state-dependent std with independent: auto-tuning entropy coeff broken, need to fix it (TODO: investigate why).
+Replace state-dependent std with independent: auto-tuning entropy coeff broken, need to fix it (TODO: investigate why). -->
 
 <!-- SAC initial commit https://github.com/haarnoja/sac/blob/fa226b0dcb244d69639416995311cc5b4092c8f7/sac/distributions/gmm.py#L122 -->
 
+<!-- Note: SAC work on MuJoCo like env
 
-<object width="100%" type="image/svg+xml" data="./img/grid_search_comb.svg"></object>
-
-Note: SAC work on MuJoCo like env
-
-Note: two variations of the same issue: unbounded (macthes Gaussian dist real domain)
+Note: two variations of the same issue: unbounded (matches Gaussian dist real domain)
 and clipped to high limits
 
 Note: brax PPO seems to implement tanh Gaussian dist (action limited to [-1, 1]): 
@@ -238,9 +209,9 @@ https://github.com/google/brax/blob/241f9bc5bbd003f9cfc9ded7613388e2fe125af6/bra
 MuJoCo playground and Brax clip: https://github.com/google-deepmind/mujoco_playground/blob/0f3adda84f2a2ab55e9d9aaf7311c917518ec25c/mujoco_playground/_src/wrapper_torch.py#L158
 but not really defined explicitly in the env (for the limits)
 
-Note: rescale action doesn't work for PPO, need retuning? need tanh normal?
+Note: rescale action doesn't work for PPO, need retuning? need tanh normal? -->
 
-Affected envs:
+### Appendix - Affected Papers/Code
 <!-- - [MuJoCo Playground](https://github.com/google-deepmind/mujoco_playground/blob/0f3adda84f2a2ab55e9d9aaf7311c917518ec25c/mujoco_playground/_src/locomotion/go1/joystick.py#L239) -->
 <!-- https://github.com/Argo-Robot/quadrupeds_locomotion/blob/45eec904e72ff6bafe1d5378322962003aeff88d/src/go2_env.py#L173 -->
 <!-- https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot.py#L85 -->
@@ -282,13 +253,18 @@ Related:
 }
 ```
 
-## Acknowledgement
+<!-- ## Acknowledgement
 
-All the graphics were made using [excalidraw](https://excalidraw.com/).
+All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
 
-## References
+## Footnotes
 
 [^rudin21]: Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." Conference on Robot Learning. PMLR, 2022.
+[^rl-tips]: Action spaces that are too small are also problematic. See [SB3 RL Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html).
+[^rescale]: Rescale from [-1, 1] to [low, high] using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
+[^clipping]: Common PPO implementations clip the actions to fit the desired boundaries, which has the effect of oversampling actions at the boundaries when the limits are smaller than ~4.
+[^brax-ppo]: This is not true for the PPO implementation in Brax which uses a squashed Gaussian like SAC.
+[^control-freq]: The control loop runs at [50 Hz](https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L302), so after 20s.
