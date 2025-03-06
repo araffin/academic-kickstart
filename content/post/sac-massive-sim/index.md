@@ -1,11 +1,13 @@
 ---
-draft: true
+draft: false
 title: "Getting SAC to Work on a Massive Parallel Simulator: An RL Journey With Off-Policy Algorithms (Part I)"
 date: 2025-02-10
 ---
 
-This is the story of how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
+This post details how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
 If you follow the journey, you will learn about overlooked details in task design and algorithm implementation that can have a big impact on performance.
+
+Spoiler alert: [quite a few papers/code](#appendix---affected-paperscode) are affected by the problem described below.
 
 - Part I is about identifying the problem and trying out quick fixes on SAC.
 - Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
@@ -18,7 +20,7 @@ This recipe has become the standard since 2021, when ETH Zurich and NVIDIA[^rudi
 The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work[^disney-robot].
 
 As an RL researcher focused on [learning directly on real robots](https://proceedings.mlr.press/v164/raffin22a/raffin22a.pdf), I was curious and suspicious about one aspect of this trend: why is no one trying an algorithm other than PPO?[^link-questions]
-PPO is not the only deep reinforcement learning (DRL) algorithm for continuous control tasks and there are alternatives like SAC or TQC that can lead to better performance[^open-rl-bench].
+PPO benefits from fast and parallel environments[^dota], but PPO is not the only deep reinforcement learning (DRL) algorithm for continuous control tasks and there are alternatives like SAC or TQC that can lead to better performance[^open-rl-bench].
 
 So I decided to investigate why these off-policy algorithms are not used by practitioners, and maybe why they don't work with massively parallel simulators.
 
@@ -35,11 +37,11 @@ As researchers, we tend to publish only positive results, but I think a lot of v
 </a>
   <p style="font-size: 12pt; text-align:center;">The DLR bert elastic quadruped</p>
 
-## (The Lazy Researcher) Hypothesis
+## (The Path of Least Resistance) Hypothesis
 
 Before digging any further, I had some hypotheses as to why PPO was the only algorithm used:
 - PPO is fast to train (in terms of computation time) and was tuned for the massively parallel environment.
-- Researchers tend to be lazy, so we tend to reuse things that work and build on them (the original training code is open source and the simulator is freely available).
+- As researchers, we tend to take the path of least resistance and build on proven solutions (the original training code is open source and the simulator is freely available) to get new interesting results[^lazy].
 - There may be some peculiarities in the environment design that favor PPO over algorithms. In other words, the massively parallel environments might be optimized for PPO.
 - SAC/TQC and derivatives are tuned for sample efficiency, not fast wall clock time. In the case of massively parallel simulation, what matters is how long it takes to train, not how many samples are used. They probably need to be tuned/adjusted for this new setting.
 
@@ -63,7 +65,7 @@ Therefore, I decided to focus on the `Isaac-Velocity-Flat-Unitree-A1-v0` locomot
 The goal is to learn a policy that can move the Unitree A1 quadruped in any direction on a flat ground, following a commanded velocity (the same way you would control a robot with a joystick).
 The agent receives information about its current task as input (joint positions, velocities, desired velocity, ...) and outputs desired joint positions (12D vector, 3 joints per leg).
 The robot is rewarded for following the correct desired velocity (linear and angular) and for other secondary tasks (feet air time, smooth control, ...).
-An episode ends when the robot falls over and is timed out ([truncation]((https://www.youtube.com/watch?v=eZ6ZEpCi6D8))) after 1000 steps[^control-freq].
+An episode ends when the robot falls over and is timed out ([truncation](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)) after 1000 steps[^control-freq].
 
 After some [quick optimizations](https://github.com/isaac-sim/IsaacLab/pull/2022) (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
 First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to quickly solve the task.
@@ -99,7 +101,7 @@ To understand why [normalizing](https://www.youtube.com/watch?v=Ikngt0_DXJg) the
 
 Like many RL algorithms, [PPO](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) relies on a probability distribution to select actions.
 During training, at each timestep, it samples an action $a_t \sim N(\mu_\theta(s_t), \sigma^2)$ from a Gaussian distribution in the case of continuous actions[^brax-ppo].
-The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural network (with parameters $\theta$) and the standard deviation is a learnable parameter $\sigma$, usually initialized with $\sigma_0 = 1.0$.
+The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural network (with parameters $\theta$) and the standard deviation is a [learnable parameter](https://github.com/DLR-RM/stable-baselines3/blob/55d6f18dbd880c62d40a276349b8bac7ebf453cd/stable_baselines3/common/distributions.py#L150) $\sigma$, usually [initialized](https://github.com/leggedrobotics/rsl_rl/blob/f80d4750fbdfb62cfdb0c362b7063450f427cf35/rsl_rl/modules/actor_critic.py#L26) with $\sigma_0 = 1.0$.
 
 This means that at the beginning of training, most of the sampled actions will be in $[-3, 3]$ (from the [Three Sigma Rule](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule)):
 
@@ -130,7 +132,7 @@ array([ 3.2,  2.8,  2.7,  2.8,  2.9,  2.7,  3.2,  2.9,  7.2,  5.7,  5. ,  5.8])
 
 Again, most of the actions are centered around zero (which makes sense, since it corresponds to the quadruped initial position, which is usually chosen to be stable), and there are almost no actions outside $[-5, 5]$ (less than 0.1%): PPO uses less than 5% of the action space!
 
-Now that we know that we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in this[^rl-tips].
+Now that we know that we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in this case[^rl-tips].
 
 <!-- Note: if in rad, 3 rad is already 171 degrees (but action scale = 0.25, so ~40 deg, action scale = 0.5 for Anymal). -->
 
@@ -164,7 +166,7 @@ What I tried next was to reduce SAC exploration by having a smaller entropy coef
 Bingo!
 SAC finally learned to solve the task!
 
-TODO: image learning curve?
+<!-- TODO: image learning curve? -->
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/sac_trained_cut_1.mp4">
 </video>
@@ -181,13 +183,13 @@ Part II will explore these aspects (and more environments), review SAC design de
 ## Outro: What Does That Mean for the RL Community?
 
 When I found out about this problem, I was curious to see how widespread it was in the community.
-After a quick search, it turns out that there are a lot of papers/code affected[^brax-envs] by this large boundary problem (see a non-exhaustive list of affected papers/code below).
+After a quick search, it turns out that there are a lot of papers/code affected[^brax-envs] by this large boundary problem (see a non-exhaustive [list of affected papers/code below](#appendix---affected-paperscode)).
 
 Although the initial choice of bounds may be a conscious and convenient one (no need to specify the real bounds, PPO will figure it out), it seems to have worked a bit by accident for those who built on top of it, and probably discouraged practitioners from trying other algorithms.
 
 My recommendation would be to always have properly defined action bounds, and if they are not known in advance, you can always [plot the action distribution](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) and adjust the limits when iterating on the environment design.
 
-TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose?
+<!-- TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose? -->
 
 <!-- Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
 
@@ -260,9 +262,11 @@ Related:
 }
 ```
 
-<!-- ## Acknowledgement
+## Acknowledgement
 
-All the graphics were made using [excalidraw](https://excalidraw.com/). -->
+I would like to thank Anssi and Leon for their feedback =).
+
+<!-- All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
@@ -281,3 +285,5 @@ All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 [^open-rl-bench]: See results from Huang, Shengyi, et al. "[Open rl benchmark](https://wandb.ai/openrlbenchmark/): Comprehensive tracked experiments for reinforcement learning." arXiv preprint arXiv:2402.03046 (2024).
 [^ent-coef]: The entropy coeff is the coeff that does the trade-off between RL objective and entropy maximization.
 [^link-questions]: I was not the only one asking why SAC doesn't work: [nvidia forum](https://forums.developer.nvidia.com/t/poor-performance-of-soft-actor-critic-sac-in-omniverseisaacgym/266970) [reddit1](https://www.reddit.com/r/reinforcementlearning/comments/lcx0cm/scaling_up_sac_with_parallel_environments/) [reddit2](https://www.reddit.com/r/reinforcementlearning/comments/12h1faq/isaac_gym_with_offpolicy_algorithms)
+[^dota]: Berner C, Brockman G, Chan B, Cheung V, Dębiak P, Dennison C, Farhi D, Fischer Q, Hashme S, Hesse C, Józefowicz R. Dota 2 with large scale deep reinforcement learning. arXiv preprint arXiv:1912.06680. 2019 Dec 13.
+[^lazy]: Yes, we tend to be lazy.
