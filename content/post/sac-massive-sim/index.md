@@ -7,24 +7,24 @@ date: 2025-02-10
 This is the story of how I managed to get the Soft-Actor Critic (SAC) and other off-policy reinforcement learning algorithms to work on massively parallel simulators (think Isaac Sim with thousands of robots simulated in parallel).
 If you follow the journey, you will learn about overlooked details in task design and algorithm implementation that can have a big impact on performance.
 
-Part I is about identifying the problem and trying out quick fixes on SAC.
-Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
+- Part I is about identifying the problem and trying out quick fixes on SAC.
+- Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
 
 
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
 
 The story begins a few months ago when I saw another paper using the same recipe for learning locomotion: train a PPO agent in simulation using thousands of environments in parallel and domain randomization, then deploy it on the real robot.
 This recipe has become the standard since 2021, when ETH Zurich and NVIDIA[^rudin21] showed that it was possible to learn locomotion in minutes on a single workstation.
-The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work (:ref: google_scholar_walk_in_minutes, example Disney robot).
+The codebase and the simulator (called Isaac Gym at that time) that were published became the basis for much follow-up work[^disney-robot].
 
-As an RL researcher focused on learning directly on real robots (no simulation, :ref: paper smooth), I was curious and suspicious about one aspect of this trend: why is no one trying an algorithm other than PPO?
-PPO is not the only deep reinforcement learning (DRL) algorithm for continuous control tasks and there are alternatives like SAC or TQC that can lead to better performance (:ref: paper SAC/TQC/open rl bench).
+As an RL researcher focused on [learning directly on real robots](https://proceedings.mlr.press/v164/raffin22a/raffin22a.pdf), I was curious and suspicious about one aspect of this trend: why is no one trying an algorithm other than PPO?[^link-questions]
+PPO is not the only deep reinforcement learning (DRL) algorithm for continuous control tasks and there are alternatives like SAC or TQC that can lead to better performance[^open-rl-bench].
 
 So I decided to investigate why these off-policy algorithms are not used by practitioners, and maybe why they don't work with massively parallel simulators.
 
 ## Why It Matters? - Fine Tuning on Real Robots
 
-If we could make SAC work with these simulators, then it would be possible to train in simulation and fine-tune on the real robot using the same algorithm (PPO is too sample-inefficient to train on a single robot) (footnote: which is the vision I have for RL and robotics).
+If we could make SAC work with these simulators, then it would be possible to train in simulation and fine-tune on the real robot using the same algorithm (PPO is too sample-inefficient to train on a single robot) .
 
 By using other algorithms it might also be possible to get better performance.
 Finally, it is always good to have a better understanding of what works or not and why.
@@ -103,7 +103,7 @@ The mean of the Gaussian $\mu_\theta(s_t)$ is the output of the actor neural net
 
 This means that at the beginning of training, most of the sampled actions will be in $[-3, 3]$ (from the [Three Sigma Rule](https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule)):
 
-<img style="max-width:70%" src="./img/gaussian.svg"/>
+<img style="max-width:80%" src="./img/gaussian.svg"/>
 <p style="font-size: 14pt; text-align:center;">The initial Gaussian distribution used by PPO for sampling actions.</p>
 
 
@@ -111,14 +111,24 @@ Back to our original topic, because of the way $\sigma$ is initialized, if the a
 In practice, the actions taken by PPO will even be far away from them.
 Now, let's compare the initial PPO action distribution with the Unitree A1 action space:
 
-<img style="max-width:70%" src="./img/gaussian_large_bounds.svg"/>
+<img style="max-width:80%" src="./img/gaussian_large_bounds.svg"/>
 <p style="font-size: 14pt; text-align:center;">The same initial Gaussian distribution but with the perspective of the Unitree A1 action space $[-100, 100]$</p>
 
-For reference, we can plot the action distribution of PPO after training:
+For reference, we can plot the action distribution of PPO after training[^action-plotter]:
 
-TODO: image of the distribution of the first 3 actions (or even the 12?)
+<img src="./img/dist_actions_trained_ppo.svg"/>
+<p style="font-size: 14pt; text-align:center;">Distribution of actions for PPO after training (on 64 000 steps).</p>
 
-Again, most of the actions are centered around zero (which makes sense, since it corresponds to the quadruped initial position, which is usually chosen to be stable), and there are no actions outside $[-5, 5]$: PPO uses less than 5% of the action space!
+The min/max values per dimension:
+```python
+>> actions.min(axis=0)
+array([-3.6, -2.5, -3.1, -1.8, -4.5, -4.2, -4. , -3.9, -2.8, -2.8, -2.9, -2.7])
+>> actions.max(axis=0)
+array([ 3.2,  2.8,  2.7,  2.8,  2.9,  2.7,  3.2,  2.9,  7.2,  5.7,  5. ,  5.8])
+
+```
+
+Again, most of the actions are centered around zero (which makes sense, since it corresponds to the quadruped initial position, which is usually chosen to be stable), and there are almost no actions outside $[-5, 5]$ (less than 0.1%): PPO uses less than 5% of the action space!
 
 Now that we know that we need less than 5% of the action space to solve the task, let's see why this might explain why SAC doesn't work in this[^rl-tips].
 
@@ -134,12 +144,12 @@ SAC then linearly rescales the sampled action to match the action space definiti
 What does this mean?
 Assuming we start with a standard deviation similar to PPO, this is what the sampled action distribution looks like after squashing[^clipping]:
 
-<img style="max-width:70%" src="./img/squashed_vs_gaussian.svg"/>
+<img src="./img/squashed_vs_gaussian.svg"/>
 <p style="font-size: 14pt; text-align:center;">The equivalent initial squashed Gaussian distribution.</p>
 
 And after rescaling to the environment limits (with PPO distribution to put it in perspective):
 
-<img style="max-width:70%" src="./img/squashed_rescaled.svg"/>
+<img src="./img/squashed_rescaled.svg"/>
 <p style="font-size: 14pt; text-align:center;">The same initial squashed Gaussian distribution but rescaled to the Unitree A1 action space $[-100, 100]$</p>
 
 As you can see, these are two completely different initial distributions at the beginning of training!
@@ -150,13 +160,11 @@ The fact that the actions are rescaled to fit the action space boundaries explai
 When I discovered that the action limits were way too large, my first reflex was to re-train SAC, but with only 3% of the action space, to more or less match the effective action space of PPO.
 Although it didn't reach PPO performance, there was finally some sign of life (an average episodic return slightly positive after a while).
 
-What I tried next was to reduce SAC exploration by having a smaller entropy coefficient at the beginning of training.
+What I tried next was to reduce SAC exploration by having a smaller entropy coefficient[^ent-coef] at the beginning of training.
 Bingo!
 SAC finally learned to solve the task!
 
-TODO: image learning curve
-
-Note: the entropy coeff is the coeff that does the trade-off between RL objective and entropy maximization
+TODO: image learning curve?
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/sac_trained_cut_1.mp4">
 </video>
@@ -165,16 +173,19 @@ Note: the entropy coeff is the coeff that does the trade-off between RL objectiv
 
 ## That's all folks?
 
-SAC works but not as fast as PPO, performance slightly below, weird movements (leg up in the air), not reliably.
-Part II will explore those aspects (and more envs), SAC design decision (trying to remove the squashed Gaussian), but for now let's see what this mean for the RL community.
+Although SAC can now solve this locomotion task, it takes more time to train, is not consistent, and the performance is slightly below PPO's.
+In addition, SAC's learned gaits are not as pleasing as PPO's, for example, SAC agents tend to keep one leg up in the air... 
+
+Part II will explore these aspects (and more environments), review SAC design decisions (for example, try to remove the squashed Gaussian), and tune it for speed, but for now let's see what this means for the RL community.
 
 ## Outro: What Does That Mean for the RL Community?
 
-Other affected papers/envs.
-Brax not affected but special PPO implementation too.
-PPO worked by accident?
-Recommendation: use the action dist plotter (link to gist), define proper action bounds.
+When I found out about this problem, I was curious to see how widespread it was in the community.
+After a quick search, it turns out that there are a lot of papers/code affected[^brax-envs] by this large boundary problem (see a non-exhaustive list of affected papers/code below).
 
+Although the initial choice of bounds may be a conscious and convenient one (no need to specify the real bounds, PPO will figure it out), it seems to have worked a bit by accident for those who built on top of it, and probably discouraged practitioners from trying other algorithms.
+
+My recommendation would be to always have properly defined action bounds, and if they are not known in advance, you can always [plot the action distribution](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) and adjust the limits when iterating on the environment design.
 
 TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose?
 
@@ -212,6 +223,7 @@ but not really defined explicitly in the env (for the limits)
 Note: rescale action doesn't work for PPO, need retuning? need tanh normal? -->
 
 ### Appendix - Affected Papers/Code
+Please find here a non-exhaustive list of papers/code affected by the large bound problem:
 <!-- - [MuJoCo Playground](https://github.com/google-deepmind/mujoco_playground/blob/0f3adda84f2a2ab55e9d9aaf7311c917518ec25c/mujoco_playground/_src/locomotion/go1/joystick.py#L239) -->
 <!-- https://github.com/Argo-Robot/quadrupeds_locomotion/blob/45eec904e72ff6bafe1d5378322962003aeff88d/src/go2_env.py#L173 -->
 <!-- https://github.com/leggedrobotics/legged_gym/blob/17847702f90d8227cd31cce9c920aa53a739a09a/legged_gym/envs/base/legged_robot.py#L85 -->
@@ -225,19 +237,14 @@ Note: rescale action doesn't work for PPO, need retuning? need tanh normal? -->
 - [Deep Whole Body Control](https://github.com/MarkFzp/Deep-Whole-Body-Control/blob/8159e4ed8695b2d3f62a40d2ab8d88205ac5021a/legged_gym/legged_gym/envs/widowGo1/widowGo1_config.py#L114)
 - [Robot Parkour Learning](https://github.com/ZiwenZhuang/parkour/blob/789e83c40b95fdd49fda7c1725c8c573df42d2a9/legged_gym/legged_gym/envs/base/legged_robot_config.py#L169)
 
-Probably many more looking at [works that cite ETH paper](https://scholar.google.com/scholar?cites=8503164023891275626&as_sdt=2005&sciodt=0,5)
+You can probably find many more looking at [works that cite the ETH paper](https://scholar.google.com/scholar?cites=8503164023891275626&as_sdt=2005&sciodt=0,5).
 
-Seems to be fixed in [Extreme Parkour](https://github.com/chengxuxin/extreme-parkour/blob/d2ffe27ba59a3229fad22a9fc94c38010bb1f519/legged_gym/legged_gym/envs/base/legged_robot_config.py#L120) (clip action 1.2)
-Almost fixed in [Walk this way](https://github.com/Improbable-AI/walk-these-ways/blob/0e7236bdc81ce855cbe3d70345a7899452bdeb1c/scripts/train.py#L200) (clip action 10)
+- Seems to be fixed in [Extreme Parkour](https://github.com/chengxuxin/extreme-parkour/blob/d2ffe27ba59a3229fad22a9fc94c38010bb1f519/legged_gym/legged_gym/envs/base/legged_robot_config.py#L120) (clip action 1.2)
+- Almost fixed in [Walk this way](https://github.com/Improbable-AI/walk-these-ways/blob/0e7236bdc81ce855cbe3d70345a7899452bdeb1c/scripts/train.py#L200) (clip action 10)
 
-Links:
-
-- https://forums.developer.nvidia.com/t/poor-performance-of-soft-actor-critic-sac-in-omniverseisaacgym/266970
-- https://www.reddit.com/r/reinforcementlearning/comments/lcx0cm/scaling_up_sac_with_parallel_environments/
-- https://www.reddit.com/r/reinforcementlearning/comments/12h1faq/isaac_gym_with_offpolicy_algorithms/
-
+<!-- 
 Related:
-- [Parallel Q Learning (PQL)](https://github.com/Improbable-AI/pql) but only tackles classic MuJoCo locomotion envs
+- [Parallel Q Learning (PQL)](https://github.com/Improbable-AI/pql) but only tackles classic MuJoCo locomotion envs -->
 
 
 ## Citation
@@ -267,4 +274,10 @@ All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 [^rescale]: Rescale from [-1, 1] to [low, high] using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
 [^clipping]: Common PPO implementations clip the actions to fit the desired boundaries, which has the effect of oversampling actions at the boundaries when the limits are smaller than ~4.
 [^brax-ppo]: This is not true for the PPO implementation in Brax which uses a squashed Gaussian like SAC.
+[^brax-envs]: A notable exception are Brax-based environments because their PPO implementation uses a squashed Gaussian, so the boundaries of the environments had to be properly defined.
 [^control-freq]: The control loop runs at [50 Hz](https://github.com/isaac-sim/IsaacLab/blob/f1a4975eb7bae8509082a8ff02fd775810a73531/source/isaaclab_tasks/isaaclab_tasks/manager_based/locomotion/velocity/velocity_env_cfg.py#L302), so after 20s.
+[^action-plotter]: The code to record and plot action distribution is on [GitHub](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70)
+[^disney-robot]: Like the [BD-1 Disney robot](https://www.youtube.com/watch?v=7_LW7u-nk6Q)
+[^open-rl-bench]: See results from Huang, Shengyi, et al. "[Open rl benchmark](https://wandb.ai/openrlbenchmark/): Comprehensive tracked experiments for reinforcement learning." arXiv preprint arXiv:2402.03046 (2024).
+[^ent-coef]: The entropy coeff is the coeff that does the trade-off between RL objective and entropy maximization.
+[^link-questions]: I was not the only one asking why SAC doesn't work: [nvidia forum](https://forums.developer.nvidia.com/t/poor-performance-of-soft-actor-critic-sac-in-omniverseisaacgym/266970) [reddit1](https://www.reddit.com/r/reinforcementlearning/comments/lcx0cm/scaling_up_sac_with_parallel_environments/) [reddit2](https://www.reddit.com/r/reinforcementlearning/comments/12h1faq/isaac_gym_with_offpolicy_algorithms)
