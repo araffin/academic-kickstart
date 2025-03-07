@@ -42,7 +42,7 @@ As researchers, we tend to publish only positive results, but I think a lot of v
 Before digging any further, I had some hypotheses as to why PPO was the only algorithm used:
 - PPO is fast to train (in terms of computation time) and was tuned for the massively parallel environment.
 - As researchers, we tend to take the path of least resistance and build on proven solutions (the original training code is open source and the simulator is freely available) to get new interesting results[^lazy].
-- There may be some peculiarities in the environment design that favor PPO over algorithms. In other words, the massively parallel environments might be optimized for PPO.
+- There may be some peculiarities in the environment design that favor PPO over other algorithms. In other words, the massively parallel environments might be optimized for PPO.
 - SAC/TQC and derivatives are tuned for sample efficiency, not fast wall clock time. In the case of massively parallel simulation, what matters is how long it takes to train, not how many samples are used. They probably need to be tuned/adjusted for this new setting.
 
 Note: during my journey, I will (obviously) be using [Stable-Baselines3](https://github.com/DLR-RM/stable-baselines3) and its fast Jax version [SBX](https://github.com/araffin/sbx).
@@ -68,7 +68,7 @@ The robot is rewarded for following the correct desired velocity (linear and ang
 An episode ends when the robot falls over and is timed out ([truncation](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)) after 1000 steps[^control-freq].
 
 After some [quick optimizations](https://github.com/isaac-sim/IsaacLab/pull/2022) (SB3 now runs 4x faster, at 60 000 fps for 2048 envs with PPO), I did some sanity checks.
-First, I ran PPO with the tuned hyperparameters found in the repo, and it was able to quickly solve the task.
+First, I ran PPO with the tuned hyperparameters found in the repository, and it was able to quickly solve the task.
 In 5 minutes, it gets an average episode return of ~30 (above an episode return of 15, the task is almost solved).
 Then I tried SAC and TQC, with default hyperparameters (and observation normalization), and, as expected, it didn't work.
 No matter how long it was training, there was no sign of improvement.
@@ -139,8 +139,7 @@ Now that we know that we need less than 5% of the action space to solve the task
 ## SAC Squashed Gaussian
 
 SAC and other off-policy algorithms for continuous actions (such as DDPG, TD3 or [TQC](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html)) have an additional transformation at the end of the actor network.
-SAC squashes the action sampled from an unbounded Gaussian distribution using a [$tanh()$](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) function.
-Therefore, the sampled actions are always in $[-1, 1]$.
+In SAC, actions are sampled from an unbounded Gaussian distribution and then passed through a [$tanh()$](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) function to squash them to the range $[-1, 1]$.
 SAC then linearly rescales the sampled action to match the action space definition, i.e. it transforms the action from $[-1, 1]$ to $[\text{low}, \text{high}]$[^rescale].
 
 What does this mean?
@@ -162,15 +161,32 @@ The fact that the actions are rescaled to fit the action space boundaries explai
 When I discovered that the action limits were way too large, my first reflex was to re-train SAC, but with only 3% of the action space, to more or less match the effective action space of PPO.
 Although it didn't reach PPO performance, there was finally some sign of life (an average episodic return slightly positive after a while).
 
-What I tried next was to reduce SAC exploration by having a smaller entropy coefficient[^ent-coef] at the beginning of training.
+What I tried next was to use a neural network similar to the one used by PPO for this task and reduce SAC exploration by having a smaller entropy coefficient[^ent-coef] at the beginning of training.
 Bingo!
 SAC finally learned to solve the task!
 
-<!-- TODO: image learning curve? -->
+<img style="max-width:90%" src="./img/learning_curve.svg"/>
+<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task using 2048 envs.</p>
+
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/sac_trained_cut_1.mp4">
 </video>
 <p style="font-size: 14pt; text-align:center;">Trained SAC agent after the quick fix.</p>
+
+SAC Hyperparameters (the ones not specified are [SB3 defaults](https://github.com/araffin/sbx/blob/8238fccc19048340870e4869813835b8fb02e577/sbx/sac/sac.py#L54-L64)):
+```python
+sac_hyperparams = dict(
+    policy_kwargs={
+        # Similar to PPO network tuned for Unitree A1 task
+        "activation_fn": jax.nn.elu,
+        "net_arch": [512, 256, 128],
+    },
+    # When using 2048 envs, gradient_steps=512 corresponds
+    # to an update-to-data ratio of 1/4
+    gradient_steps=512,
+    ent_coef="auto_0.006",
+)
+```
 
 
 ## That's all folks?
@@ -264,7 +280,7 @@ Related:
 
 ## Acknowledgement
 
-I would like to thank Anssi and Leon for their feedback =).
+I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 
 <!-- All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 
