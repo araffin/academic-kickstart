@@ -264,6 +264,24 @@ You can probably find many more looking at [works that cite the ETH paper](https
 Related:
 - [Parallel Q Learning (PQL)](https://github.com/Improbable-AI/pql) but only tackles classic MuJoCo locomotion envs -->
 
+### Appendix - Note on Unbounded Action Spaces
+
+While discussing this blog post with [Nico Bohlinger](https://github.com/nico-bohlinger), he raised another point that could explain why people might choose unbounded action space.
+
+In short, policies can learn to produce actions outside the joint limits to trick the underlying [PD controller](https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller) into outputting desired torques.
+For example, when recovering from a strong push, what matters is not to accurately track a desired position, but to quickly move the joints in the right direction.
+This makes training almost invariant to the chosen PD gains.
+
+<details>
+  <summary>Full quote</summary>
+
+>So in theory you could clip [the actor output] to the min and max ranges of the joints, but what happens quite often is that these policies learn to produce actions that sets the target joint position outside of the joint limits.
+>This happens because the policies don't care about the tracking accuracy of the underlying [PD controller](https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller), they just want to command: in which direction should the joint angle change, and by how much.
+
+>In control, the magnitude is done through the P and D gains, but we fix them during training, so when the policy wants to move the joints in a certain direction very quickly (especially needed during recovery of strong pushes or strong domain randomization in general), it learns to command actions that are far away to move into this direction quickly, i.e. to produce more torque.
+
+>It essentially learns to trick the PD control to output whatever torques it needs. Of course, this also depends on the PD gains you set; if they are well chosen, actions outside of the joint limits are less frequent. A big benefit is that this makes the whole training pipeline quite invariant to the PD gains you choose at the start, which makes tuning easier.
+</details>
 
 ## Citation
 
