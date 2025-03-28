@@ -18,7 +18,7 @@ In this blog post, I'll explore some of the techniques for automatic hyperparame
 I'll discuss the challenges of hyperparameter optimization, and introduce different samplers and schedulers for exploring the hyperparameter space.
 In part two (WIP), I'll show how to use the [Optuna library](https://github.com/optuna/optuna) to put these techniques into practice.
 
-If you prefer to learn with video, I recently gave this tutorial at ICRA 2022.
+If you prefer to learn with video, I gave this tutorial at ICRA 2022.
 The [slides](https://araffin.github.io/tools-for-robotic-rl-icra2022/), notebooks and videos are online:
 
 {{< youtube AidFTOdGNFQ >}}
