@@ -42,13 +42,13 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     # From 2**5=32 to 2**12=4096
     n_steps_pow = trial.suggest_int("n_steps_pow", 5, 12)
     gamma = trial.suggest_float("one_minus_gamma", 0.97, 0.9999)
-    learning_rate = trial.suggest_float("learning_rate", 1e-5, 0.002, log=True)
+    learning_rate = trial.suggest_float("learning_rate", 3e-5, 3e-3, log=True)
     activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
 
     n_steps = 2**n_steps_pow
     # Display true values
     trial.set_user_attr("n_steps", n_steps)
-
+    # Convert to PyTorch objects
     activation_fn = {"tanh": nn.Tanh, "relu": nn.ReLU}[activation_fn]
 
     return {
