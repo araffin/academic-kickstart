@@ -180,6 +180,19 @@ In this post, I introduced the challenges and basic components of automatic hype
 The [second part](../optuna/) will be about applying hyperparameter tuning in practice with the [Optuna](https://github.com/optuna/optuna) library, using reinforcement learning as an example
 (if you are impatient, the video and the colab notebook are already [online](https://araffin.github.io/tools-for-robotic-rl-icra2022/)).
 
+## Citation
+
+```
+@article{raffin2023hyperparameter,
+  title   = "Automatic Hyperparameter Tuning - A Visual Guide",
+  author  = "Raffin, Antonin",
+  journal = "araffin.github.io",
+  year    = "2023",
+  month   = "May",
+  url     = "https://araffin.github.io/post/hyperparam-tuning/"
+}
+```
+
 
 ## Acknowledgement
 

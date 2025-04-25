@@ -9,10 +9,10 @@ In the [first part](https://araffin.github.io/post/hyperparam-tuning/), I introd
 This second part is about the practical application of this technique with the [Optuna library](https://github.com/optuna/optuna), in a reinforcement learning setting (using the [Stable-Baselines3 (SB3)](https://github.com/DLR-RM/stable-baselines3) library).
 
 
-Note: if you prefer to learn with video, I gave this tutorial at ICRA 2022.
-
 Code: https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524
 
+
+Note: if you prefer to learn with video, I gave this tutorial at ICRA 2022.
 The [slides](https://araffin.github.io/tools-for-robotic-rl-icra2022/), notebooks and videos are online:
 
 {{< youtube ihP7E76KGOI >}}
@@ -20,16 +20,10 @@ The [slides](https://araffin.github.io/tools-for-robotic-rl-icra2022/), notebook
 
 <div style="margin-top: 50px"></div>
 
-## The Optuna Library
-
-Among the various open-source libraries for hyperparameter optimization (such as [hyperopt](https://github.com/hyperopt/hyperopt) or [Ax](https://github.com/facebook/Ax)), I chose [Optuna](https://optuna.org/) for multitple reasons:
-- it has a clean API and good [documentation](https://optuna.readthedocs.io/en/stable/index.html)
-- it supports many samplers and pruners
-- it has some nice additional features (like easy distributed optimization support, multi-objective support or the [optuna-dashboard](https://optuna-dashboard.readthedocs.io/en/latest/getting-started.html))
 
 ## PPO on Pendulum-v1 - When default hyperparameters don't work
 
-To make this more concrete, let's take a simple example where the default hyperparameters don't work.
+To make this post more concrete, let's take a simple example where the default hyperparameters don't work.
 In the [`Pendulum-v1`](https://gymnasium.farama.org/environments/classic_control/pendulum/) environment, the RL agent controls a pendulum that "starts in a random position, and the goal is to swing it up so it stays upright".
 
 <video controls src="https://huggingface.co/sb3/sac-Pendulum-v1/resolve/main/replay.mp4">
@@ -54,20 +48,25 @@ PPO("MlpPolicy", "Pendulum-v1", verbose=1).learn(100_000, progress_bar=True)
 ## Defining the Search Space
 
 The first thing to define when optimizing hyperparameters is the search space: what parameters to optimize and what range to explore?
-Another decision to be made is to define from which distribution to sample from.
+You need also to decide from which distribution to sample from.
 For example, in the case of continuous variables (like the discount factor $\gamma$ or the learning rate $\alpha$), values can be sampled from a uniform or [log-uniform](https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.loguniform.html) distribution.
-Optuna provides several `trial.suggest_...` methods to define which parameter to optimize with which distribution.
-For example, to sample the discount factor $\gamma$ uniformly from the range $[0, 1]$, you would use `gamma = trial.suggest_float("gamma", 0.0, 1.0)`.
 
-I recommend reading the [Optuna documentation](https://optuna.readthedocs.io/en/stable/) to learn about the library and its features.
+### Sampling methods
+
+In practice, Optuna provides several `trial.suggest_...` methods to define which parameter to optimize with which distribution.
+For instance, to sample the discount factor $\gamma$ uniformly from the range $[0, 1]$, you would use `gamma = trial.suggest_float("gamma", 0.0, 1.0)`.
+
+I recommend reading the [Optuna documentation](https://optuna.readthedocs.io/en/stable/) to have a better understanding of the library and its features.
 In the meantime, you need to know about some other useful methods for sampling hyperparameters:
 - `trial.suggest_float(..., log=True)` to sample from a log-uniform distribution (ex: learning rate)
-- `trial.suggest_int("name", low, high)` to sample from integers (ex: mini-batch size)
+- `trial.suggest_int("name", low, high)` to sample from integers (ex: mini-batch size), `low` and `high` are included
 - `trial.suggest_categorical("name", choices)` for sampling from a list of choices (ex: choosing an activation function)
 
 Back to the PPO example on the `Pendulum-v1` task, what hyperparameters can be optimized and what range should be explored for each of them?
 
-[PPO](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html) has many hyperparameters, but to keep the search fast, I will limit the search to four: the learning rate $\alpha$, the discount factor $\gamma$, the activation function of the neural networks and the number of steps for data collection (`n_steps`).
+### PPO hyperparameters
+
+[PPO](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html) has many hyperparameters, but to keep the search small (and this blog post short), I will limit the search to four parameters: the learning rate $\alpha$, the discount factor $\gamma$, the activation function of the neural networks and the number of steps for data collection (`n_steps`).
 
 Tuning the learning rate $\alpha$ is crucial for fast but stable training. If $\alpha$ is too big, the training tends to be unstable and usually leads to NaNs (or other numerical instability). If it is too small, it will take forever to converge.
 Since the learning rate $\alpha$ is a continuous variable (it is a float) and distinguishing between small learning rates is important, it is recommended to use a log-uniform distribution for sampling.
@@ -76,7 +75,7 @@ This translates to `learning_rate = trial.suggest_float("learning_rate", 3e-5, 3
 
 The discount factor $\gamma$ represents a trade-off between optimizing short-term rewards and long-term rewards.
 In general, we want to maximize the sum of undiscounted rewards ($\gamma = 1$), but in practice $\gamma < 1$ works best (while keeping $\gamma \approx 1$).
-A recommended range for the discount factor $\gamma$ is $[0.97, 0.9999]$[^param-range] (default is 0.99), so in Python `gamma = trial.suggest_float("one_minus_gamma", 0.97, 0.9999)`.
+A recommended range for the discount factor $\gamma$ is $[0.97, 0.9999]$[^param-range] (default is 0.99), so in Python `gamma = trial.suggest_float("gamma", 0.97, 0.9999)`.
 
 I'm considering two activation functions in this example: [Tanh](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) and [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html).
 Because the activation function is sampled from a list of options, `activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])` is the corresponding code[^serialize].
@@ -194,7 +193,7 @@ def objective(trial: optuna.Trial) -> float:
 Finally, after defining the search space and the objective function, you have to choose a sampler and (optionally) a pruner (see [part one](../hyperparam-tuning/)).
 If you don't know what to choose, Optuna now has an [AutoSampler](https://hub.optuna.org/samplers/auto_sampler/) which will choose a recommended sampler (between `TPESampler`, `GPSampler` and `CmaEsSampler`) for you based on heuristics.
 
-Otherwise `TPESampler` and `MedianPruner` are good default choices. Don't forget to pass `n_startup_trials` to both to warm up the optimization with a `RandomSampler` and to avoid premature convergence (like pruning potentially good trials too early):
+Here, I selected `TPESampler` and `MedianPruner` because they tend to be good default choices. Don't forget to pass `n_startup_trials` to both to warm up the optimization with a `RandomSampler` and to avoid premature convergence (like pruning potentially good trials too early):
 
 ```python
 from optuna.pruners import MedianPruner
@@ -247,6 +246,12 @@ model.learn(40_000, progress_bar=False)
 ```
 It should give you much better results than the default hyperparameters with half the training budget.
 
+Note: I recommend using the [RL Zoo](https://github.com/DLR-RM/rl-baselines3-zoo) for more complex settings.
+It includes automatic hyperparameter tuning, loading trial and distributed optimization.
+Example:
+```bash
+python -m rl_zoo3.train --algo ppo --env Pendulum-v1 -optimize --storage ./demo.log --study-name demo
+```
 
 ## Distributed Optimization
 
@@ -280,9 +285,12 @@ If you use a database (you should), you can also use [Optuna dashboard](https://
 
 Before concluding this blog post, I would like to give you some tips and tricks to keep in mind when doing hyperparameter tuning.
 
+### Start simple
+
 First, as with any RL problem, starting simple is the [key to success](https://www.youtube.com/watch?v=eZ6ZEpCi6D8).
 Do not try to optimize too many hyperparameters at once, using large ranges.
 My advice would be to start with a minimal number of parameters (i.e., start with a small search space) and increase their number and ranges only as needed.
+
 For example, to decide whether to increase or decrease the search range, you can look at the best trials so far.
 If the best trials are close to the limits of the search space (saturation), this is a sign that you should increase the limits.
 On the other hand, if above a certain threshold for a parameter, all trials are bad, you can probably reduce the search space (to at most the threshold).
@@ -290,10 +298,14 @@ On the other hand, if above a certain threshold for a parameter, all trials are 
 Another thing to keep in mind is that most of the time you don't need automatic tuning.
 Simply training for a longer time can improve the results without changing the hyperparameters.
 
+### Post-Evaluation to Remove Noise
+
 Last but not least (and perhaps the most important tip), do not forget that RL training is a stochastic process.
 This means that the performance reported for each trial can be noisy: if you run the same trial but with a different random seed, you might get different results.
+
 I tend to approach this problem in two ways.
-To filter out the evaluation noise, I usually re-evaluate the top trials multiple times to find out which ones were actually "lucky seeds".
+
+To filter out the evaluation noise, I usually re-evaluate the top trials multiple times to find out which ones were actually "lucky seeds" and which ones work consistently.
 Another way to deal with this problem is to do multiple runs per trial: each run uses the same hyperparameters but a different random seed.
 However, this technique is expensive in terms of computation time and makes it difficult to prune out bad trials early.
 
@@ -311,6 +323,26 @@ As a conclusion and transition to the next blog post, I will use this technique 
 
 PS: In case you missed it, you can find the final script here: https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524
 
+## Appendix - The Optuna Library
+
+Among the various open-source libraries for hyperparameter optimization (such as [hyperopt](https://github.com/hyperopt/hyperopt) or [Ax](https://github.com/facebook/Ax)), I chose [Optuna](https://optuna.org/) for multitple reasons:
+- it has a clean API and good [documentation](https://optuna.readthedocs.io/en/stable/index.html)
+- it supports many samplers and pruners
+- it has some nice additional features (like easy distributed optimization support, multi-objective support or the [optuna-dashboard](https://optuna-dashboard.readthedocs.io/en/latest/getting-started.html))
+
+## Citation
+
+```
+@article{raffin2025optuna,
+  title   = "Automatic Hyperparameter Tuning - In Practice",
+  author  = "Raffin, Antonin",
+  journal = "araffin.github.io",
+  year    = "2025",
+  month   = "April",
+  url     = "https://araffin.github.io/post/optuna/"
+}
+```
+
 <!-- ## Acknowledgement
 
 All the graphics were made using [excalidraw](https://excalidraw.com/). -->
@@ -322,8 +354,8 @@ All the graphics were made using [excalidraw](https://excalidraw.com/). -->
 
 [^ppo-converge]: Without proper [truncation handling](https://github.com/DLR-RM/stable-baselines3/issues/633), PPO will actually not converge even in 1 million steps with default hyperparameters.
 
-[^param-range]: A common way to define param range is to start small, and increase the search space later if the best parameters found are at the border of the defined range.
+[^param-range]: A common way to define the param range is to start small and later increase the search space if the best parameters found are at the boundary of the defined range.
 
 [^serialize]: I convert strings to PyTorch objects later because options need to be serializable to be stored by Optuna.
 
-[^power-two]: One of the main reason to select a power of two is because GPU kernel/hardware are optimized for power of two operations. Also, in practice, `n_steps=4096` vs `n_steps=4000` doesn't make much of a difference, so sampling power of twos reduces the search space.
+[^power-two]: One of the main reasons for choosing a power of two is that the GPU kernel/hardware is optimized for power of two operations. Also, in practice, `n_steps=4096` vs. `n_steps=4000` doesn't make much difference, so using a power of two reduces the search space.
