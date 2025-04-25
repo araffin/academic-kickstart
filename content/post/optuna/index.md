@@ -36,7 +36,7 @@ The agent is rewarded for keeping the pendulum upright ($\theta = 0$ and $\dot{\
 An episode ends after a timeout of 200 steps ([truncation](https://www.youtube.com/watch?v=eZ6ZEpCi6D8)).
 
 If you try to run the [Proximal Policy Optimization (PPO)](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html) algorithm on the `Pendulum-v1` environment, with a budget of 100,000 timesteps (SAC can solve this task in only 5,000 steps), it will not converge[^ppo-converge].
-With the default hyperparameters, you will get an average return of about -1000, which is far from the best performance you can get, which is around -200:
+With the default hyperparameters, you will get an average return of about -1000, far from the best performance you can get, which is around -200:
 ```python
 from stable_baselines3 import PPO
 # Faster, with Jax: from sbx import PPO
@@ -59,7 +59,7 @@ For instance, to sample the discount factor $\gamma$ uniformly from the range $[
 I recommend reading the [Optuna documentation](https://optuna.readthedocs.io/en/stable/) to have a better understanding of the library and its features.
 In the meantime, you need to know about some other useful methods for sampling hyperparameters:
 - `trial.suggest_float(..., log=True)` to sample from a log-uniform distribution (ex: learning rate)
-- `trial.suggest_int("name", low, high)` to sample from integers (ex: mini-batch size), `low` and `high` are included
+- `trial.suggest_int("name", low, high)` to sample integers (ex: mini-batch size), `low` and `high` are included
 - `trial.suggest_categorical("name", choices)` for sampling from a list of choices (ex: choosing an activation function)
 
 Back to the PPO example on the `Pendulum-v1` task, what hyperparameters can be optimized and what range should be explored for each of them?
@@ -69,23 +69,24 @@ Back to the PPO example on the `Pendulum-v1` task, what hyperparameters can be o
 [PPO](https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html) has many hyperparameters, but to keep the search small (and this blog post short), I will limit the search to four parameters: the learning rate $\alpha$, the discount factor $\gamma$, the activation function of the neural networks and the number of steps for data collection (`n_steps`).
 
 Tuning the learning rate $\alpha$ is crucial for fast but stable training. If $\alpha$ is too big, the training tends to be unstable and usually leads to NaNs (or other numerical instability). If it is too small, it will take forever to converge.
+
 Since the learning rate $\alpha$ is a continuous variable (it is a float) and distinguishing between small learning rates is important, it is recommended to use a log-uniform distribution for sampling.
-For the range, the PPO default learning rate value is $\alpha_0 = 3e^{-4}$, so I defined the search space to be between $\alpha_{\text{min}} = \alpha_0 / 10 = 3e^{-5}$ and $\alpha_{\text{min}} = 10 \alpha_0 = 3e^{-3}$.
+To search around the default learning rate $\alpha_0 = 3e^{-4}$, I define the search space to be in $[\alpha_0 / 10, 10 \alpha_0] = [3e^{-5}, 3e^{-3}]$.
 This translates to `learning_rate = trial.suggest_float("learning_rate", 3e-5, 3e-3, log=True)` with Optuna.
 
 The discount factor $\gamma$ represents a trade-off between optimizing short-term rewards and long-term rewards.
 In general, we want to maximize the sum of undiscounted rewards ($\gamma = 1$), but in practice $\gamma < 1$ works best (while keeping $\gamma \approx 1$).
-A recommended range for the discount factor $\gamma$ is $[0.97, 0.9999]$[^param-range] (default is 0.99), so in Python `gamma = trial.suggest_float("gamma", 0.97, 0.9999)`.
+A recommended range for the discount factor $\gamma$ is $[0.97, 0.9999]$[^param-range] (default is 0.99), or in Python: `gamma = trial.suggest_float("gamma", 0.97, 0.9999)`.
 
 I'm considering two activation functions in this example: [Tanh](https://pytorch.org/docs/stable/generated/torch.nn.Tanh.html) and [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html).
 Because the activation function is sampled from a list of options, `activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])` is the corresponding code[^serialize].
 
 Finally, PPO has a `n_steps` parameter that controls the "number of steps to run for each environment per update".
-That is to say, PPO will update its policy every `n_steps * n_envs` steps (and collect `n_steps * n_envs` transitions to sample from).
+That is to say, PPO updates its policy every `n_steps * n_envs` steps (and collect `n_steps * n_envs` transitions to sample from).
 This hyperparameter also affects the value and advantage estimation (larger `n_steps` leads to less biased estimates).
-It is recommended to use power of two for its value[^power-two], so it can be sampled with `n_steps_pow = trial.suggest_int("n_steps_pow", 5, 12)` (from $2^5=32$ to $2^{12}=4096$).
+It is recommended to use a power of two for its value[^power-two], i.e., we sample the exponent instead of the value directly, which translates to `n_steps_pow = trial.suggest_int("n_steps_pow", 5, 12)` (from $2^5=32$ to $2^{12}=4096$).
 
-The overall sampling function looks like that:
+To summarize, this is the overall sampling function:
 
 ```python
 from typing import Any
@@ -99,7 +100,7 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     gamma = trial.suggest_float("one_minus_gamma", 0.97, 0.9999)
     learning_rate = trial.suggest_float("learning_rate", 3e-5, 3e-3, log=True)
     activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
-
+    # Convert power of two to number of steps
     n_steps = 2**n_steps_pow
     # Display true values
     trial.set_user_attr("n_steps", n_steps)
@@ -120,7 +121,7 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
 ## Defining the Objective Function
 
 After choosing the search space, you need to define the objective function.
-In reinforcement learning, we usually want to get the best performance for a given budget (either in terms of samples or training time), so we optimize for maximum episodic reward.
+In reinforcement learning, we usually want to get the best performance for a given budget (either in terms of samples or training time), i.e., we try to maximize the episodic reward.
 
 One way to measure the performance is to periodically evaluate the agent on a test environment for multiple episodes:
 ```python
@@ -131,7 +132,7 @@ from stable_baselines3.common.evaluation import evaluate_policy
 mean_return, std_return = evaluate_policy(model, eval_env, n_eval_episodes=20)
 ```
 
-With SB3, I will use a custom [callback](https://stable-baselines3.readthedocs.io/en/master/guide/callbacks.html) to trigger evaluations at different stages of training:
+In practice, with SB3, I use a custom [callback](https://stable-baselines3.readthedocs.io/en/master/guide/callbacks.html) to trigger evaluations at different stages of training:
 ```python
 from stable_baselines3.common.callbacks import BaseCallback
 
@@ -140,7 +141,7 @@ class TrialEvalCallback(BaseCallback):
 
     def _on_step(self) -> bool:
         if self.eval_freq > 0 and self.n_calls % self.eval_freq == 0:
-            # Evaluate the current policy every n_steps
+            # Evaluate the current policy every n_calls
             mean_return, _ = evaluate_policy(self.model, self.eval_env)
             self.eval_idx += 1
             # Send report to Optuna
@@ -151,7 +152,7 @@ class TrialEvalCallback(BaseCallback):
                 return False
         return True
 ```
-This callback also allows to stop training early if a trial is too bad and should be pruned (by checking `trial.should_prune()`).
+This callback also allows to stop training early if a trial is too bad and should be pruned (by checking the value of `trial.should_prune()`).
 
 The full objective method contains additional code to create the training environment, sample the hyperparameters, instantiate the RL agent and train it:
 ```python
@@ -191,9 +192,9 @@ def objective(trial: optuna.Trial) -> float:
 ## Choosing Sampler and Pruner
 
 Finally, after defining the search space and the objective function, you have to choose a sampler and (optionally) a pruner (see [part one](../hyperparam-tuning/)).
-If you don't know what to choose, Optuna now has an [AutoSampler](https://hub.optuna.org/samplers/auto_sampler/) which will choose a recommended sampler (between `TPESampler`, `GPSampler` and `CmaEsSampler`) for you based on heuristics.
+If you don't know what to choose, Optuna now has an [AutoSampler](https://hub.optuna.org/samplers/auto_sampler/) which choosees a recommended sampler for you (between `TPESampler`, `GPSampler` and `CmaEsSampler`), based on heuristics.
 
-Here, I selected `TPESampler` and `MedianPruner` because they tend to be good default choices. Don't forget to pass `n_startup_trials` to both to warm up the optimization with a `RandomSampler` and to avoid premature convergence (like pruning potentially good trials too early):
+Here, I selected `TPESampler` and `MedianPruner` because they tend to be good default choices. Don't forget to pass `n_startup_trials` to both to warm up the optimization with a `RandomSampler` (uniform sampler) and to avoid premature convergence (like pruning potentially good trials too early):
 
 ```python
 from optuna.pruners import MedianPruner
@@ -214,9 +215,9 @@ best_trial = study.best_trial
 ```
 
 Et voilà! That's all you need to run automatic hyperparameter optimization.
-If you now run the [final script](https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524) for five minutes, it should already find hyperparameters that give good results.
+If you now run the [final script](https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524) for five minutes, it should quickly find hyperparameters that give good results.
 
-For example, in one of the runs I was able to get in just two minutes:
+For example, in one of the runs I did, I was able to get in just two minutes:
 ```yaml
 Number of finished trials: 21
 Best trial:
@@ -244,11 +245,11 @@ hyperparams = dict(n_steps=256, gamma=0.97, learning_rate=1.5e-3)
 model = PPO("MlpPolicy", vec_env, verbose=1, **hyperparams)
 model.learn(40_000, progress_bar=False)
 ```
-It should give you much better results than the default hyperparameters with half the training budget.
+It should give you better results than the default hyperparameters with half of the training budget.
 
 Note: I recommend using the [RL Zoo](https://github.com/DLR-RM/rl-baselines3-zoo) for more complex settings.
 It includes automatic hyperparameter tuning, loading trial and distributed optimization.
-Example:
+Example command to optimize PPO on the Pendulum-v1 environment:
 ```bash
 python -m rl_zoo3.train --algo ppo --env Pendulum-v1 -optimize --storage ./demo.log --study-name demo
 ```
@@ -293,10 +294,10 @@ My advice would be to start with a minimal number of parameters (i.e., start wit
 
 For example, to decide whether to increase or decrease the search range, you can look at the best trials so far.
 If the best trials are close to the limits of the search space (saturation), this is a sign that you should increase the limits.
-On the other hand, if above a certain threshold for a parameter, all trials are bad, you can probably reduce the search space (to at most the threshold).
+On the other hand, if above a certain threshold for a parameter, all trials are bad, you can probably reduce the search space.
 
-Another thing to keep in mind is that most of the time you don't need automatic tuning.
-Simply training for a longer time can improve the results without changing the hyperparameters.
+Another thing to keep in mind is that most of the time, you don't need automatic tuning.
+Simply training for a longer time (i.e., using a larger training budget) can improve the results without changing the hyperparameters.
 
 ### Post-Evaluation to Remove Noise
 
@@ -305,8 +306,8 @@ This means that the performance reported for each trial can be noisy: if you run
 
 I tend to approach this problem in two ways.
 
-To filter out the evaluation noise, I usually re-evaluate the top trials multiple times to find out which ones were actually "lucky seeds" and which ones work consistently.
-Another way to deal with this problem is to do multiple runs per trial: each run uses the same hyperparameters but a different random seed.
+To filter out the evaluation noise, I usually re-evaluate the top trials multiple times to find out which ones were "lucky seeds" and which ones work consistently.
+Another way to deal with this problem is to do multiple runs per trial: each run uses the same hyperparameters but starts with a different random seed.
 However, this technique is expensive in terms of computation time and makes it difficult to prune out bad trials early.
 
 
@@ -319,7 +320,7 @@ I've covered:
 - speeding up the tuning process with distributed optimization
 - tips and tricks to keep in mind when doing automatic hyperparameter tuning
 
-As a conclusion and transition to the next blog post, I will use this technique to [tune SAC for fast training](./sac-massive-sim/) when using a massively parallel environment like Isaac Sim.
+As a conclusion and transition to the next blog post (WIP), I will use this technique to [tune SAC for fast training](./sac-massive-sim/) when using a massively parallel environment like Isaac Sim.
 
 PS: In case you missed it, you can find the final script here: https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524
 
