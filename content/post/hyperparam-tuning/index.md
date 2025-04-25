@@ -16,7 +16,7 @@ As a personal and concrete example, I used this technique on a [real elastic qua
 
 In this blog post, I'll explore some of the techniques for automatic hyperparameter tuning, using reinforcement learning as a concrete example.
 I'll discuss the challenges of hyperparameter optimization, and introduce different samplers and schedulers for exploring the hyperparameter space.
-In part two (WIP), I'll show how to use the [Optuna library](https://github.com/optuna/optuna) to put these techniques into practice.
+In [part two](../optuna/), I'll show how to use the [Optuna library](https://github.com/optuna/optuna) to put these techniques into practice.
 
 If you prefer to learn with video, I gave this tutorial at ICRA 2022.
 The [slides](https://araffin.github.io/tools-for-robotic-rl-icra2022/), notebooks and videos are online:
@@ -177,7 +177,7 @@ In this post, I introduced the challenges and basic components of automatic hype
 - the different samplers that choose which set of parameters to try
 - the various schedulers that decide how to allocate resources and when to stop a trial
 
-The second part (WIP) will be about applying hyperparameter tuning in practice with the [Optuna](https://github.com/optuna/optuna) library, using reinforcement learning as an example
+The [second part](../optuna/) will be about applying hyperparameter tuning in practice with the [Optuna](https://github.com/optuna/optuna) library, using reinforcement learning as an example
 (if you are impatient, the video and the colab notebook are already [online](https://araffin.github.io/tools-for-robotic-rl-icra2022/)).
 
 

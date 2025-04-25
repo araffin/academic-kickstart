@@ -41,7 +41,7 @@ def sample_ppo_params(trial: optuna.Trial) -> dict[str, Any]:
     """Sampler for PPO hyperparameters."""
     # From 2**5=32 to 2**12=4096
     n_steps_pow = trial.suggest_int("n_steps_pow", 5, 12)
-    gamma = trial.suggest_float("one_minus_gamma", 0.97, 0.9999)
+    gamma = trial.suggest_float("gamma", 0.97, 0.9999)
     learning_rate = trial.suggest_float("learning_rate", 3e-5, 3e-3, log=True)
     activation_fn = trial.suggest_categorical("activation_fn", ["tanh", "relu"])
 
