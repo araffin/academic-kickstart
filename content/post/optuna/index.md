@@ -344,9 +344,9 @@ Among the various open-source libraries for hyperparameter optimization (such as
 }
 ```
 
-<!-- ## Acknowledgement
+## Acknowledgement
 
-All the graphics were made using [excalidraw](https://excalidraw.com/). -->
+I would like to thank Anssi for his feedback =).
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
