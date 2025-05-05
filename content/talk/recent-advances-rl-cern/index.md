@@ -24,7 +24,7 @@ tags:
 featured: false
 
 url_project:
-url_slides:
+url_slides: slides/recent-advances-rl/
 url_video:
 
 
