@@ -247,6 +247,9 @@ model.learn(40_000, progress_bar=False)
 ```
 It should give you better results than the default hyperparameters with half of the training budget.
 
+<img style="max-width:80%" src="./img/Results_Pendulum-v1.svg"/>
+<p style="font-size: 14pt; text-align:center;">Learning curve for PPO with default and tuned hyperparameters</p>
+
 Note: I recommend using the [RL Zoo](https://github.com/DLR-RM/rl-baselines3-zoo) for more complex settings.
 It includes automatic hyperparameter tuning, loading trial and distributed optimization.
 Example command to optimize PPO on the Pendulum-v1 environment:
@@ -346,7 +349,7 @@ Among the various open-source libraries for hyperparameter optimization (such as
 
 ## Acknowledgement
 
-I would like to thank Anssi for his feedback =).
+I would like to thank Anssi and Costa for their feedback =).
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
