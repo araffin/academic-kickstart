@@ -32,9 +32,9 @@
                             <div class="col-xs-12">
                                 <h2 id='main-title'>Recent Advances in RL for Continuous Control</h2>
                             </div>
-                            <!-- <div class="col-xs-12">
-                                <img class="shadow" style="max-width: 80%" src="images/simba_net.png">
-                            </div> -->
+                            <div class="col-xs-12">
+                                <img class="shadow" style="max-width: 50%" src="images/norbert.jpg">
+                            </div>
                         </div>
                         <div class="col-xs-12 xsmall-text">
                             Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
@@ -89,7 +89,8 @@
                 <section>
                     <h4>Outline</h4>
                     <ol>
-                        <li style="font-weight: bold;">Advances in Algorithms</li>
+                        <li style="font-weight: bold;">RL 102 (from DQN to SAC)</li>
+                        <li style="color:lightgrey;">Advances in Algorithms</li>
                         <li style="color:lightgrey;">Advances in Software</li>
                         <li style="color:lightgrey;">Advances in Simulators</li>
                     </ol>
@@ -111,6 +112,9 @@
                                 <video style="width: 80%" src="https://huggingface.co/sb3/a2c-BreakoutNoFrameskip-v4/resolve/main/replay.mp4" controls></video>
                             </div>
                         </div>
+                        <p class="xsmall-text">
+                            Mnih, Volodymyr, et al. "Playing atari with deep reinforcement learning." (2013).
+                        </p>
                     </section>
                     <section>
                         <h3>RL Objective</h3>
@@ -129,7 +133,7 @@
                     </section>
                     <section>
                          <h5>Action-Value Function: $Q$-Value</h5>
-                         <p>How good is it take action $a$ in state $s$?</p>
+                         <p>How good is it to take action $a$ in state $s$?</p>
                          <div class="row">
                              <div class="col-xs-12">
                                 <div class="fragment" style="font-size:80%; text-align:center;">
@@ -137,18 +141,18 @@
                                     Q^\pi(s, a) = \mathop{\mathbb{E}}[r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + ... | s_t=s, a_t=a].
                                     \end{aligned} \]
                                 </div>
-
+                                <p class="fragment medium-text">
+                                    \[\begin{aligned}
+                                    \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
+                                    \end{aligned} \]
+                                </p>
                                 <div class="fragment" style="font-size:80%; text-align:center">
                                     <span>Bellman equation (practical):</span>
                                     \[\begin{aligned}
                                         Q^{\pi}(s, a) &= \mathbb{E}[r_t + \gamma \mathbb{E}_{a'\sim \pi}{Q^{\pi}(s_{t+1},a')}].
                                     \end{aligned}\]
                                 </div>
-                                <p class="fragment medium-text">
-                                    \[\begin{aligned}
-                                    \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
-                                    \end{aligned} \]
-                                </p>
+
                              </div>
                          </div>
                     </section>
@@ -176,6 +180,12 @@
                     </section>
                     <section>
                         <h3>Extending DQN to Continuous Actions (DDPG)</h3>
+                        <p class="fragment medium-text">
+                            Discrete actions:
+                            \[\begin{aligned}
+                            \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
+                            \end{aligned} \]
+                        </p>
                         <p class="fragment">
                             Learn to maximize the $Q$-function using $\pi_{\phi}$.
                         </p>
@@ -186,14 +196,11 @@
                                     \max_{a \in A} Q_\theta(s, a) \approx Q_\theta(s, \pi_{\phi}(s)).
                                     \end{aligned} \]
                                 </div>
-                                <p class="fragment medium-text">
-                                    Discrete actions:
-                                    \[\begin{aligned}
-                                    \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
-                                    \end{aligned} \]
-                                </p>
                             </div>
                         </div>
+                        <p class="xsmall-text">
+                            Lillicrap, Timothy P., et al. "Continuous control with deep reinforcement learning." (2015).
+                        </p>
                     </section>
                     <section>
                         <h3>Deep Deterministic Policy Gradient (DDPG)</h3>
@@ -205,6 +212,9 @@
                         <p class="fragment">
                             TD3: select the min of $Q^1_\theta$ and $Q^2_\theta$
                         </p>
+                        <p class="xsmall-text">
+                            Fujimoto, Scott, Herke Hoof, and David Meger. "Addressing function approximation error in actor-critic methods." (2018).
+                        </p>
                     </section>
                     <section>
                         <h3>Soft Actor-Critic (SAC)</h3>
@@ -212,8 +222,20 @@
                             SAC $\approx$ DQN + DDPG + TD3 + Maximum entropy RL
                         </p>
                         <p class="fragment">
-                            Maximum entropy RL: encourage exploration while still solving the task
+                            Maximum <span style="color:darkgreen;">entropy</span> RL: encourage <span style="color:darkgreen;">exploration</span> while still <span style="color:darkblue;">solving the task</span>
                         </p>
+                        <div class="fragment" style="font-size:80%; text-align:center">
+                            \[\begin{aligned}
+                            J(\pi) = \mathop{\mathbb{E}}[\sum_{t}{\textcolor{darkblue}{\gamma^t r(s_t, a_t)} + \textcolor{darkgreen}{\alpha\mathcal{H}(\pi({\,\cdot\,}|s_t))}}].
+                            \end{aligned} \]
+                        </div>
+                        <p class="medium-text fragment">
+                            Ex: Avoid the variance of the Gaussian distribution to collapse too early
+                        </p>
+                        <p class="xsmall-text">
+                            Haarnoja, Tuomas, et al. "Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor." (2018).
+                        </p>
+
                     </section>
                     <section>
                         <h3>Annotated DQN Algorithm</h3>
@@ -221,16 +243,32 @@
                     </section>
                 </section>
                 <section>
+                    <h4>Outline</h4>
+                    <ol>
+                        <li style="color: grey;">RL 102 (from DQN to SAC)</li>
+                        <li style="font-weight: bold;">Advances in Algorithms</li>
+                        <li style="color:lightgrey;">Advances in Software</li>
+                        <li style="color:lightgrey;">Advances in Simulators</li>
+                    </ol>
+                    <aside class="notes">
+
+                    </aside>
+                </section>
+                <section>
                     <h3>Beyond SAC: TQC, DroQ, SimBa, ...</h3>
-                    <!-- TODO: add references for each paper
-                    Dissecting Deep RL with High Update Ratios:
-                    Combatting Value Overestimation and Divergence for an overview?
-                   Sample-Efficient Reinforcement Learning by Breaking the Replay Ratio Barrier -->
+                </section>
+                <section>
+                    <h3>Stochastic Environments</h3>
+                    <p class="small-text">Same state $s_t$, same action $a_t$, different outcome $r(s_t, a_t)$</p>
+                    <img class="" style="max-width: 50%" src="images/dqn/norbert_cliff.png">
                 </section>
                 <section>
                     <h3>Distributional RL</h3>
-                    <img style="width: 60%; margin: 0;" src="images/dqn/distributional_rl.svg">
-                    <p class="fragment">TQC: SAC + quantile regression (truncated)</p>
+                    <img class="fragment" style="width: 60%; margin: 0;" src="images/dqn/distributional_rl.png">
+                    <p class="fragment medium-text">TQC $\approx$ SAC + quantile regression (truncated)</p>
+                    <p class="xsmall-text">
+                        Kuznetsov, Arsenii, et al. "Controlling overestimation bias with truncated mixture of continuous distributional quantile critics." (2020).
+                    </p>
                 </section>
                 <section>
                     <h3>TQC Results</h3>
@@ -245,15 +283,20 @@
                 </section>
                 <section>
                     <h3>Higher replay ratio (REDQ, DroQ)</h3>
-                    <div class="medium-text">
+                    <div class="medium-text" style="margin-top: 3em;">
                         <p class="fragment"><b>Idea:</b> re-use samples from the replay buffer more</p>
-                        <!-- TODO: Add diagram to explain architecture? -->
                         <p class="fragment"><b>Issue:</b> Naive scaling doesn't work (overestimation, extrapolation errors, ...)</p>
                         <p class="fragment"><b>Solution?</b> explicit (REDQ)/ implicit (DroQ) ensembles, regularization, ...</p>
-                        <!-- <p class="fragment small-text">
-                            Note: Replay Ratio (RR) for SAC (RR=1) vs DroQ (RR=20)
-                        </p> -->
                     </div>
+                    <p class="xsmall-text bottom-xs" style="margin-top: 8em;">
+                        Chen, Xinyue, et al. "Randomized ensembled double q-learning: Learning fast without a model." (2021).
+                        <br>
+                        Hiraoka, Takuya, et al. "Dropout q-functions for doubly efficient reinforcement learning." (2021).
+                        <br>
+                        D'Oro, Pierluca, et al. "Sample-efficient reinforcement learning by breaking the replay ratio barrier." (2022).
+                        <br>
+                        Hussing, Marcel, et al. "Dissecting deep rl with high update ratios: Combatting value overestimation and divergence." (2024).
+                    </p>
                 </section>
                 <section>
                     <h3>$Q$-value Network and Replay Ratio</h3>
@@ -265,7 +308,7 @@
                     <h6 data-fragment-index="2" class="fragment">DroQ (RR=20)</h6>
                     <img data-fragment-index="2" class="fragment" style="max-width: 100%; margin-bottom:0;" src="images/droq_net.png">
                     <p data-fragment-index="2" class="fragment xsmall-text" style="margin-top: 0;">
-                        Hiraoka, Takuya, et al. "Dropout q-functions for doubly efficient reinforcement learning."
+                        Hiraoka, Takuya, et al. "Dropout q-functions for doubly efficient reinforcement learning." (2021).
                     </p>
 
 
@@ -305,7 +348,7 @@
                     <h6 data-fragment-index="2" class="fragment">SimBa</h6>
                     <img data-fragment-index="2" class="fragment" style="max-width: 100%; margin-bottom:0;" src="images/simba_net.png">
                     <p data-fragment-index="2" class="fragment xsmall-text" style="margin-top: 0;">
-                        Lee, Hojoon, et al. "Simba: Simplicity bias for scaling up parameters in deep reinforcement learning."
+                        Lee, Hojoon, et al. "Simba: Simplicity bias for scaling up parameters in deep reinforcement learning." (2024).
                     </p>
 
                     <!-- <p class="xsmall-text fragment" style="margin-top: 0;">
@@ -329,6 +372,7 @@
                 <section>
                     <h4>Outline</h4>
                     <ol>
+                        <li style="color: grey;">RL 102 (from DQN to SAC)</li>
                         <li style="color: grey;">Advances in Algorithms</li>
                         <li style="font-weight: bold;">Advances in Software</li>
                         <li style="color:lightgrey;">Advances in Simulators</li>
@@ -351,6 +395,7 @@
                 <section>
                     <h4>Outline</h4>
                     <ol>
+                        <li style="color: grey;">RL 102 (from DQN to SAC)</li>
                         <li style="color: grey;">Advances in Algorithms</li>
                         <li style="color: grey;">Advances in Software</li>
                         <li style="font-weight: bold;">Advances in Simulators</li>
@@ -370,6 +415,9 @@
                     <!-- Also talk about differentiable sim? -->
                     <p class="fragment">Thousands of robots in parallel, learn in minutes</p>
                     <p class="fragment small-text">Ex: MJX (MuJoCo), Isaac Sim, Genesis, ...</p>
+                    <aside class="notes">
+                        Also: differentiable sim
+                    </aside>
                 </section>
 
                 <section>
@@ -378,7 +426,7 @@
                     <img class="fragment" style="width: 70%" src="https://araffin.github.io/post/sac-massive-sim/img/learning_curve.svg">
                     <p class="small-text fragment">
                         <a href="https://araffin.github.io/post/sac-massive-sim/">
-                            Getting SAC to Work on a Massive Parallel Simulator
+                            Getting SAC to Work on a Massive Parallel Simulator (2025).
                         </a>
                     </p>
                     <aside class="notes">
