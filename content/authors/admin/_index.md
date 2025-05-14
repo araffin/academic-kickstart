@@ -91,4 +91,4 @@ email: ""
 
 # Bio
 
-Robots. Machine Learning. Blues Dance.
+Antonin Raffin is a research engineer at the German Aerospace Center (DLR) who specializes in reinforcement learning (RL). He is the lead developer of Stable-Baselines3 (SB3), an open-source library that implements Deep RL algorithms. His main focus is on learning controllers directly on real robots and improving the reproducibility of RL.
