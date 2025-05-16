@@ -165,7 +165,7 @@ What I tried next was to use a neural network similar to the one used by PPO for
 Bingo!
 SAC finally learned to solve the task!
 
-<img style="max-width:90%" src="./img/learning_curve.svg"/>
+<img style="max-width:100%" src="./img/learning_curve.svg"/>
 <p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task using 2048 envs.</p>
 
 
