@@ -4,33 +4,225 @@ title: "Getting SAC to Work on a Massive Parallel Simulator: Tuning for Speed (P
 date: 2025-05-14
 ---
 
+This second post details how I tuned the Soft-Actor Critic (SAC) algorithm to learn as fast as PPO in the context of a massively parallel simulator (thousands of robots simulated in parallel).
+If you read along, you will learn about automatically tuning SAC for speed, finding better action boundaries and everything I tried that didn't work.
 
-<!-- TODO: get feedback if this is an overlooked problem or known issue but PPO is nice because it can decide which action space to choose? -->
+If you haven't read it yet, please have a look at [part I](https://araffin.github.io/post/sac-massive-sim/) which is about analysing why SAC doesn't work how of the box on Isaac Sim environments and using a quick fix.
 
-<!-- Quick tuning: use TQC (equal or better perf than SAC), faster training with JIT and multi gradient steps, policy delay and train_freq, bigger batch size.
+## Truncated Quantile Critics (TQC) - A New Hope
 
-Note: entropy coeff is inverse reward scale in maximum entropy RL -->
+In [part I](https://araffin.github.io/post/sac-massive-sim/), I left the story where we could get some sign of life from SAC.
+By limiting the action space limits to 3% of the original space, and tuning quickly SAC (bigger network, reduce initial exploration rate), I could get SAC to learn to solve the Unitree A1 task in minutes (on a flat surface).
 
-<!-- ## Tuning for speed
+However, it was taking more time train than PPO (12 minutes vs 6 minutes) and was not reaching PPO's performance.
 
-Automatic hyperparameter optimization with Optuna.
-Good and fast results (not as fast as PPO but more sample efficient).
-Try schedule of action space (start small and make it bigger over time): not so satifying,
-looking into unbounded action space. -->
+I had different ideas to improve SAC training speed and performance (I present the ones that didn't work and could need help at the end of this post).
 
-Action space:
-- use PPO to extract bounds
+The first one is to replace the SAC algorithm with its [distributional](https://araffin.github.io/slides/recent-advances-rl/#/8/0/1) counterpart [Truncated Quantile Critics (TQC)](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html).
+Instead of approximating only the expected return, TQC models the distribution of returns.
+TQC performance tends to be on-par with SAC, but it can outperform it on some [harder environments]((https://araffin.github.io/slides/recent-advances-rl/#/9)) (at the cost of slightly more expensive gradient step).
+It also has a parameter to control the overstimation bias of the $Q$-value function.
 
-Hyperparam:
-- TQC instead of SAC
-- auto tuning
-- manual tuning: schedule + drop quantile
+## Defining Proper Action Bound - Extracting the Limits with PPO
+
+Another aspect I wanted to improve was to properly defined the action space boundaries.
+In part one, I limited the action space to 3% of the original one as a quick fix.
+To have a finer definition, I [recorded](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) the actions taken by a trained PPO agent and took the 2.5 and 97.5 percentile of it for the new limits.
+That is to say, the new action space contains 95% of the actions commanded by a trained PPO agent:
+```python
+# np.percentile(actions, 2.5, axis=0)
+low = np.array([-2.0, -0.4, -2.6, -1.3, -2.2, -1.9, -0.7, -0.4, -2.1, -2.4, -2.5, -1.7])
+# np.percentile(actions, 97.5, axis=0)
+high = np.array([1.1, 2.6, 0.7, 1.9, 1.3, 2.6, 3.4, 3.8, 3.4, 3.4, 1.9, 2.1])
+```
+
+For any new environment where the boundaries would not work, I can repeat the same process.
+
+## Need for Speed or: How I Learned to Stop Worrying About Sample Efficiency
+
+SAC and its derivates (such as TQC) are tuned for sample efficency.
+This is perfect when you want to learn directly on a real robot (and have only one robot) but is sub-optimal if you have thousands of robot (in simulation) and care only about training time.
+
+In [part one](https://araffin.github.io/post/sac-massive-sim/), I quickly tuned SAC by hand to have some sign of life.
+This was fine for obtaining initial results but would be very time consuming if I wanted to reach PPO's performance.
+That's why I turned towards automatic hyperparameter optimization.
+
+If you are not familiar with automatic hyperparameter tuning, I wrote two blog posts about it:
+- [Automatic Hyperparameter Tuning - A Visual Guide (Part 1)](https://araffin.github.io/post/hyperparam-tuning/)
+- [Automatic Hyperparameter Tuning - In Practice (Part 2)](../optuna/) shows how to use the [Optuna library](https://github.com/optuna/optuna) to put these techniques into practice
+
+### New Objective: Learn as Fast as Possible
+
+Since I'm using a massively parallel simulator, what I care about is no longer how many samples do I need to learn something (how many step in the environment) but how fast can it learn (no matter how many samples are used).
+In practice, this translates to an objective function that looks like that:
+```python
+def objective(trial: optuna.Trial) -> float:
+    hyperparams = sample_tqc_params(trial)
+    agent = sbx.TQC(env=env, **hyperparams)
+    # Optimize for best performance after 5 minutes
+    callback = TimeoutCallback(timeout=60 * 5)
+    # Max budget of 30_000_000 timesteps
+    agent.learn(total_timesteps=int(3e7), callback=callback)
+    # Log the number of steps in the environments
+    trial.set_user_attr("num_timesteps", agent.num_timesteps)
+    # Evaluate the trained agent
+    env.seed(args_cli.seed)
+    mean_reward, std_reward = evaluate_policy(agent, env, n_eval_episodes=512)
+    return mean_reward
+```
+
+After 5 minutes of training, the agent is evaluated, no matter how many interactions with the environment were needed (the `TimeoutCallback` forces the agent to exit the training loop).
+
+
+### TQC hyperparameters
+
+Similar to [PPO](../optuna/) many hyperparameters can be tuned for TQC.
+After some trials and errors, here is the sampling function I used:
+
+```python
+def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
+    # Discount factor
+    gamma = trial.suggest_float("gamma", 0.975, 0.995)
+    learning_rate = trial.suggest_float("learning_rate", 1e-4, 0.002, log=True)
+    # Initial exploration rate (entropy coefficient in the SAC loss)
+    ent_coef_init = trial.suggest_float("ent_coef_init", 0.001, 0.02, log=True)
+    # From 128 to 2*12 = 4096, the mini-batch size
+    batch_size_pow = trial.suggest_int("batch_size_pow", 7, 12, log=True)
+    # net_arch = trial.suggest_categorical("net_arch", ["default", "medium", "simba", "large", "xlarge"])
+    # Use int to be able to use CMA-ES
+    net_arch_complexity = trial.suggest_int("net_arch_complexity", 3, 4)
+    # From 1 to 8 (how often should we update the networks, every train_freq steps in the env)
+    train_freq_pow = trial.suggest_int("train_freq_pow", 0, 3)
+    # From 1 to 1024 (how many gradient steps by step in the environment)
+    gradient_steps_pow = trial.suggest_int("gradient_steps_pow", 0, 10)
+    # From 1 to 32 (the policy delay parameter, similar to TD3 update)
+    policy_delay_pow = trial.suggest_int("policy_delay_pow", 0, 5)
+    # Polyak coeff (soft update of the target network)
+    tau = trial.suggest_float("tau", 0.001, 0.05, log=True)
+    
+    # Display true values
+    trial.set_user_attr("batch_size", 2**batch_size_pow)
+    trial.set_user_attr("gradient_steps", 2**gradient_steps_pow)
+    trial.set_user_attr("policy_delay", 2**policy_delay_pow)
+    trial.set_user_attr("train_freq", 2**train_freq_pow)
+
+    return to_hyperparams({
+        "train_freq_pow": train_freq_pow,
+        "gradient_steps_pow": gradient_steps_pow,
+        "batch_size_pow": batch_size_pow,
+        "tau": tau,
+        "gamma": gamma,
+        "learning_rate": learning_rate,
+        "policy_delay_pow": policy_delay_pow,
+        "ent_coef_init": ent_coef_init,
+        "net_arch_complexity": net_arch_complexity,
+    })
+```
+
+In a classic setting, when optimizing for sample efficiency, the replay ratio for SAC (or update to data, UTD ratio) `replay_ratio = n_gradient_steps / (n_envs * train_freq)` is usually greater than one (at least one gradient step per interaction with the environment).
+In the current setting, because getting new data is not the costly operation, it tends to be lower than 1/4 (one gradient step every four steps in the environment).
+
+I let the CMA-ES sampler of Optuna optimize the hyperparameters for 100 trials (~10 hours) and then retrained the best trials to filter out any lucky seed.
+
+TODO: show learning curve of Optuna
+
+This is how the optimized hyperparameters look like:
+```yaml
+batch_size: 512
+ent_coef: auto_0.009471776840423638
+gamma: 0.983100250213744
+gradient_steps: 32
+learning_rate: 0.00044689099625712413
+learning_starts: 2000
+policy: MlpPolicy
+policy_delay: 8
+policy_kwargs:
+  net_arch: [512, 256, 128]
+  activation_fn: !!python/name:isaaclab_rl.sb3.elu ''
+  optimizer_class: !!python/name:optax._src.alias.adamw ''
+  layer_norm: true
+tau: 0.0023055560568780655
+train_freq: 1
+```
+
+Compared to SAC/TQC default hyperparameters, there are some notables changes:
+- the network architecture is much bigger (`[512, 256, 128]` vs `[256, 256]`) but similar to the one used by PPO
+- the lower replay ratio (RR $\approx 0.03$  for 1024 envs, so one gradient step every 100 steps in the env) and the higher policy delay (update the actor after 8 updates of the actor) makes it faster (less time taken doing gradient update)
+- the discount factor is lower than the default one (0.99) favouring more short-term rewards
+
+
+## The Final Touch
+
+To improve the convergence of TQC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
+```python
+# Decrease the LR linearly from 5e-4 to 1e-4 over 7.5M steps (0.15 * 50_000_000, where 50M is the max training budget)
+learning_rate = LinearSchedule(start=5e-4, end=1e-5, end_fraction=0.15)
+```
+
+and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
+```python
+top_quantiles_to_drop_per_net = 5  # The default value is 2
+```
+
+TODO: show learning curve before and after + with PPO as reference + SAC vs PPO
+and also the effect on the trained policy (no more leg up in the air)
+
+
+## Does it work? - More Environments
+
+So far, I optimized and tested the hyperparameters only on one environment.
+The goal is obviously to make it work on any locomotion environment.
+Thus, after it learned successfully on the Unitree A1 flat environment, I tested the same recipe (I had to update the limits for each family of robot, the PPO percentile technique worked nicely) with the GO1, GO2, Anymal-B, Anymal-C, even Disney BD-X flat environment and ... it worked =)!
+
+TODO: video of BD-X, Anymal, GO1, Go2
+Show learning curve vs PPO and sample efficiency
+
+Then, I trained TQC on harder environments, the "Rough" locomotion environments, where the robot has to learn to navigated steps, un-even, accidented terrain (with additional randomization?) and ... it worked partially.
+For some reason that I'm still investigating (any help is welcomed =)), TQC trained agent exhibits inconsistent behavior.
+For example, on the same steps, it manages to climb down the pyramid without falling but another instance just do nothing.
+Additionally, no matter how long it trains, it seems to not be able to learn to solve the "inverted pyramid" at all (which is weird because it should be as hard as the normal pyramid).
+
+## Conclusion
+
+
+## Appendix: What I tried that didn't work
+
+While preparing this blog post, I tried many things in order to reach PPO performance and learn good policies with a minimal training time.
+A lot of this thing I tried didn't work but are probably worth investigating further.
+I also hope yoy can learn from my failures.
+
+### Using an Unbounded Gaussian Distribution
+
+One natural thing that I tried was to make SAC looks closer to PPO.
+In part one, PPO could handle unbounded action space because it was using a (non-squashed) Gaussian distribution under the hood (vs a squashed one for SAC).
+Replacing SAC squashed Normal distribution with an unbounded Gaussian dist lead to additional problems.
+
+First, without layer normalization in the critic, it diverges quickly (leading to Inf/NaN), it seems that the actor, encouraged by the entropy bonus, pushes towards very large value for the actions.
+
+Note: tried with both state-dependent std and independent std
+
+TODO: try with fixed std? more tuning, tune notably the target entropy, any other mechanism to avoid explosion of losses/divergence?
+
+## KL divergence adaptive learning rate
+
+One component of PPO that allows to achieve better performance and adapts automatically the learning rate.
+It tries to keep the KL div between two updates constant (so that the new policy is not too far from the previous one).
+it should be possible with SAC, but both approximating KL div with log prob or with the Gaussian parameters didn't work (values are too large and inconsistent), SAC would probably need a trust region mechanism too.
+
+
+## Penalty for actions close to actions bounds
+
 
 What i tried that didn't work:
-- Gaussian dist (need layer norm)
-- KL div adaptive LR
 - penalty to be away from action bounds (hard to tune)
 - weird things happening with Rough env (norm need to be disabled, only solve task partially, not consistent behavior)
+- schedule action space (increase the limits over time, tricky and doesn't really improve)
+
+To try:
+- reduce height scan / double check height scan values
+- normalize input partially (not heiht scan)
+- use trained PPO net as feature extractor
+- add an history for the height scan
 
 <!-- ## PPO Gaussian dist vs Squashed Gaussian
 
@@ -42,15 +234,8 @@ Replace state-dependent std with independent: auto-tuning entropy coeff broken, 
 
 <!-- SAC initial commit https://github.com/haarnoja/sac/blob/fa226b0dcb244d69639416995311cc5b4092c8f7/sac/distributions/gmm.py#L122 -->
 
-<!-- Note: SAC work on MuJoCo like env
+<!-- 
 
-Note: two variations of the same issue: unbounded (matches Gaussian dist real domain)
-and clipped to high limits
-
-Note: brax PPO seems to implement tanh Gaussian dist (action limited to [-1, 1]): 
-https://github.com/google/brax/blob/241f9bc5bbd003f9cfc9ded7613388e2fe125af6/brax/training/agents/ppo/networks.py#L78
-MuJoCo playground and Brax clip: https://github.com/google-deepmind/mujoco_playground/blob/0f3adda84f2a2ab55e9d9aaf7311c917518ec25c/mujoco_playground/_src/wrapper_torch.py#L158
-but not really defined explicitly in the env (for the limits)
 
 Note: rescale action doesn't work for PPO, need retuning? need tanh normal? -->
 
