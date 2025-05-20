@@ -223,6 +223,8 @@ To try:
 - normalize input partially (not heiht scan)
 - use trained PPO net as feature extractor
 - add an history for the height scan
+- n-step return
+- KL penalty for SAC (trust region, already tried I guess?)
 
 <!-- ## PPO Gaussian dist vs Squashed Gaussian
 
