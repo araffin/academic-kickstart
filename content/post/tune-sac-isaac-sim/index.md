@@ -77,9 +77,8 @@ The agent is evaluated after five minutes of training, regardless of how many in
 
 ### TQC hyperparameters
 
-Similar to [PPO](../optuna/) many hyperparameters can be tuned for TQC.
-After some trials and errors, here is the sampling function I used (I've put in comments the meaning of each of them):
-
+Similar to [PPO](../optuna/), many hyperparameters can be tuned for TQC.
+After some trial and error, I came up with the following sampling function (I've included comments explaining the meaning of each parameter):
 ```python
 def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
     # Discount factor
@@ -107,7 +106,9 @@ def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
     trial.set_user_attr("gradient_steps", 2**gradient_steps_pow)
     trial.set_user_attr("policy_delay", 2**policy_delay_pow)
     trial.set_user_attr("train_freq", 2**train_freq_pow)
-
+    # to_hyperparams() does the convertions between sampled value and expected value
+    # ex: converts batch_size_pow to batch_size
+    # This is useful when replaying trials
     return to_hyperparams({
         "train_freq_pow": train_freq_pow,
         "gradient_steps_pow": gradient_steps_pow,
@@ -121,15 +122,20 @@ def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
     })
 ```
 
-In a classic setting, when optimizing for sample efficiency, the replay ratio for SAC (or update to data, UTD ratio) `replay_ratio = n_gradient_steps / (n_envs * train_freq)` is usually greater than one (at least one gradient step per interaction with the environment).
-In the current setting, because getting new data is not the costly operation, it tends to be lower than 1/4 (one gradient step every four steps in the environment).
+The replay ratio (also known as update-to-data ratio or UTD ratio) is a metric that measures the number of gradient updates performed per environment interaction or experience collected.
+This ratio represents how many times an agent updates its parameters relative to how much new experience it gathers.
+It is defined as `replay_ratio = n_gradient_steps / (n_envs * train_freq)` for SAC.
 
-To optimize the hyperparameters, I used the CMA-ES sampler of Optuna for 100 trials (~10 hours, with a population size of 10 individuals).
-After the optimization, I retrained the best trials to filter out any lucky seed, i.e. finding hyperparameters that works consistently across different runs.
+In a classic setting, the replay ratio is usually greater than one when optimizing for sample efficiency.
+That means that SAC does at least one gradient step per interaction with the environment.
+However, in the current setting, since collecting new data is cheap, the replay ratio tends to be lower than 1/4 (one gradient step for every four steps in the environment).
+
+To optimize the hyperparameters, I used Optuna's CMA-ES sampler for 100 trials (taking about 10 hours with a population size of 10 individuals).
+Afterward, I retrained the best trials to filter out any lucky seeds, i.e., to find hyperparameters that work consistently across different runs.
 
 TODO: show learning curve of Optuna
 
-This is how the optimized hyperparameters look like:
+These are the hyperparameters of SAC/TQC, optimized for speed:
 ```yaml
 batch_size: 512
 ent_coef: auto_0.009471776840423638
@@ -148,13 +154,13 @@ tau: 0.0023055560568780655
 train_freq: 1
 ```
 
-Compared to SAC/TQC default hyperparameters, there are some notables changes:
-- the network architecture is much bigger (`[512, 256, 128]` vs `[256, 256]`) but similar to the one used by PPO in Isaac Sim
-- the lower replay ratio (RR $\approx 0.03$  for 1024 envs, so three gradient step every 100 steps in the env) and the higher policy delay (update the actor after 8 updates of the actor) makes it faster (less time taken doing gradient update)
-- the discount factor is lower than the default one (0.99) favouring more short-term rewards
+Compared to the default hyperparameters of SAC/TQC, there are some notable changes:
+- The network architecture is much larger (`[512, 256, 128]` vs. `[256, 256]`), but similar to that used by PPO in Isaac Sim.
+- The lower replay ratio (RR ≈ 0.03 for 1024 environments, or three gradient steps every 100 steps in an environment) and higher policy delay (update the actor after eight actor updates) make it faster, as less time is taken for gradient updates.
+- The discount factor is lower than the default value of 0.99, which favors shorter-term rewards.
 
 
-## The Final Touch
+### The Final Touch
 
 To improve the convergence of TQC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
 ```python
@@ -173,32 +179,47 @@ and also the effect on the trained policy (no more leg up in the air)
 
 ## Does it work? - More Environments
 
-So far, I optimized and tested the hyperparameters only on one environment.
-The goal is obviously to make it work on any locomotion environment.
-Thus, after it learned successfully on the Unitree A1 flat environment, I tested the same recipe (I had to update the limits for each family of robot, the PPO percentile technique worked nicely) with the GO1, GO2, Anymal-B, Anymal-C, even Disney BD-X flat environment and ... it worked =)!
+So far, I have only optimized and tested the hyperparameters in one environment.
+The goal is to make it work in any locomotion environment.
+
+After it successfully learned on the flat Unitree A1 environment, I tested the same recipe[^action-space-recipe] on the GO1, GO2, Anymal-B, and Anymal-C environments, as well as the flat Disney BD-X environment and ... it worked!
 
 TODO: video of BD-X, Anymal, GO1, Go2
 Show learning curve vs PPO and sample efficiency
 
-Then, I trained TQC on harder environments, the "Rough" locomotion environments, where the robot has to learn to navigated steps, un-even, accidented terrain (with additional randomization?) and ... it worked partially.
-For some reason that I'm still investigating (any help is welcomed =)), TQC trained agent exhibits inconsistent behavior.
-For example, on the same steps, it manages to climb down the pyramid without falling but another instance just do nothing.
-Additionally, no matter how long it trains, it seems to not be able to learn to solve the "inverted pyramid" at all (which is weird because it should be as hard as the normal pyramid).
+Then, I trained TQC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
+And ... it worked partially.
+For some reason that I'm still investigating, the TQC-trained agent exhibits inconsistent behavior (any help is welcomed!).
+For example, on the same steps, it manages to climb down the pyramid without falling, but in another instance, it does nothing.
+Additionally, no matter how long it trains, it doesn't seem to be able to learn to solve the "inverted pyramid".
+
+## Solving Harder Environments
+
+### Identifying the problem: Why it doesn't work?
+
+Looking at the trained agent, it seems that the harder problem is the inverted pyramid.
+
+TODO: image inverted
+
+Make it simpler, less point cloud, train only on this environment, it doesn't work! (bingo?)
+Then: looks like an exploration problem (remember mountain car?)
+Just more noise doesn't work, gSDE (maybe?)
+Lower difficulty: yes!
+Curriculum in terrain generation (need to see if possible)
 
 ## Conclusion
 
-This concludes the journey I started some months ago to make SAC work on massive parallel simulator.
-During this adventure, I shed light on a common issue that prevents SAC-like algorithm to work in those environments (the use of unbounded action space).
-At the end, with a proper action space and tuned hyperparameters, SAC[^well-tqc] is now competitive with PPO in term of training time on a large collection of locomotion environments.
-It is also much more sample efficient than PPO but fail to fully solve the most complex environments so far (help is welcomed).
-I hope that my voyage will encourage others to use SAC in their experiments and unlock fine-tuning on real robots, after pretraining in simulation.
-
+This concludes the journey I started a few months ago to make SAC work on a massively parallel simulator.
+During this adventure, I addressed a common issue that prevents SAC-like algorithms from working in these environments: the use of an unbounded action space.
+In the end, with a proper action space and tuned hyperparameters, SAC[^well-tqc] is now competitive with PPO in terms of training time on a large collection of locomotion environments.
+It is also much more sample efficient than PPO, though it has not yet fully solved the most complex environments (help is welcome).
+I hope my voyage encourages others to use SAC in their experiments and unlock fine-tuning on real robots after pretraining in simulation.
 
 ## Appendix: What I tried that didn't work
 
-While preparing this blog post, I tried many things in order to reach PPO performance and learn good policies with a minimal training time.
-A lot of this thing I tried didn't work but are probably worth investigating further.
-I also hope yoy can learn from my failures.
+While preparing this blog post, I tried many things to achieve PPO performance and learn good policies in minimal time.
+Many of the things I tried didn't work, but they are probably worth investigating further.
+I hope you can learn from my failures, too.
 
 ### Using an Unbounded Gaussian Distribution
 
@@ -228,27 +249,11 @@ What i tried that didn't work:
 - schedule action space (increase the limits over time, tricky and doesn't really improve)
 
 To try:
-- reduce height scan / double check height scan values
-- normalize input partially (not heiht scan)
+- normalize input partially (not height scan)
 - use trained PPO net as feature extractor
 - add an history for the height scan
 - n-step return
 - KL penalty for SAC (trust region, already tried I guess?)
-
-<!-- ## PPO Gaussian dist vs Squashed Gaussian
-
-Difference between log std computation (state-dependent with clipping vs independent global param).
-
-Trying to make SAC looks like PPO, move to unbounded Gaussian dist, instabilities.
-Fixes: clip max action, l2 loss (like [SAC original implementation](https://github.com/haarnoja/sac/blob/8258e33633c7e37833cc39315891e77adfbe14b2/sac/distributions/normal.py#L69-L70))
-Replace state-dependent std with independent: auto-tuning entropy coeff broken, need to fix it (TODO: investigate why). -->
-
-<!-- SAC initial commit https://github.com/haarnoja/sac/blob/fa226b0dcb244d69639416995311cc5b4092c8f7/sac/distributions/gmm.py#L122 -->
-
-<!-- 
-
-
-Note: rescale action doesn't work for PPO, need retuning? need tanh normal? -->
 
 
 ## Citation
@@ -278,3 +283,4 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 [^lazy]: Yes, we tend to be lazy.
 [^well-tqc]: Well, its distributional variant TQC
 [^didnt-work]: I present the ones that didn't work and could use help at the end of this post.
+[^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
