@@ -9,24 +9,19 @@ If you read along, you will learn how to automatically tune SAC for speed, how t
 
 If you haven't read it yet, please have a look at [part I](https://araffin.github.io/post/sac-massive-sim/) which is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
 
-## Truncated Quantile Critics (TQC) - A New Hope
+## In the previous episode...
 
 In the [first part](https://araffin.github.io/post/sac-massive-sim/), I stopped at the point where we could detect some signs of life from SAC (it was learning something).
 
 By limiting the action space limits to 3% of the original size, and quickly tuning SAC (bigger network, reduced initial exploration rate), I could get SAC to learn to solve the Unitree A1 task on a flat surface in a matter of minutes.
 
 However, SAC took more time to train than PPO (12 minutes vs. 6 minutes), and it did not reach PPO's performance level.
-
 I had several ideas for improving SAC's training speed and performance[^didnt-work].
 
-The first idea is to replace the SAC algorithm with its [distributional](https://araffin.github.io/slides/recent-advances-rl/#/8/0/1) counterpart [Truncated Quantile Critics (TQC)](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html).
-Rather than approximating only the expected return, TQC models the distribution of returns.
-TQC's performance tends to be on par with SAC's, but it can outperform SAC in [harder environments]((https://araffin.github.io/slides/recent-advances-rl/#/9)) (at the cost of a slightly more expensive gradient step).
-TQC also has a parameter that controls the overestimation bias of the Q-value function (how many top quantiles to drop).
 
 ## Defining Proper Action Bound - Extracting the Limits with PPO
 
-Another aspect I wanted to improve was properly defining the boundaries of the action space.
+An aspect I wanted to improve was properly defining the boundaries of the action space.
 In part one, I quickly fixed it by limiting the action space to 3% of the original.
 For a more precise definition, I [recorded](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) the actions taken by a trained PPO agent and took the 2.5th and 97.5th percentile for the new limits.
 In other words, the new action space contains 95% of the actions commanded by a trained PPO agent:
@@ -58,8 +53,8 @@ Since I'm using a massively parallel simulator, I no longer care about how many 
 In practice, this translates to an objective function that looks like this:
 ```python
 def objective(trial: optuna.Trial) -> float:
-    hyperparams = sample_tqc_params(trial)
-    agent = sbx.TQC(env=env, **hyperparams)
+    hyperparams = sample_sac_params(trial)
+    agent = sbx.SAC(env=env, **hyperparams)
     # Optimize for best performance after 5 minutes
     callback = TimeoutCallback(timeout=60 * 5)
     # Max budget of 50_000_000 timesteps
@@ -75,12 +70,12 @@ def objective(trial: optuna.Trial) -> float:
 The agent is evaluated after five minutes of training, regardless of how many interactions with the environment were needed (the `TimeoutCallback` forces the agent to exit the training loop).
 
 
-### TQC hyperparameters
+### SAC hyperparameters
 
-Similar to [PPO](../optuna/), many hyperparameters can be tuned for TQC.
+Similar to [PPO](../optuna/), many hyperparameters can be tuned for SAC.
 After some trial and error, I came up with the following sampling function (I've included comments explaining the meaning of each parameter):
 ```python
-def sample_tqc_params(trial: optuna.Trial) -> dict[str, Any]:
+def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
     # Discount factor
     gamma = trial.suggest_float("gamma", 0.975, 0.995)
     learning_rate = trial.suggest_float("learning_rate", 1e-4, 0.002, log=True)
@@ -135,7 +130,7 @@ Afterward, I retrained the best trials to filter out any lucky seeds, i.e., to f
 
 TODO: show learning curve of Optuna
 
-These are the hyperparameters of SAC/TQC, optimized for speed:
+These are the hyperparameters of SAC, optimized for speed:
 ```yaml
 batch_size: 512
 ent_coef: auto_0.009471776840423638
@@ -154,7 +149,7 @@ tau: 0.0023055560568780655
 train_freq: 1
 ```
 
-Compared to the default hyperparameters of SAC/TQC, there are some notable changes:
+Compared to the default hyperparameters of SAC, there are some notable changes:
 - The network architecture is much larger (`[512, 256, 128]` vs. `[256, 256]`), but similar to that used by PPO in Isaac Sim.
 - The lower replay ratio (RR ≈ 0.03 for 1024 environments, or three gradient steps every 100 steps in an environment) and higher policy delay (update the actor after eight actor updates) make it faster, as less time is taken for gradient updates.
 - The discount factor is lower than the default value of 0.99, which favors shorter-term rewards.
@@ -162,15 +157,10 @@ Compared to the default hyperparameters of SAC/TQC, there are some notable chang
 
 ### The Final Touch
 
-To improve the convergence of TQC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
+To improve the convergence of SAC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
 ```python
 # Decrease the LR linearly from 5e-4 to 1e-4 over 7.5M steps (0.15 * 50_000_000, where 50M is the max training budget)
 learning_rate = LinearSchedule(start=5e-4, end=1e-5, end_fraction=0.15)
-```
-
-and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
-```python
-top_quantiles_to_drop_per_net = 5  # The default value is 2
 ```
 
 TODO: show learning curve before and after + with PPO as reference + SAC vs PPO
@@ -187,9 +177,9 @@ After it successfully learned on the flat Unitree A1 environment, I tested the s
 TODO: video of BD-X, Anymal, GO1, Go2
 Show learning curve vs PPO and sample efficiency
 
-Then, I trained TQC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
+Then, I trained SAC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
 And ... it worked partially.
-For some reason that I'm still investigating, the TQC-trained agent exhibits inconsistent behavior (any help is welcomed!).
+For some reason that I'm still investigating, the SAC-trained agent exhibits inconsistent behavior (any help is welcomed!).
 For example, on the same steps, it manages to climb down the pyramid without falling, but in another instance, it does nothing.
 Additionally, no matter how long it trains, it doesn't seem to be able to learn to solve the "inverted pyramid".
 
@@ -211,7 +201,7 @@ Curriculum in terrain generation (need to see if possible)
 
 This concludes the journey I started a few months ago to make SAC work on a massively parallel simulator.
 During this adventure, I addressed a common issue that prevents SAC-like algorithms from working in these environments: the use of an unbounded action space.
-In the end, with a proper action space and tuned hyperparameters, SAC[^well-tqc] is now competitive with PPO in terms of training time on a large collection of locomotion environments.
+In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO in terms of training time on a large collection of locomotion environments.
 It is also much more sample efficient than PPO, though it has not yet fully solved the most complex environments (help is welcome).
 I hope my voyage encourages others to use SAC in their experiments and unlock fine-tuning on real robots after pretraining in simulation.
 
@@ -255,6 +245,20 @@ To try:
 - n-step return
 - KL penalty for SAC (trust region, already tried I guess?)
 
+### Truncated Quantile Critics (TQC)
+
+One idea I had was to replace the SAC algorithm with its [distributional](https://araffin.github.io/slides/recent-advances-rl/#/8/0/1) counterpart [Truncated Quantile Critics (TQC)](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html).
+Rather than approximating only the expected return, TQC models the distribution of returns.
+TQC's performance tends to be on par with SAC's, but it can outperform SAC in [harder environments]((https://araffin.github.io/slides/recent-advances-rl/#/9)) (at the cost of a slightly more expensive gradient step).
+TQC also has a parameter that controls the overestimation bias of the Q-value function (how many top quantiles to drop).
+
+While writting this blog (and doing experiments), TQC tended to be more easy to tune.
+However, after finding good hyperparmaters for speed, SAC was faster and reach equivalent performance compared to TQC.
+
+<!-- and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
+```python
+top_quantiles_to_drop_per_net = 5  # The default value is 2
+``` -->
 
 ## Citation
 
@@ -281,6 +285,5 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 ## Footnotes
 
 [^lazy]: Yes, we tend to be lazy.
-[^well-tqc]: Well, its distributional variant TQC
 [^didnt-work]: I present the ones that didn't work and could use help at the end of this post.
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
