@@ -178,6 +178,8 @@ After it successfully learned on the flat Unitree A1 environment, I tested the s
 TODO: video of BD-X, Anymal, GO1, Go2
 Show learning curve vs PPO and sample efficiency
 
+In those environments, SAC learns as fast as PPO but is much more sample efficient.
+
 Then, I trained SAC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
 And ... it worked partially.
 
@@ -187,21 +189,37 @@ And ... it worked partially.
 
 On the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior.
 For example, on the same pyramid steps, it manages to climb down without falling, but in another instance, it does nothing.
-Additionally, no matter how long it trains, it doesn't seem to be able to learn to solve the "inverted pyramid", probably one of the hardest task.
+Additionally, no matter how long it trains, it didn't seem to be able to learn to solve the "inverted pyramid", probably one of the hardest task.
 
 TODO: image inverted
 
-Make it simpler, less point cloud, train only on this environment, it doesn't work! (bingo?)
-Then: looks like an exploration problem (remember mountain car?)
-Just more noise doesn't work, gSDE (maybe?)
-Lower difficulty: yes!
-Curriculum in terrain generation (need to see if possible)
+I decided to isolate this task, so training SAC only on the inverted pyramid.
+Looking at what was happening, it looked like an exploration problem, that is to say SAC never experienced a successful stepping when trying random movements.
+This reminded me of SAC failing on the [mountain car problem](https://github.com/rail-berkeley/softlearning/issues/76) because the exploration was not consistent enough (the default high-frequency noise is usually not very effective for robots).
 
-Note: sde allow to have better performance without linear schedule
+To test this hypothesis, I lowered the step (litteraly) to make the problem simpler and use a more consistent [exploration scheme gSDE](https://openreview.net/forum?id=TSuSGVkjuXd) that I developped during my PhD to train RL directly on real robots (in its simplest form, gSDE just repeats the noise vector for n-steps).
+And...it could finally learn to solve this task, partially at least (note: with gSDE, without it wouldn't work as good).
+(note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?)
+
+There was still a big gap in final performance between SAC and PPO.
+To close it, I took inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
+By using `n_steps=3`, SAC finally managed to solve the hardest task! (Note: there is still a small performance gap between SAC and PPO, but after reading FastTD3 paper and doing some experiments on my own, I'm leaning towards the fact that the rewards of the env were tuned for PPO to achieve a desired behavior...)
+
+To sum up, here are the manual changes I made compared to the automatically optimized one:
+```yaml
+# Note: we must use train_freq > 1 to enable gSDE which resamples the noise every n_steps (here every 10 steps)
+train_freq: 10
+gradient_steps: 320 # 32 * train_freq = 320
+use_sde: True
+# N-step return
+n_steps: 3
+```
+
+<!-- Note: sde allow to have better performance without linear schedule -->
 
 ## Conclusion
 
-This concludes the journey I started a few months ago to make SAC work on a massively parallel simulator.
+This concludes the long journey I started a few months ago to make SAC work on a massively parallel simulator.
 During this adventure, I addressed a common issue that prevents SAC-like algorithms from working in these environments: the use of an unbounded action space.
 In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO in terms of training time on a large collection of locomotion environments.
 It is also much more sample efficient than PPO, though it has not yet fully solved the most complex environments (help is welcome).
@@ -263,6 +281,20 @@ Note: works better on Disney env
 ```python
 top_quantiles_to_drop_per_net = 5  # The default value is 2
 ``` -->
+
+### SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A small change in the code, a big change in performance
+
+
+While writing this blog post, I noticed two things: 1) PPO SBX was not learning anything when obs normalization was turned off where PPO SB3 worked 2) the dynamic of the std of the Gaussian distribution was different.
+
+So I investigated where did the difference come from (SBX and SB3 share quite some code, so I was surprised of such a difference).
+My main suspect was Jax vs PyTorch, because Adam implementation is different and network initialization is different too. I tried to have the same initialization for the weights (and same optimizer params) but I somehow didn't manage at that time to have similar behavior.
+
+To go further, I checked the statistics of the collected data (to understand why the std was growing in SBX) and I noticed something odd. The mean of the actions was not zero (during the very beginning of training) and the std of the action was much larger than the expected one (std=1 for PPO by default at init time). 
+That's where I realized it was due to the last layer init, which was not outputting actions close to zero because of initialization. Fixing this init problem solved my original issue (and the std of actions during exploration).
+
+One line of code changed, big difference in learning curves:
+<img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="PPO SB3 vs PPO SBX" />
 
 ## Citation
 
