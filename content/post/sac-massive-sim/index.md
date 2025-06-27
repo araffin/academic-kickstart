@@ -307,7 +307,7 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 
 ## Footnotes
 
-[^rudin21]: Rudin, Nikita, et al. "Learning to walk in minutes using massively parallel deep reinforcement learning." Conference on Robot Learning. PMLR, 2022.
+[^rudin21]: Rudin, Nikita, et al. ["Learning to walk in minutes using massively parallel deep reinforcement learning."](https://arxiv.org/abs/2109.11978) Conference on Robot Learning. PMLR, 2022.
 [^rl-tips]: Action spaces that are too small are also problematic. See [SB3 RL Tips and Tricks](https://stable-baselines3.readthedocs.io/en/master/guide/rl_tips.html).
 [^rescale]: Rescale from [-1, 1] to [low, high] using `action = low + (0.5 * (scaled_action + 1.0) * (high - low))`.
 [^clipping]: Common PPO implementations clip the actions to fit the desired boundaries, which has the effect of oversampling actions at the boundaries when the limits are smaller than ~4.

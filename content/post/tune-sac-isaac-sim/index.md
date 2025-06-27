@@ -128,7 +128,8 @@ However, in the current setting, since collecting new data is cheap, the replay 
 To optimize the hyperparameters, I used Optuna's CMA-ES sampler for 100 trials (taking about 10 hours with a population size of 10 individuals).
 Afterward, I retrained the best trials to filter out any lucky seeds, i.e., to find hyperparameters that work consistently across different runs.
 
-TODO: show learning curve of Optuna
+<img style="max-width: 100%" src="./img/optuna_sac.png" alt="Hyperparameter optimization history" />
+<p style="font-size: 12pt; text-align:center;">Hyperparameter optimization history</p>
 
 These are the hyperparameters of SAC, optimized for speed:
 ```yaml
@@ -179,15 +180,14 @@ Show learning curve vs PPO and sample efficiency
 
 Then, I trained SAC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
 And ... it worked partially.
-For some reason that I'm still investigating, the SAC-trained agent exhibits inconsistent behavior (any help is welcomed!).
-For example, on the same steps, it manages to climb down the pyramid without falling, but in another instance, it does nothing.
-Additionally, no matter how long it trains, it doesn't seem to be able to learn to solve the "inverted pyramid".
 
 ## Solving Harder Environments
 
 ### Identifying the problem: Why it doesn't work?
 
-Looking at the trained agent, it seems that the harder problem is the inverted pyramid.
+On the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior.
+For example, on the same pyramid steps, it manages to climb down without falling, but in another instance, it does nothing.
+Additionally, no matter how long it trains, it doesn't seem to be able to learn to solve the "inverted pyramid", probably one of the hardest task.
 
 TODO: image inverted
 
@@ -196,6 +196,8 @@ Then: looks like an exploration problem (remember mountain car?)
 Just more noise doesn't work, gSDE (maybe?)
 Lower difficulty: yes!
 Curriculum in terrain generation (need to see if possible)
+
+Note: sde allow to have better performance without linear schedule
 
 ## Conclusion
 
@@ -255,6 +257,8 @@ TQC also has a parameter that controls the overestimation bias of the Q-value fu
 While writting this blog (and doing experiments), TQC tended to be more easy to tune.
 However, after finding good hyperparmaters for speed, SAC was faster and reach equivalent performance compared to TQC.
 
+Note: works better on Disney env
+
 <!-- and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
 ```python
 top_quantiles_to_drop_per_net = 5  # The default value is 2
@@ -287,3 +291,4 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 [^lazy]: Yes, we tend to be lazy.
 [^didnt-work]: I present the ones that didn't work and could use help at the end of this post.
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
+[^fast-td3]: Seo, Younggyo, et al. ["FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control"](https://arxiv.org/abs/2505.22642) (2025)
