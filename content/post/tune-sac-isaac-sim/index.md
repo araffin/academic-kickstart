@@ -16,7 +16,7 @@ In the [first part](https://araffin.github.io/post/sac-massive-sim/), I stopped 
 By limiting the action space limits to 3% of the original size, and quickly tuning SAC (bigger network, reduced initial exploration rate), I could get SAC to learn to solve the Unitree A1 task on a flat surface in a matter of minutes.
 
 However, SAC took more time to train than PPO (12 minutes vs. 6 minutes), and it did not reach PPO's performance level.
-I had several ideas for improving SAC's training speed and performance[^didnt-work].
+Luckily, I still had several ideas for improving SAC's training speed and performance[^didnt-work].
 
 
 ## Defining Proper Action Bound - Extracting the Limits with PPO
@@ -24,15 +24,13 @@ I had several ideas for improving SAC's training speed and performance[^didnt-wo
 An aspect I wanted to improve was properly defining the boundaries of the action space.
 In part one, I quickly fixed it by limiting the action space to 3% of the original.
 For a more precise definition, I [recorded](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) the actions taken by a trained PPO agent and took the 2.5th and 97.5th percentile for the new limits.
-In other words, the new action space contains 95% of the actions commanded by a trained PPO agent:
+In other words, the new action space contains 95% of the actions commanded by a trained PPO agent[^define-space]:
 ```python
 # np.percentile(actions, 2.5, axis=0)
 low = np.array([-2.0, -0.4, -2.6, -1.3, -2.2, -1.9, -0.7, -0.4, -2.1, -2.4, -2.5, -1.7])
 # np.percentile(actions, 97.5, axis=0)
 high = np.array([1.1, 2.6, 0.7, 1.9, 1.3, 2.6, 3.4, 3.8, 3.4, 3.4, 1.9, 2.1])
 ```
-
-Note: I repeat the same process for any new environment where those boundaries would not work.
 
 ## Need for Speed or: How I Learned to Stop Worrying About Sample Efficiency
 
@@ -53,9 +51,10 @@ Since I'm using a massively parallel simulator, I no longer care about how many 
 In practice, this translates to an objective function that looks like this:
 ```python
 def objective(trial: optuna.Trial) -> float:
+    """Optimize for best performance after 5 minutes of training."""
     hyperparams = sample_sac_params(trial)
     agent = sbx.SAC(env=env, **hyperparams)
-    # Optimize for best performance after 5 minutes
+    # Exit the training loop after 5 minutes
     callback = TimeoutCallback(timeout=60 * 5)
     # Max budget of 50_000_000 timesteps
     agent.learn(total_timesteps=int(5e7), callback=callback)
@@ -73,7 +72,7 @@ The agent is evaluated after five minutes of training, regardless of how many in
 ### SAC Hyperparameters
 
 Similar to [PPO](../optuna/), many hyperparameters can be tuned for SAC.
-After some trial and error, I came up with the following sampling function (I've included comments explaining the meaning of each parameter):
+After some trial and error, I came up with the following sampling function (I've included comments that explain the meaning of each parameter):
 ```python
 def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
     # Discount factor
@@ -81,7 +80,7 @@ def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
     learning_rate = trial.suggest_float("learning_rate", 1e-4, 0.002, log=True)
     # Initial exploration rate (entropy coefficient in the SAC loss)
     ent_coef_init = trial.suggest_float("ent_coef_init", 0.001, 0.02, log=True)
-    # From 128 to 2*12 = 4096, the mini-batch size
+    # From 2^7=128 to 2^12 = 4096, the mini-batch size
     batch_size_pow = trial.suggest_int("batch_size_pow", 7, 12, log=True)
     # How big should should the actor and critic networks be
     # net_arch = trial.suggest_categorical("net_arch", ["default", "medium", "simba", "large", "xlarge"])
@@ -101,8 +100,8 @@ def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
     trial.set_user_attr("gradient_steps", 2**gradient_steps_pow)
     trial.set_user_attr("policy_delay", 2**policy_delay_pow)
     trial.set_user_attr("train_freq", 2**train_freq_pow)
-    # to_hyperparams() does the convertions between sampled value and expected value
-    # ex: converts batch_size_pow to batch_size
+    # Note: to_hyperparams() does the convertions between sampled value and expected value
+    # Ex: converts batch_size_pow to batch_size
     # This is useful when replaying trials
     return to_hyperparams({
         "train_freq_pow": train_freq_pow,
@@ -187,31 +186,35 @@ And ... it worked partially.
 
 ### Identifying the problem: Why it doesn't work?
 
-On the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior.
-For example, on the same pyramid steps, it manages to climb down without falling, but in another instance, it does nothing.
-Additionally, no matter how long it trains, it didn't seem to be able to learn to solve the "inverted pyramid", probably one of the hardest task.
+In the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior.
+For instance, it manages to climb down the same pyramid steps without falling, yet at another time, it does nothing.
+Additionally, no matter how long it is trained, it does not seem to be able to learn to solve the "inverted pyramid," which is probably one of the hardest tasks.
 
 TODO: image inverted
 
-I decided to isolate this task, so training SAC only on the inverted pyramid.
-Looking at what was happening, it looked like an exploration problem, that is to say SAC never experienced a successful stepping when trying random movements.
-This reminded me of SAC failing on the [mountain car problem](https://github.com/rail-berkeley/softlearning/issues/76) because the exploration was not consistent enough (the default high-frequency noise is usually not very effective for robots).
+I decided to isolate this task by training SAC only on the inverted pyramid.
+Upon further inspection, it appeared to be an exploration problem; that is, SAC never experiences successful stepping when executing random movements.
+This reminded me of SAC failing on the [mountain car problem](https://github.com/rail-berkeley/softlearning/issues/76) because the exploration was inconsistent (the default high-frequency noise is usually a [bad default](https://openreview.net/forum?id=TSuSGVkjuXd) for robots).
 
 ### Improving Exploration and Performance
 
-To test this hypothesis, I lowered the step (litteraly) to make the problem simpler and use a more consistent [exploration scheme gSDE](https://openreview.net/forum?id=TSuSGVkjuXd) that I developped during my PhD to train RL directly on real robots (in its simplest form, gSDE just repeats the noise vector for n-steps).
-And...it could finally learn to solve this task, partially at least (note: with gSDE, without it wouldn't work as good).
-(note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?)
+To test this hypothesis, I simplified the problem by lowering the step of the inverted pyramid and used a more consistent exploration scheme, [gSDE](https://openreview.net/forum?id=TSuSGVkjuXd), that I developed during my PhD to train RL directly on real robots.
+In its simplest form, gSDE repeats the noise vector for n steps (instead of sampling it at every timestep).
+With this improved exploration, the robot could finally learn to partially solve this task (note: gSDE is necessary for this to work well, lowering the step of the inverted pyramid alone is not enough).
+<!-- (note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?) -->
 
 There was still a big gap in final performance between SAC and PPO.
-To close it, I took inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
-By using `n_steps=3`, SAC finally managed to solve the hardest task[^perf-gap]!
+To close the gap, I drew inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
+Using `n_steps=3` allowed SAC to finally solve the hardest task[^perf-gap]!
 
 To sum up, here are the manual changes I made compared to the automatically optimized one:
 ```yaml
-# Note: we must use train_freq > 1 to enable gSDE which resamples the noise every n_steps (here every 10 steps)
+# Note: we must use train_freq > 1 to enable gSDE
+# which resamples the noise every n steps (here every 10 steps)
 train_freq: 10
-gradient_steps: 320 # 32 * train_freq = 320
+# Scaling the gradient steps accordingly, to keep the same replay ratio:
+# 32 * train_freq = 320
+gradient_steps: 320 
 use_sde: True
 # N-step return
 n_steps: 3
@@ -248,7 +251,7 @@ If you manage to reliably make SAC work with an unbounded Gaussian distribution,
 
 <!-- TODO: try with fixed std? more tuning, tune notably the target entropy, any other mechanism to avoid explosion of losses/divergence? -->
 
-## KL Divergence Adaptive Learning Rate
+### KL Divergence Adaptive Learning Rate
 
 One component of PPO that allows for better performance is the learning rate schedule (although it is not critical, it ease hyperparameter tuning).
 It automatically adjusts the learning rate to maintain a constant KL divergence between two updates, ensuring that the new policy remains close to the previous one (and ensuring that the learning rate is large enough too).
@@ -290,7 +293,7 @@ However, after finding good hyperparmaters for speed, SAC was faster and reach e
 top_quantiles_to_drop_per_net = 5  # The default value is 2
 ``` -->
 
-## SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A Small Change in the Code, a Big Change in Performance
+## Appendix: SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A Small Change in the Code, a Big Change in Performance
 
 
 While writing this blog post, I regularly compared SAC to PPO. I have two implementations of PPO: SB3 PPO in PyTorch and SBX PPO in JAX.
@@ -311,6 +314,7 @@ Fixing this initialization problem solved my original issue (and the std of the 
 
 One line of code changed, big difference in learning curves:
 <img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="SB3 PPO vs SBX PPO" />
+<p style="font-size: 12pt; text-align:center;">Learning curves for SB3 PPO and SBX PPO before and after the fix. SB3 PPO is the blue line. SBX PPO before is the yellow line, and SBX PPO after the fix is the grey line.</p>
 
 ## Citation
 
@@ -337,6 +341,7 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 ## Footnotes
 
 [^didnt-work]: I present the ones that didn't work and could use help (open-problems) at the end of this post.
+[^define-space]: I repeat the same process for any new environment where those boundaries would not work.
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
 [^fast-td3]: Seo, Younggyo, et al. ["FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control"](https://arxiv.org/abs/2505.22642) (2025)
 [^perf-gap]: Although there is still a slight performance gap between SAC and PPO, after reading the FastTD3 paper and conducting my own experiments, I believe that the environment rewards were tuned for PPO to achieve a desired behavior. In other words, I'm suspecting that the weighting of the reward terms was asjuted for PPO. To achieve similar performance, different weights are probably needed for SAC.
