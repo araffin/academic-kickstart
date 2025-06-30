@@ -9,7 +9,7 @@ If you read along, you will learn how to automatically tune SAC for speed, how t
 
 If you haven't read it yet, please have a look at [part I](https://araffin.github.io/post/sac-massive-sim/) which is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
 
-## In the previous episode...
+## In the Previous Episode...
 
 In the [first part](https://araffin.github.io/post/sac-massive-sim/), I stopped at the point where we could detect some signs of life from SAC (it was learning something).
 
@@ -70,7 +70,7 @@ def objective(trial: optuna.Trial) -> float:
 The agent is evaluated after five minutes of training, regardless of how many interactions with the environment were needed (the `TimeoutCallback` forces the agent to exit the training loop).
 
 
-### SAC hyperparameters
+### SAC Hyperparameters
 
 Similar to [PPO](../optuna/), many hyperparameters can be tuned for SAC.
 After some trial and error, I came up with the following sampling function (I've included comments explaining the meaning of each parameter):
@@ -156,7 +156,7 @@ Compared to the default hyperparameters of SAC, there are some notable changes:
 - The discount factor is lower than the default value of 0.99, which favors shorter-term rewards.
 
 
-### The Final Touch
+### Improving Convergence
 
 To improve the convergence of SAC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
 ```python
@@ -197,13 +197,15 @@ I decided to isolate this task, so training SAC only on the inverted pyramid.
 Looking at what was happening, it looked like an exploration problem, that is to say SAC never experienced a successful stepping when trying random movements.
 This reminded me of SAC failing on the [mountain car problem](https://github.com/rail-berkeley/softlearning/issues/76) because the exploration was not consistent enough (the default high-frequency noise is usually not very effective for robots).
 
+### Improving Exploration and Performance
+
 To test this hypothesis, I lowered the step (litteraly) to make the problem simpler and use a more consistent [exploration scheme gSDE](https://openreview.net/forum?id=TSuSGVkjuXd) that I developped during my PhD to train RL directly on real robots (in its simplest form, gSDE just repeats the noise vector for n-steps).
 And...it could finally learn to solve this task, partially at least (note: with gSDE, without it wouldn't work as good).
 (note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?)
 
 There was still a big gap in final performance between SAC and PPO.
 To close it, I took inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
-By using `n_steps=3`, SAC finally managed to solve the hardest task! (Note: there is still a small performance gap between SAC and PPO, but after reading FastTD3 paper and doing some experiments on my own, I'm leaning towards the fact that the rewards of the env were tuned for PPO to achieve a desired behavior...)
+By using `n_steps=3`, SAC finally managed to solve the hardest task[^perf-gap]!
 
 To sum up, here are the manual changes I made compared to the automatically optimized one:
 ```yaml
@@ -221,11 +223,10 @@ n_steps: 3
 
 This concludes the long journey I started a few months ago to make SAC work on a massively parallel simulator.
 During this adventure, I addressed a common issue that prevents SAC-like algorithms from working in these environments: the use of an unbounded action space.
-In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO in terms of training time on a large collection of locomotion environments.
-It is also much more sample efficient than PPO, though it has not yet fully solved the most complex environments (help is welcome).
+In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO in terms of training time (while being much more sample efficient) on a large collection of locomotion environments.
 I hope my voyage encourages others to use SAC in their experiments and unlock fine-tuning on real robots after pretraining in simulation.
 
-## Appendix: What I tried that didn't work
+## Appendix: What I Tried That Didn't Work
 
 While preparing this blog post, I tried many things to achieve PPO performance and learn good policies in minimal time.
 Many of the things I tried didn't work, but they are probably worth investigating further.
@@ -233,24 +234,33 @@ I hope you can learn from my failures, too.
 
 ### Using an Unbounded Gaussian Distribution
 
-One natural thing that I tried was to make SAC looks closer to PPO.
-In part one, PPO could handle unbounded action space because it was using a (non-squashed) Gaussian distribution under the hood (vs a squashed one for SAC).
-Replacing SAC squashed Normal distribution with an unbounded Gaussian dist lead to additional problems.
+One approach I tried was to make SAC look more like PPO.
+In part one, PPO could handle an unbounded action space because it used a (non-squashed) Gaussian distribution (vs. a squashed one for SAC).
+However, replacing SAC's squashed Normal distribution with an unbounded Gaussian distribution led to additional problems.
 
-First, without layer normalization in the critic, it diverges quickly (leading to Inf/NaN), it seems that the actor, encouraged by the entropy bonus, pushes towards very large value for the actions.
+Without layer normalization in the critic, it quickly diverges (leading to Inf/NaN).
+It seems that, encouraged by the entropy bonus, the actor pushes toward very large action values.
+It also appears that this variant requires specific tuning (and that state-dependent std may need to be replaced with state-independent std, as is done for PPO).
 
-Note: tried with both state-dependent std and independent std
+If you manage to reliably make SAC work with an unbounded Gaussian distribution, please reach out!
 
-TODO: try with fixed std? more tuning, tune notably the target entropy, any other mechanism to avoid explosion of losses/divergence?
+<!-- Note: tried with both state-dependent std and independent std -->
 
-## KL divergence adaptive learning rate
+<!-- TODO: try with fixed std? more tuning, tune notably the target entropy, any other mechanism to avoid explosion of losses/divergence? -->
 
-One component of PPO that allows to achieve better performance and adapts automatically the learning rate.
-It tries to keep the KL div between two updates constant (so that the new policy is not too far from the previous one).
-it should be possible with SAC, but both approximating KL div with log prob or with the Gaussian parameters didn't work (values are too large and inconsistent), SAC would probably need a trust region mechanism too.
+## KL Divergence Adaptive Learning Rate
+
+One component of PPO that allows for better performance is the learning rate schedule (although it is not critical, it ease hyperparameter tuning).
+It automatically adjusts the learning rate to maintain a constant KL divergence between two updates, ensuring that the new policy remains close to the previous one (and ensuring that the learning rate is large enough too).
+It should be possible to do something similar with SAC.
+However, when I tried to approximate the KL divergence using either the log probability or the extracted Gaussian parameters (mean and standard deviation), it didn't work.
+The KL divergence values were too large and inconsistent.
+SAC would probably need a trust region mechanism as well.
+
+Again, if you find a way to make it work, please reach out!
 
 
-## Penalty for actions close to actions bounds
+<!-- ## Penalty for Actions Close to Actions Bounds
 
 
 What i tried that didn't work:
@@ -263,7 +273,7 @@ To try:
 - use trained PPO net as feature extractor
 - add an history for the height scan
 - n-step return
-- KL penalty for SAC (trust region, already tried I guess?)
+- KL penalty for SAC (trust region, already tried I guess?) -->
 
 ### Truncated Quantile Critics (TQC)
 
@@ -273,28 +283,34 @@ TQC's performance tends to be on par with SAC's, but it can outperform SAC in [h
 TQC also has a parameter that controls the overestimation bias of the Q-value function (how many top quantiles to drop).
 
 While writting this blog (and doing experiments), TQC tended to be more easy to tune.
-However, after finding good hyperparmaters for speed, SAC was faster and reach equivalent performance compared to TQC.
-
-Note: works better on Disney env
+However, after finding good hyperparmaters for speed, SAC was faster and reach equivalent performance compared to TQC (except on the Disney robot env where TQC tend to work better).
 
 <!-- and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
 ```python
 top_quantiles_to_drop_per_net = 5  # The default value is 2
 ``` -->
 
-### SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A small change in the code, a big change in performance
+## SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A Small Change in the Code, a Big Change in Performance
 
 
-While writing this blog post, I noticed two things: 1) PPO SBX was not learning anything when obs normalization was turned off where PPO SB3 worked 2) the dynamic of the std of the Gaussian distribution was different.
+While writing this blog post, I regularly compared SAC to PPO. I have two implementations of PPO: SB3 PPO in PyTorch and SBX PPO in JAX.
+While comparing, I noticed two things.
+First, SBX PPO did not learn anything when observation normalization was turned off, whereas SB3 PPO did.
+Second, the dynamics of the standard deviation (its evolution over time) of the Gaussian distribution were different.
 
-So I investigated where did the difference come from (SBX and SB3 share quite some code, so I was surprised of such a difference).
-My main suspect was Jax vs PyTorch, because Adam implementation is different and network initialization is different too. I tried to have the same initialization for the weights (and same optimizer params) but I somehow didn't manage at that time to have similar behavior.
+I investigated where the difference came from.
+SBX and SB3 share quite a bit of code, so I was surprised by such a significant difference.
+My main suspects were Jax vs. PyTorch because the Adam implementation and network initialization are different.
+I tried to use the same initialization for the weights and the same optimizer parameters, but I couldn't get similar behavior at that time.
 
-To go further, I checked the statistics of the collected data (to understand why the std was growing in SBX) and I noticed something odd. The mean of the actions was not zero (during the very beginning of training) and the std of the action was much larger than the expected one (std=1 for PPO by default at init time). 
-That's where I realized it was due to the last layer init, which was not outputting actions close to zero because of initialization. Fixing this init problem solved my original issue (and the std of actions during exploration).
+To dig deeper, I checked the statistics of the collected data to understand why the standard deviation was growing with the SBX implementation (instead of decreasing).
+I noticed something odd.
+The mean of the actions was not zero at the very beginning of training, and the standard deviation of the actions was much larger than expected (I was expecting std around 1.0, but got std=3.0 for instance).
+I realized that this was due to the last layer initialization, which was not producing actions close to zero at the beginning of training.
+Fixing this initialization problem solved my original issue (and the std of the actions during exploration): I could get similar performance with SB3 PPO and SBX PPO.
 
 One line of code changed, big difference in learning curves:
-<img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="PPO SB3 vs PPO SBX" />
+<img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="SB3 PPO vs SBX PPO" />
 
 ## Citation
 
@@ -320,7 +336,7 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 
 ## Footnotes
 
-[^lazy]: Yes, we tend to be lazy.
-[^didnt-work]: I present the ones that didn't work and could use help at the end of this post.
+[^didnt-work]: I present the ones that didn't work and could use help (open-problems) at the end of this post.
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
 [^fast-td3]: Seo, Younggyo, et al. ["FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control"](https://arxiv.org/abs/2505.22642) (2025)
+[^perf-gap]: Although there is still a slight performance gap between SAC and PPO, after reading the FastTD3 paper and conducting my own experiments, I believe that the environment rewards were tuned for PPO to achieve a desired behavior. In other words, I'm suspecting that the weighting of the reward terms was asjuted for PPO. To achieve similar performance, different weights are probably needed for SAC.
