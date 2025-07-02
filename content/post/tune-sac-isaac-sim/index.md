@@ -7,11 +7,11 @@ date: 2025-07-01
 This second post details how I tuned the Soft-Actor Critic (SAC) algorithm to learn as fast as PPO in the context of a massively parallel simulator (thousands of robots simulated in parallel).
 If you read along, you will learn how to automatically tune SAC for speed, how to find better action boundaries, and what I tried that didn't work.
 
-If you haven't read it yet, please have a look at [part I](https://araffin.github.io/post/sac-massive-sim/) which is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
+If you haven't read it yet, please have a look at [part I](../sac-massive-sim/) which is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
 
 ## In the Previous Episode...
 
-In the [first part](https://araffin.github.io/post/sac-massive-sim/), I stopped at the point where we could detect some signs of life from SAC (it was learning something).
+In the [first part](../sac-massive-sim/), I stopped at the point where we could detect some signs of life from SAC (it was learning something).
 
 By limiting the action space limits to 3% of the original size, and quickly tuning SAC (bigger network, reduced initial exploration rate), I could get SAC to learn to solve the Unitree A1 task on a flat surface in a matter of minutes.
 
@@ -37,12 +37,12 @@ high = np.array([1.1, 2.6, 0.7, 1.9, 1.3, 2.6, 3.4, 3.8, 3.4, 3.4, 1.9, 2.1])
 The SAC algorithm and its derivatives (such as TQC) are optimized for sample efficiency.
 This is ideal for learning directly on a single real robot, but suboptimal for training thousands of robots in simulation.
 
-In [part one](https://araffin.github.io/post/sac-massive-sim/), I quickly tuned SAC by hand to get it up and running.
+In [part one](../sac-massive-sim/), I quickly tuned SAC by hand to get it up and running.
 This was sufficient for obtaining initial results, but it would be very time-consuming to continue tuning manually in order to reach PPO's performance level.
 That's why I turned to automatic hyperparameter optimization.
 
 If you are not familiar with automatic hyperparameter tuning, I wrote two blog posts about it:
-- [Automatic Hyperparameter Tuning - A Visual Guide (Part 1)](https://araffin.github.io/post/hyperparam-tuning/)
+- [Automatic Hyperparameter Tuning - A Visual Guide (Part 1)](../hyperparam-tuning/)
 - [Automatic Hyperparameter Tuning - In Practice (Part 2)](../optuna/) shows how to use the [Optuna library](https://github.com/optuna/optuna) to put these techniques into practice
 
 ### New Objective: Learn as Fast as Possible

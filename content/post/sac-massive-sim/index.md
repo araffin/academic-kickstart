@@ -10,7 +10,7 @@ If you follow the journey, you will learn about overlooked details in task desig
 Spoiler alert: [quite a few papers/code](#appendix---affected-paperscode) are affected by the problem described below.
 
 - Part I is about identifying the problem and trying out quick fixes on SAC.
-- Part II (WIP) will be about tuning SAC for speed and making it work as good as PPO.
+- [Part II](../tune-sac-isaac-sim/) will be about tuning SAC for speed and making it work as good as PPO.
 
 
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
@@ -194,7 +194,7 @@ sac_hyperparams = dict(
 Although SAC can now solve this locomotion task, it takes more time to train, is not consistent, and the performance is slightly below PPO's.
 In addition, SAC's learned gaits are not as pleasing as PPO's, for example, SAC agents tend to keep one leg up in the air... 
 
-Part II will explore these aspects (and more environments), review SAC design decisions (for example, try to remove the squashed Gaussian), and tune it for speed, but for now let's see what this means for the RL community.
+[Part II](../tune-sac-isaac-sim/) explores these aspects (and more environments), review SAC design decisions (for example, try to remove the squashed Gaussian), and tune it for speed, but for now let's see what this means for the RL community.
 
 ## Outro: What Does That Mean for the RL Community?
 
