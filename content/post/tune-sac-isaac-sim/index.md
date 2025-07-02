@@ -133,6 +133,7 @@ Afterward, I retrained the best trials to filter out any lucky seeds, i.e., to f
 These are the hyperparameters of SAC, optimized for speed:
 ```yaml
 batch_size: 512
+buffer_size: 2_000_000
 ent_coef: auto_0.009471776840423638
 gamma: 0.983100250213744
 gradient_steps: 32
@@ -154,13 +155,15 @@ Compared to the default hyperparameters of SAC, there are some notable changes:
 - The lower replay ratio (RR ≈ 0.03 for 1024 environments, or three gradient steps every 100 steps in an environment) and higher policy delay (update the actor after eight actor updates) make it faster, as less time is taken for gradient updates.
 - The discount factor is lower than the default value of 0.99, which favors shorter-term rewards.
 
-Here is the result in video and the associated learning curve:
+Here is the result in video and the associated learning curves[^seed-note]:
 
 <img style="max-width:100%" src="./img/learning_curve_unitree.svg"/>
-<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task (3 seeds) using 1024 envs.</p>
+<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task using 1024 envs.</p>
 
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/q6aM4WCSNF28ErD/">
+</video>
+<p style="font-size: 14pt; text-align:center;">Trained SAC agent after automatic tuning.</p>
 
-TODO: video and learning curve (3 seeds at least, for PPO too)
 
 <!-- ### Improving Convergence
 
@@ -179,12 +182,14 @@ and also the effect on the trained policy (no more leg up in the air) -->
 So far, I have only optimized and tested the hyperparameters in one environment.
 The goal is to make it work in any locomotion environment.
 
-After it successfully learned on the flat Unitree A1 environment, I tested the same recipe[^action-space-recipe] on the GO1, GO2, Anymal-B, and Anymal-C environments, as well as the flat Disney BD-X environment and ... it worked!
+After it successfully learned on the flat Unitree A1 environment, I tested the same recipe[^action-space-recipe] on the GO1, GO2, Anymal-B, and Anymal-C environments, as well as the flat [Disney BD-X](https://github.com/louislelay/disney_bdx_rl_isaaclab) environment and ... it worked!
 
-TODO: video of BD-X, Anymal, GO1, Go2
-Show learning curve vs PPO and sample efficiency
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/RKCWddABEtj5MFT/">
+</video>
+<p style="font-size: 14pt; text-align:center;">Trained SAC agent in different environments, using the same tuned hyperparameters.</p>
 
-In those environments, SAC learns as fast as PPO but is more sample efficient.
+
+<!-- In those environments, SAC learns as fast as PPO but is more sample efficient. -->
 
 Then, I trained SAC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
 And ... it worked partially.
@@ -208,8 +213,13 @@ This reminded me of SAC failing on the [mountain car problem](https://github.com
 
 To test this hypothesis, I simplified the problem by lowering the step of the inverted pyramid and used a more consistent exploration scheme, [gSDE](https://openreview.net/forum?id=TSuSGVkjuXd), that I developed during my PhD to train RL directly on real robots.
 In its simplest form, gSDE repeats the noise vector for n steps (instead of sampling it at every timestep).
-With this improved exploration, the robot could finally learn to partially solve this task (note: gSDE is necessary for this to work well, lowering the step of the inverted pyramid alone is not enough).
+With this improved exploration, the robot could finally learn to partially solve this task.
+<!-- (note: gSDE is necessary for this to work well, lowering the step of the inverted pyramid alone is not enough). -->
 <!-- (note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?) -->
+
+<video controls src="https://b2drop.eudat.eu/public.php/dav/files/TRkAKzNyWZ83Q7K/">
+</video>
+<p style="font-size: 14pt; text-align:center;">Trained SAC agent with gSDE and n-step return in the "Rough" Anymal-C environment.</p>
 
 There was still a big gap in final performance between SAC and PPO.
 To close the gap, I drew inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
@@ -228,7 +238,13 @@ use_sde: True
 n_steps: 3
 ```
 
-TODO: learning curve and video + sample efficiency curve for Anymal C Rough
+And the associated learning curves[^seed-note](plotting the current curriculum level on the y-axis[^curriculum]):
+
+<img style="max-width:100%" src="./img/learning_curve_rough.svg"/>
+<p style="font-size: 14pt; text-align:center;">Learning curve on the Anymal-C "Rough" task using 1024 envs (except for PPO).</p>
+
+<img style="max-width:100%" src="./img/learning_curve_rough_efficiency.svg"/>
+<p style="font-size: 14pt; text-align:center;">Learning curve in term of sample-effiency on the Anymal-C "Rough" task using 1024 envs (except for PPO).</p>
 
 <!-- Note: sde allow to have better performance without linear schedule -->
 
@@ -304,6 +320,8 @@ To try:
 
 ## Appendix: SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A Small Change in the Code, a Big Change in Performance
 
+<img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="SB3 PPO vs SBX PPO" />
+<p style="font-size: 12pt; text-align:center;">Learning curves for SB3 PPO and SBX PPO before and after the fix. SB3 PPO is the blue line. SBX PPO before is the yellow line, and SBX PPO after the fix is the grey line.</p>
 
 While writing this blog post, I regularly compared SAC to PPO. I have two implementations of PPO: SB3 PPO in PyTorch and SBX PPO in JAX.
 While comparing, I noticed two things.
@@ -321,9 +339,7 @@ The mean of the actions was not zero at the very beginning of training, and the 
 I realized that this was due to the last layer initialization, which was not producing actions close to zero at the beginning of training.
 Fixing this initialization problem solved my original issue (and the std of the actions during exploration): I could get similar performance with SB3 PPO and SBX PPO.
 
-One line of code changed, big difference in learning curves:
-<img style="max-width: 100%" src="https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:ux3nlsvhsagmx3yxjvvaimdv/bafkreibxnbcdikdbflwiufvkfjhbmhljnrghfqgkavf6eo6go3sj4ffita@jpeg" alt="SB3 PPO vs SBX PPO" />
-<p style="font-size: 12pt; text-align:center;">Learning curves for SB3 PPO and SBX PPO before and after the fix. SB3 PPO is the blue line. SBX PPO before is the yellow line, and SBX PPO after the fix is the grey line.</p>
+<!-- One line of code changed, big difference in learning curves: -->
 
 ## Citation
 
@@ -350,7 +366,9 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 ## Footnotes
 
 [^didnt-work]: I present the ones that didn't work and could use help (open-problems) at the end of this post.
-[^define-space]: I repeat the same process for any new environment where those boundaries would not work.
+[^define-space]: I repeat the same process for any new environment where those boundaries would not work (taking sometime the 0.5 and 99.5 percentiles to have a larger space).
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
 [^fast-td3]: Seo, Younggyo, et al. ["FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control"](https://arxiv.org/abs/2505.22642) (2025)
 [^perf-gap]: Although there is still a slight performance gap between SAC and PPO, after reading the FastTD3 paper and conducting my own experiments, I believe that the environment rewards were tuned for PPO to achieve a desired behavior. In other words, I'm suspecting that the weighting of the reward terms was asjuted for PPO. To achieve similar performance, different weights are probably needed for SAC.
+[^seed-note]: The results are plotted for only three independent runs (random seeds). This is usually insufficient for RL due to the stochasticity of the results. However, in this case, the results tend to be consistent between runs (limited variability). I observed this during the many runs I did while debugging (and writting this blog post), so the trend is likely correct, even with a limited number of seeds. I only have one machine to run the tests, but I will try to run more tests in the coming weeks and update the plots.
+[^curriculum]: I'm plotting the current state of the terrain curriculum (the higher the number, the harder the task/terrain) as the reward magnitude doesn't tell the whole story for the "Rough" task.
