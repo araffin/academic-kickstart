@@ -1,7 +1,7 @@
 ---
-draft: true
+draft: false
 title: "Getting SAC to Work on a Massive Parallel Simulator: Tuning for Speed (Part II)"
-date: 2025-05-14
+date: 2025-07-01
 ---
 
 This second post details how I tuned the Soft-Actor Critic (SAC) algorithm to learn as fast as PPO in the context of a massively parallel simulator (thousands of robots simulated in parallel).
