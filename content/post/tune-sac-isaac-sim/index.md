@@ -156,6 +156,10 @@ Compared to the default hyperparameters of SAC, there are some notable changes:
 
 Here is the result in video and the associated learning curve:
 
+<img style="max-width:100%" src="./img/learning_curve_unitree.svg"/>
+<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task (3 seeds) using 1024 envs.</p>
+
+
 TODO: video and learning curve (3 seeds at least, for PPO too)
 
 <!-- ### Improving Convergence
@@ -180,7 +184,7 @@ After it successfully learned on the flat Unitree A1 environment, I tested the s
 TODO: video of BD-X, Anymal, GO1, Go2
 Show learning curve vs PPO and sample efficiency
 
-In those environments, SAC learns as fast as PPO but is much more sample efficient.
+In those environments, SAC learns as fast as PPO but is more sample efficient.
 
 Then, I trained SAC on the "rough" locomotion environments, which are harder environments where the robot has to learn to navigate steps and uneven, accidented terrain (with additional randomization).
 And ... it worked partially.
@@ -223,6 +227,8 @@ use_sde: True
 # N-step return
 n_steps: 3
 ```
+
+TODO: learning curve and video + sample efficiency curve for Anymal C Rough
 
 <!-- Note: sde allow to have better performance without linear schedule -->
 

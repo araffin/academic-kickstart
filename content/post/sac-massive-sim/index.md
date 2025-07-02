@@ -166,7 +166,7 @@ Bingo!
 SAC finally learned to solve the task!
 
 <img style="max-width:100%" src="./img/learning_curve.svg"/>
-<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task using 2048 envs.</p>
+<p style="font-size: 14pt; text-align:center;">Learning curve on the Unitree A1 task using 1024 envs.</p>
 
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/sac_trained_cut_1.mp4">
