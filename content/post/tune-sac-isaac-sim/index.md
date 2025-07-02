@@ -154,8 +154,11 @@ Compared to the default hyperparameters of SAC, there are some notable changes:
 - The lower replay ratio (RR ≈ 0.03 for 1024 environments, or three gradient steps every 100 steps in an environment) and higher policy delay (update the actor after eight actor updates) make it faster, as less time is taken for gradient updates.
 - The discount factor is lower than the default value of 0.99, which favors shorter-term rewards.
 
+Here is the result in video and the associated learning curve:
 
-### Improving Convergence
+TODO: video and learning curve (3 seeds at least, for PPO too)
+
+<!-- ### Improving Convergence
 
 To improve the convergence of SAC (see the oscillations in the learning curve), I replaced the constant learning rate with a linear schedule:
 ```python
@@ -164,7 +167,7 @@ learning_rate = LinearSchedule(start=5e-4, end=1e-5, end_fraction=0.15)
 ```
 
 TODO: show learning curve before and after + with PPO as reference + SAC vs PPO
-and also the effect on the trained policy (no more leg up in the air)
+and also the effect on the trained policy (no more leg up in the air) -->
 
 
 ## Does it work? - More Environments
@@ -190,7 +193,8 @@ In the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior
 For instance, it manages to climb down the same pyramid steps without falling, yet at another time, it does nothing.
 Additionally, no matter how long it is trained, it does not seem to be able to learn to solve the "inverted pyramid," which is probably one of the hardest tasks.
 
-TODO: image inverted
+<img style="max-width: 100%" src="./img/inverted_pyramid.jpg" alt="The inverted pyramid task." />
+<p style="font-size: 12pt; text-align:center;">The inverted pyramid task.</p>
 
 I decided to isolate this task by training SAC only on the inverted pyramid.
 Upon further inspection, it appeared to be an exploration problem; that is, SAC never experiences successful stepping when executing random movements.
@@ -263,24 +267,9 @@ SAC would probably need a trust region mechanism as well.
 Again, if you find a way to make it work, please reach out!
 
 
-<!-- ## Penalty for Actions Close to Actions Bounds
-
-
-What i tried that didn't work:
-- penalty to be away from action bounds (hard to tune)
-- weird things happening with Rough env (norm need to be disabled, only solve task partially, not consistent behavior)
-- schedule action space (increase the limits over time, tricky and doesn't really improve)
-
-To try:
-- normalize input partially (not height scan)
-- use trained PPO net as feature extractor
-- add an history for the height scan
-- n-step return
-- KL penalty for SAC (trust region, already tried I guess?) -->
-
 ### Truncated Quantile Critics (TQC)
 
-One idea I had was to replace the SAC algorithm with its [distributional](https://araffin.github.io/slides/recent-advances-rl/#/8/0/1) counterpart [Truncated Quantile Critics (TQC)](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html).
+One idea I had to improve performance was to replace the SAC algorithm with its [distributional](https://araffin.github.io/slides/recent-advances-rl/#/8/0/1) counterpart [Truncated Quantile Critics (TQC)](https://sb3-contrib.readthedocs.io/en/master/modules/tqc.html).
 Rather than approximating only the expected return, TQC models the distribution of returns.
 TQC's performance tends to be on par with SAC's, but it can outperform SAC in [harder environments]((https://araffin.github.io/slides/recent-advances-rl/#/9)) (at the cost of a slightly more expensive gradient step).
 TQC also has a parameter that controls the overestimation bias of the Q-value function (how many top quantiles to drop).
@@ -292,6 +281,20 @@ However, after finding good hyperparmaters for speed, SAC was faster and reach e
 ```python
 top_quantiles_to_drop_per_net = 5  # The default value is 2
 ``` -->
+
+### En Vrac - Other Things I Tried
+
+- penalty to be away from action bounds (hard to tune)
+- action space schedule (start with small action space, make it bigger over time, tricky to schedule and didn't improve performance)
+- linear schedule (`learning_rate = LinearSchedule(start=5e-4, end=1e-5, end_fraction=0.15)`), it helped for convergence when using `n_steps=1` and `use_sde=False`, but was not needed at the end
+
+<!--
+To try:
+- TD3 instead of SAC
+- normalize input partially (not height scan) -> doesn't work?
+- use trained PPO net as feature extractor -> not needed
+- add an history for the height scan -> not needed
+- KL penalty for SAC (trust region, already tried I guess?) -->
 
 ## Appendix: SB3 PPO (PyTorch) vs. SBX PPO (Jax) - A Small Change in the Code, a Big Change in Performance
 
