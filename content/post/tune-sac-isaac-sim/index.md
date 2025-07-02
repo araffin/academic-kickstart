@@ -125,7 +125,7 @@ That means that SAC does at least one gradient step per interaction with the env
 However, in the current setting, since collecting new data is cheap, the replay ratio tends to be lower than 1/4 (one gradient step for every four steps in the environment).
 
 To optimize the hyperparameters, I used Optuna's CMA-ES sampler for 100 trials (taking about 10 hours with a population size of 10 individuals).
-Afterward, I retrained the best trials to filter out any lucky seeds, i.e., to find hyperparameters that work consistently across different runs.
+Afterward, I retrained the best trials to [filter out](https://arxiv.org/abs/2209.07171) any lucky seeds, i.e., to find hyperparameters that work consistently across different runs.
 
 <img style="max-width: 100%" src="./img/optuna_sac.png" alt="Hyperparameter optimization history" />
 <p style="font-size: 12pt; text-align:center;">Hyperparameter optimization history</p>
