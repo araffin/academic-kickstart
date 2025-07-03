@@ -22,11 +22,12 @@ Luckily, I still had several ideas for improving SAC's training speed and perfor
 
 ## Defining Proper Action Bound - Extracting the Limits with PPO
 
-First, I wanted to have a finer definition of the action space.
-Definining correct boundaries for the action space is important both for the speed of convergence and the final performance.
-A larger action space provides the agent with more flexibility, potentially leading to better performance at the cost of slower learning. Conversely, a smaller action space can accelerate learning but may result in suboptimal solutions.
+First, I wanted to define the action space more precisely.
+Correctly defining the boundaries of the action space is important for both the speed of convergence and the final performance.
+A larger action space gives the agent more flexibility, which can lead to better performance, but slower learning.
+Conversely, a smaller action space can accelerate learning, though it may result in suboptimal solutions.
 
-Thus, instead of simply restricting the action space to a small percentage of the original, I [recorded](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) the actions taken by a trained PPO agent and took the 2.5th and 97.5th percentiles for the new limits.
+Thus, rather than simply restricting the action space to a small percentage of the original, I [recorded](https://gist.github.com/araffin/e069945a68aa0d51fcdff3f01e945c70) the actions taken by a trained PPO agent and took the 2.5th and 97.5th percentiles for the new limits.
 In other words, the new action space contains 95% of the actions commanded by a trained PPO agent[^define-space]:
 ```python
 # np.percentile(actions, 2.5, axis=0)
@@ -38,9 +39,9 @@ high = np.array([1.1, 2.6, 0.7, 1.9, 1.3, 2.6, 3.4, 3.8, 3.4, 3.4, 1.9, 2.1])
 
 ## Need for Speed or: How I Learned to Stop Worrying About Sample Efficiency
 
-The second aspect I wanted to improve were SAC's hyperparameters.
-The default hyperparameters of SAC algorithm and its derivatives (such as TQC) are optimized for sample efficiency.
-This is ideal for learning directly on a single real robot, but suboptimal for training thousands of robots in simulation.
+The second aspect I wanted to improve was the hyperparameters of the SAC algorithm.
+The default hyperparameters of the SAC algorithm are optimized for sample efficiency.
+While this is ideal for learning directly on a single real robot, it is suboptimal for training thousands of robots in simulation.
 
 In [part one](../sac-massive-sim/), I quickly tuned SAC by hand to get it up and running.
 This was sufficient for obtaining initial results, but it would be very time-consuming to continue tuning manually in order to reach PPO's performance level.
@@ -128,7 +129,7 @@ def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
 A metric that will be useful to understand the tuned hyperparameters is the replay ratio.
 The replay ratio (also known as update-to-data ratio or UTD ratio) measures the number of gradient updates performed per environment interaction or experience collected.
 This ratio represents how many times an agent updates its parameters relative to how much new experience it gathers.
-It is defined as `replay_ratio = n_gradient_steps / (n_envs * train_freq)` for SAC.
+For SAC, it is defined as `replay_ratio = n_gradient_steps / (n_envs * train_freq)`.
 
 In a classic setting, the replay ratio is usually greater than one when optimizing for sample efficiency.
 That means that SAC does at least one gradient step per interaction with the environment.
@@ -178,7 +179,7 @@ Here is the result in video and the associated learning curves[^seed-note]:
 </video>
 <p style="font-size: 14pt; text-align:center;">Trained SAC agent after automatic tuning.</p>
 
-With those tuned hyperparameters, SAC learns faster than in part I, reaches a higher performance and the learned gaits look better =) (no more feet in the air).
+With these tuned hyperparameters, SAC learns faster (than in part I), achieves higher performance, and the learned gaits look better =). (No more feet in the air!)
 
 
 <!-- ### Improving Convergence
@@ -215,8 +216,8 @@ And ... it worked partially.
 ### Identifying the problem: Why it doesn't work?
 
 In the "Rough" environment, the SAC-trained agent exhibits inconsistent behavior.
-For instance, one time, the robot manages to climb down the same pyramid steps without falling, yet at another time, it does nothing.
-Additionally, no matter how long SAC trains, it does not seem to be able to learn to solve the "inverted pyramid", which is probably one of the hardest tasks:
+For example, one time the robot successfully climbs down the pyramid steps without falling; at other times, however, it does nothing.
+Additionally, no matter how long it is trained, SAC does not seem to be able to learn to solve the "inverted pyramid", which is probably one of the hardest tasks:
 
 <img style="max-width: 100%" src="./img/inverted_pyramid.jpg" alt="The inverted pyramid task." />
 <p style="font-size: 12pt; text-align:center;">The inverted pyramid task.</p>
@@ -229,10 +230,9 @@ This reminded me of SAC failing on the [mountain car problem](https://github.com
 
 To test this hypothesis, I simplified the problem by lowering the step of the inverted pyramid and used a more consistent exploration scheme, [gSDE](https://openreview.net/forum?id=TSuSGVkjuXd), that I developed during my PhD to train RL directly on real robots.
 
-In its simplest form, gSDE repeats the noise vector for $n$-steps (instead of sampling it at every timestep).
-In other words, instead of selecting actions following $a_t = \mu_\theta(s_t) + \epsilon_t$[^actor-out] and sampling $\epsilon_t \sim N(0, \sigma^2)$ at every step during exploration, gSDE samples $\epsilon \sim N(0, \sigma^2)$ once and keeps it constant for $n$-steps.
+In its simplest form, gSDE repeats the noise vector for $n$-steps, instead of sampling it at every timestep.
+In other words, instead of selecting actions following $a_t = \mu_\theta(s_t) + \epsilon_t$[^actor-out] and sampling $\epsilon_t \sim N(0, \sigma^2)$ at every step during exploration, gSDE samples $\epsilon \sim N(0, \sigma^2)$ once and keeps $\epsilon$ constant for $n$-steps.
 With this improved exploration, the robot could finally learn to partially solve this task.
-<!-- (note: gSDE is necessary for this to work well, lowering the step of the inverted pyramid alone is not enough). -->
 <!-- (note: gSDE also allowed to have better performance on the flat terrain, maybe my PhD was useful ^^?) -->
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/TRkAKzNyWZ83Q7K/">
