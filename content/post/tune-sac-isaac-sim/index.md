@@ -129,7 +129,7 @@ def sample_sac_params(trial: optuna.Trial) -> dict[str, Any]:
 A metric that will be useful to understand the tuned hyperparameters is the replay ratio.
 The replay ratio (also known as update-to-data ratio or UTD ratio) measures the number of gradient updates performed per environment interaction or experience collected.
 This ratio represents how many times an agent updates its parameters relative to how much new experience it gathers.
-For SAC, it is defined as `replay_ratio = n_gradient_steps / (n_envs * train_freq)`.
+For SAC, it is defined as `replay_ratio = gradient_steps / (num_envs * train_freq)`.
 
 In a classic setting, the replay ratio is usually greater than one when optimizing for sample efficiency.
 That means that SAC does at least one gradient step per interaction with the environment.
@@ -140,7 +140,7 @@ However, in the current setting, since collecting new data is cheap, the replay 
 To optimize the hyperparameters, I used Optuna's CMA-ES sampler for 100 trials[^need-compute] (taking about 10 hours with a population size of 10 individuals).
 Afterward, I retrained the best trials to [filter out](https://arxiv.org/abs/2209.07171) any lucky seeds, i.e., to find hyperparameters that work consistently across different runs.
 
-This is how the optimization looks like, many trials were successful:
+This is what the optimization history looks like. Many sets of hyperparameters were successful:
 
 <img style="max-width: 100%" src="./img/optuna_sac.png" alt="Hyperparameter optimization history" />
 <p style="font-size: 12pt; text-align:center;">Hyperparameter optimization history</p>
@@ -179,7 +179,8 @@ Here is the result in video and the associated learning curves[^seed-note]:
 </video>
 <p style="font-size: 14pt; text-align:center;">Trained SAC agent after automatic tuning.</p>
 
-With these tuned hyperparameters, SAC learns faster (than in part I), achieves higher performance, and the learned gaits look better =). (No more feet in the air!)
+With these tuned hyperparameters, SAC learns faster (than in part I), achieves higher performance, and the learned gaits look better (no more feet in the air!).
+What more could you ask for?
 
 
 <!-- ### Improving Convergence
@@ -196,10 +197,10 @@ and also the effect on the trained policy (no more leg up in the air) -->
 
 ## Does it work? - More Environments
 
-So far, I have only optimized and tested the hyperparameters in one environment.
-The goal is to make it work in any locomotion environment.
+<!-- So far, I have only optimized and tested the hyperparameters in one environment. -->
+<!-- The goal is to make it work in any locomotion environment. -->
 
-After it successfully learned on the flat Unitree A1 environment, I tested the same recipe[^action-space-recipe] on the GO1, GO2, Anymal-B, and Anymal-C environments, as well as the flat [Disney BD-X](https://github.com/louislelay/disney_bdx_rl_isaaclab) environment and ... it worked!
+After it successfully learned on the flat Unitree A1 environment, I tested the same hyperparameters (with the same recipe[^action-space-recipe]) on the GO1, GO2, Anymal-B, and Anymal-C environments, as well as the flat [Disney BD-X](https://github.com/louislelay/disney_bdx_rl_isaaclab) environment and ... it worked!
 
 <video controls src="https://b2drop.eudat.eu/public.php/dav/files/RKCWddABEtj5MFT/">
 </video>
@@ -228,7 +229,7 @@ This reminded me of SAC failing on the [mountain car problem](https://github.com
 
 ### Improving Exploration and Performance
 
-To test this hypothesis, I simplified the problem by lowering the step of the inverted pyramid and used a more consistent exploration scheme, [gSDE](https://openreview.net/forum?id=TSuSGVkjuXd), that I developed during my PhD to train RL directly on real robots.
+To test this hypothesis, I simplified the problem by lowering the step of the inverted pyramid and used a more consistent exploration scheme, [gSDE](https://openreview.net/forum?id=TSuSGVkjuXd) (that I developed during my PhD to train RL directly on real robots).
 
 In its simplest form, gSDE repeats the noise vector for $n$-steps, instead of sampling it at every timestep.
 In other words, instead of selecting actions following $a_t = \mu_\theta(s_t) + \epsilon_t$[^actor-out] and sampling $\epsilon_t \sim N(0, \sigma^2)$ at every step during exploration, gSDE samples $\epsilon \sim N(0, \sigma^2)$ once and keeps $\epsilon$ constant for $n$-steps.
@@ -243,7 +244,7 @@ There was still a big gap in final performance between SAC and PPO.
 To close the gap, I drew inspiration from the recent [FastTD3](https://github.com/younggyoseo/FastTD3) paper and implemented [n-step returns](https://github.com/DLR-RM/stable-baselines3/pull/2144) for all off-policy algorithms in SB3.
 Using `n_steps=3` allowed SAC to finally solve the hardest task[^perf-gap]!
 
-To sum up, here are the manual changes I made to SAC's hyperparameters, compared to the automatically optimized one:
+In summary, here are the additional manual changes I made to the hyperparameters of SAC compared to those optimized automatically:
 ```yaml
 # Note: we must use train_freq > 1 to enable gSDE
 # which resamples the noise every n steps (here every 10 steps)
@@ -256,7 +257,7 @@ use_sde: True
 n_steps: 3
 ```
 
-And the associated learning curves[^seed-note](plotting the current curriculum level on the y-axis[^curriculum]):
+And here are the associated learning curves[^seed-note](plotting the current curriculum level on the y-axis[^curriculum]):
 
 <img style="max-width:100%" src="./img/learning_curve_rough.svg"/>
 <p style="font-size: 14pt; text-align:center;">Learning curve on the Anymal-C "Rough" task using 1024 envs (except for PPO).</p>
@@ -264,13 +265,16 @@ And the associated learning curves[^seed-note](plotting the current curriculum l
 <img style="max-width:100%" src="./img/learning_curve_rough_efficiency.svg"/>
 <p style="font-size: 14pt; text-align:center;">Learning curve in term of sample-effiency on the Anymal-C "Rough" task using 1024 envs (except for PPO).</p>
 
+In those plots, you can see the effect of gSDE and the use of n-step returns.
+SAC is also much more sample efficient than PPO.
+
 <!-- Note: sde allow to have better performance without linear schedule -->
 
 ## Conclusion
 
 This concludes the long journey I started a few months ago to make SAC work on a massively parallel simulator.
 During this adventure, I addressed a common issue that prevents SAC-like algorithms from working in these environments: the use of an unbounded action space.
-In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO in terms of training time (while being much more sample efficient) on a large collection of locomotion environments.
+In the end, with a proper action space and tuned hyperparameters, SAC is now competitive with PPO[^perf-gap] in terms of training time (while being much more sample efficient) on a large collection of locomotion environments.
 I hope my voyage encourages others to use SAC in their experiments and unlock fine-tuning on real robots after pretraining in simulation.
 
 ## Appendix: What I Tried That Didn't Work
