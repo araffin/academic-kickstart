@@ -10,7 +10,7 @@ If you follow the journey, you will learn about overlooked details in task desig
 Spoiler alert: [quite a few papers/code](#appendix---affected-paperscode) are affected by the problem described below.
 
 - Part I is about identifying the problem and trying out quick fixes on SAC.
-- [Part II](../tune-sac-isaac-sim/) will be about tuning SAC for speed and making it work as good as PPO.
+- [Part II](../tune-sac-isaac-sim/) is about tuning SAC for speed and making it work as good as PPO.
 
 
 ##  A Suspicious Trend: PPO, PPO, PPO, ...
