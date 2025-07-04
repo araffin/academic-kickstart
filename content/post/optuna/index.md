@@ -323,7 +323,7 @@ I've covered:
 - speeding up the tuning process with distributed optimization
 - tips and tricks to keep in mind when doing automatic hyperparameter tuning
 
-As a conclusion and transition to the next blog post (WIP), I will use this technique to [tune SAC for fast training](./sac-massive-sim/) when using a massively parallel environment like Isaac Sim.
+As a conclusion and transition to the [next blog post](../tune-sac-isaac-sim/), I will use this technique to [tune SAC for fast training](../sac-massive-sim/) when using a massively parallel environment like Isaac Sim.
 
 PS: In case you missed it, you can find the final script here: https://gist.github.com/araffin/d16e77aa88ffc246856f4452ab8a2524
 

@@ -5,7 +5,7 @@ date: 2025-07-01
 ---
 
 This second post details how I tuned the Soft-Actor Critic (SAC) algorithm to learn as fast as PPO in the context of a massively parallel simulator (thousands of robots simulated in parallel).
-If you read along, you will learn how to automatically tune SAC for speed, how to find better action boundaries, and what I tried that didn't work.
+If you read along, you will learn how to automatically tune SAC for speed (i.e., minimize wall clock time), how to find better action boundaries, and what I tried that didn't work.
 
 - [Part I](../sac-massive-sim/) is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
 - Part II is about tuning SAC for speed and making it work as good as PPO.
@@ -391,7 +391,7 @@ I would like to thank Anssi, Leon, Ria and Costa for their feedback =).
 [^define-space]: I repeat the same process for any new environment where those boundaries would not work (taking sometime the 0.5 and 99.5 percentiles to have a larger space).
 [^action-space-recipe]: I updated the limits for each family of robots. The PPO percentiles technique worked nicely.
 [^fast-td3]: Seo, Younggyo, et al. ["FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control"](https://arxiv.org/abs/2505.22642) (2025)
-[^perf-gap]: Although there is still a slight performance gap between SAC and PPO, after reading the FastTD3 paper and conducting my own experiments, I believe that the environment rewards were tuned for PPO to achieve a desired behavior. In other words, I'm suspecting that the weighting of the reward terms was asjuted for PPO. To achieve similar performance, different weights are probably needed for SAC.
+[^perf-gap]: Although there is still a slight performance gap between SAC and PPO, after reading the FastTD3 paper and conducting my own experiments, I believe that the environment rewards were tuned for PPO to encourage a desired behavior. In other words, I suspect that the weighting of the reward terms was adjusted for PPO. To achieve similar performance, SAC probably needs different weights.
 [^seed-note]: The results are plotted for only three independent runs (random seeds). This is usually insufficient for RL due to the stochasticity of the results. However, in this case, the results tend to be consistent between runs (limited variability). I observed this during the many runs I did while debugging (and writting this blog post), so the trend is likely correct, even with a limited number of seeds. I only have one machine to run the tests, but I will try to run more tests in the coming weeks and update the plots.
 [^curriculum]: I'm plotting the current state of the terrain curriculum (the higher the number, the harder the task/terrain) as the reward magnitude doesn't tell the whole story for the "Rough" task.
 [^need-compute]: Here, I only optimized for the Unitree A1 flat task due to limited computation power. It would be interesting to tune SAC directly for the "Rough" variant, including `n_steps` and gSDE train frequency as hyperparameters.
