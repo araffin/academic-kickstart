@@ -39,4 +39,4 @@ projects: ['learning-to-drive']
 
 ---
 
-Read the full article on [Medium](https://towardsdatascience.com/learning-to-drive-smoothly-in-minutes-450a7cdb35f4)
+Read the full article on [Medium](https://medium.com/data-science/learning-to-drive-smoothly-in-minutes-450a7cdb35f4)

@@ -16,4 +16,4 @@ caption = "Image credit: L-M Tenkes"
 
 +++
 
-Read the full article on [Medium](https://towardsdatascience.com/stable-baselines-a-fork-of-openai-baselines-reinforcement-learning-made-easy-df87c4b2fc82)
+Read the full article on [Medium](https://medium.com/data-science/stable-baselines-a-fork-of-openai-baselines-reinforcement-learning-made-easy-df87c4b2fc82)
