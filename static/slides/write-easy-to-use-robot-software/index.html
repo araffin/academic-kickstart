@@ -24,7 +24,7 @@
         <div class="reveal">
             <div class="slides">
                 <header>
-                    www.dlr.de &middot; Antonin RAFFIN &middot; Designing Software That Is Easy to Use; CoRL Workshop 2025 &middot; 27.09.2025
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Designing (Robot) Software That Is Easy to Use; CoRL Open-Source Hardware Workshop 2025 &middot; 27.09.2025
                 </header>
                 <section data-background-image="images/bg_image.jpg">
                     <div class="row bottom-xs">
@@ -45,23 +45,10 @@
                         </div>
                     </div>
                 </section>
-                <section>
+                <!--<section>
                     <h3>Background</h3>
                     <p>Learning directly on real robots</p>
-                </section>
-                <section>
-                    <!--My BG: learning directly on real robots-->
-                    <h4>Adapting quickly: Retrained from Space</h4>
-                    <div class="row">
-                        <div class="col-xs-1">
-                        </div>
-                        <div class="col-xs-11">
-                            <div class="videoWrapper">
-                                <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+                </section>-->
 
                 <section>
                     <h4>Stable-Baselines3 (SB3)</h4>
@@ -89,7 +76,6 @@
 
                     <aside class="notes">
                     What it is? Why is it there? <br>
-                    Trusted implementations <br>
                     </aside>
                 </section>
                 <section>
@@ -111,15 +97,15 @@
                     </ol>
                 </section>
                 <section>
-                    <h4>Reliable Implementations?</h4>
+                    <h4>High Quality Software</h4>
 
                     <img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/all_green.png" style="max-width: 50%" alt="">
 
                     <ul class="medium-text">
                         <!--<li class="fragment">Performance checked</li>-->
-                        <li class="fragment">Software best practices (96% code coverage, type checked, ...)</li>
+                        <li class="fragment">Software best practices (unit tests, mock hardware, typing, ...)</li>
                         <!--<li class="fragment">3 types of tests (run, unit tests, performance)</li>-->
-                        <li class="fragment">Separate optional dependencies</li>
+                        <li class="fragment">Separate optional dependencies (ex: ROS)</li>
                         <li class="fragment">Avoid breaking changes, migration guide</li>
                         <!--<li class="fragment">Active community (11k+ stars, 3500+ citations, 10M+ downloads)</li>-->
                         <li class="fragment">Fully documented</li>
@@ -161,7 +147,7 @@
                          <div class="row medium-text middle-xs">
                             <div class="col-xs-6 fragment">
                                 <img src="images/interface/Tensorflow-1.png" alt="TF1" style="max-width:90%;"/>
-                                <p>❌ Inconsistent</p>
+                                <p>❌ Confusing</p>
                             </div>
                             <div class="col-xs-6 fragment">
                                 <img src="images/interface/SB3-vs-SBX.png" alt="SB3 vs SBX" style="max-width:100%;"/>
@@ -194,6 +180,9 @@
                                 <p>✅ Automated</p>
                             </div>
                          </div>
+                         <aside class="notes">
+                             Give good default, simplify common usage.
+                         </aside>
                      </section>
                  </section>
 
@@ -221,7 +210,7 @@
                          </div>
                      </div>
                      <aside class="notes">
-                         do not have to look into 10 different to understand what is happening
+                         Each component is separated. But need to know where they are.
                      </aside>
 
                  </section>
@@ -252,6 +241,21 @@
                     </aside>
                 </section>
 
+                <section>
+                    <h4>Modular vs Minimal</h4>
+                    <div class="row middle-xs medium-text">
+                        <div class="col-xs-6 fragment">
+                            <img src="images/modular/Modular-Open-Loop-Oscillators.svg" style="max-width:90%; margin-bottom: 0;" class="" alt="">
+                            <p style="margin-top: 0;">Modular</p>
+                        </div>
+                        <div class="col-xs-6 fragment">
+                            <img src="images/modular/Open-Loop-Baseline-for-RL-Locomotion.svg" style="max-width:90%; margin-bottom: 0;" class="" alt="">
+                            <p style="margin-top: 0;">Minimal</p>
+                        </div>
+                    </div>
+
+                </section>
+
                  <section>
                     <h4>Conclusion</h4>
                     <ul class="">
@@ -262,6 +266,24 @@
 
                 <section>
                     <h4>Questions?</h4>
+                </section>
+
+                <section>
+                    <h4>Backup slides</h4>
+                </section>
+
+                <section>
+                    <!--My BG: learning directly on real robots-->
+                    <h4>Adapting quickly: Retrained from Space</h4>
+                    <div class="row">
+                        <div class="col-xs-1">
+                        </div>
+                        <div class="col-xs-11">
+                            <div class="videoWrapper">
+                                <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
             </div>
