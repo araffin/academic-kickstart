@@ -156,17 +156,19 @@
                          </div>
                      </section>
                      <section>
-                         <h5>Abstraction level</h5>
-                         <div class="row medium-text middle-xs">
-                            <div class="col-xs-12 fragment">
-                                <img src="images/interface/Bert-High-Level-Interface.svg" alt="Bert interface" style="max-width:60%;"/>
-                                <p>Flexible while still easy-to-use</p>
-                            </div>
-                         </div>
-                         <aside class="notes">
-                             Depends on who are your users.
-                             Usually missing medium-level for open-source hardware
-                         </aside>
+                        <h5>Abstraction level</h5>
+
+                        <div class="r-stack">
+                            <img class="fragment fade-out shadow" data-fragment-index="0" src="images/interface/Low-Level-API.svg">
+                            <img class="fragment shadow current-visible" data-fragment-index="0" src="images/interface/RL-API.svg" >
+                            <img class="fragment" data-fragment-index="1" src="images/interface/Bert-High-Level-Interface.svg" >
+                        </div>
+                            <p class="fragment"  data-fragment-index="1">Flexible while still easy-to-use</p>
+
+                        <aside class="notes">
+                            Depends on who are your users.
+                            Usually missing medium-level for open-source hardware
+                        </aside>
                      </section>
                      <section>
                          <h5>Automate repetitive code</h5>
@@ -284,7 +286,17 @@
                         </div>
                     </div>
                 </section>
+                <section>
+                   <h5>Tests</h5>
 
+                   <div class="r-stack">
+                       <img class="fragment fade-out shadow" data-fragment-index="0" src="images/tests/Run-Test.svg">
+                       <img class="fragment shadow current-visible" data-fragment-index="0" src="images/tests/Performance-test.svg" >
+                       <img class="fragment shadow" data-fragment-index="1" src="images/tests/Mock-Robot-Communication.svg" >
+                   </div>
+                   <aside class="notes">
+                   </aside>
+                </section>
             </div>
         </div>
 
