@@ -32,8 +32,8 @@ Illustration of a $Q$-Table representing the expected outcomes of actions for ea
 One key element to solve the discounted [RL problem](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html) is the action-value function, or $Q$-function, noted $Q^{\pi}$ for a given policy $\pi$.
 It is defined as the expected discounted return starting in state $s$, taking action $a$, and following policy $\pi$:
 
-<!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{\tau \sim \pi}{r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots \left| s_t = s, a_t = a\right.}.-->
-<img style="height: 70px;" src="./img/q_eq23.svg"/>
+<!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{\tau \sim \pi}\left[{r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots \left| s_t = s, a_t = a\right.}\right].-->
+<img style="height: 45px;" src="./img/q_eq23.svg"/>
 
 In other words, the $Q$-function gives an estimate of *how good it is to take the action $a$ in state $s$ while following a policy $\pi(s)$*.
 
@@ -42,7 +42,7 @@ The $Q$-function can be estimated recursively, also known as the Bellman equatio
 <!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{s'\sim P}\left[ r(s,a) + \gamma \mathop{\mathbb{E}}_{a'\sim \pi}\left[ Q^{\pi}(s',a') \right] \right].-->
 
 
-<img id="bellman-eq" style="height: 85px;" src="./img/q_eq24.svg"/>
+<img id="bellman-eq" style="height: 55px;" src="./img/q_eq24.svg"/>
 
 This rewrite allows to build an estimate of the $Q$-value without having to wait for terminal states.
 It is the formula used in practice.
