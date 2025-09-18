@@ -56,14 +56,14 @@ By definition of the optimal policy, which selects the actions that **max**imize
 The other way around, if we have the optimal action-value function $Q^\ast$, we can retrieve the action taken by the optimal policy $\pi^*$ using:
 
 \begin{align}
-	\pi^*(s) = \mathop{\text{argmax}}_{a \in A}{\ Q^{\ast}(s, a)}.
+  \pi^*(s) = \mathop{\text{argmax}}_{a \in A}{\ Q^{\ast}(s, a)}.
 \end{align}
 
 <!--(not optimal most of the time)-->
 Similarly, we can derive a greedy policy from the $Q$-function associated with policy $\pi$:
 
 \begin{align}
-	\pi(s) = \mathop{\text{argmax}}_{a \in A}\ Q^\pi(s, a).
+  \pi(s) = \mathop{\text{argmax}}_{a \in A}\ Q^\pi(s, a).
 \end{align}
 
 This policy is implicitly defined: we take the action that maximizes the $Q$-function.
@@ -80,9 +80,12 @@ For discrete states and actions, the $Q$-learning algorithm can be used to estim
 The idea is to start with an initial estimate for the first iteration ($n = 0$)[^initial-estimate] and slowly update the estimate over time according to the [Bellman equations](#bellman-eq).
 For each transition tuple $(s_t, a_t, r_t, s_{t+1})$, we compute the error between the <span style="color: #1864AB">estimation</span>  and the <span style="color: #A61E4D">target</span> value and update the estimate with a learning rate $\eta$:
 
-$$
-	Q^n(s_t, a_t) = Q^{n-1}(s_t, a_t) + \eta \cdot \bigl(\color{#A61E4D}{r_t + \gamma \cdot \max_{a'} Q^{n-1}(s_{t+1}, a')} - \color{#1864AB}{Q^{n-1}(s_t, a_t)}\bigr).
-$$
+<!--$$
+  Q^n(s_t, a_t) = Q^{n-1}(s_t, a_t) + \eta \cdot \bigl(\color{#A61E4D}{r_t + \gamma \cdot \max_{a'} Q^{n-1}(s_{t+1}, a')} - \color{#1864AB}{Q^{n-1}(s_t, a_t)}\bigr).
+$$-->
+
+<img style="height: 50px;" src="./img/q_learning.svg"/>
+
 
 Under the assumptions that all state-action pairs are visited an infinite number of times and that we use a learning rate $\eta \in ]0,1[$, the $Q$-learning algorithm converges to a fixed point (i.e., $Q^{n+1}(s, a) = Q^n(s, a)$): the optimal action-value function $Q^*(s, a)$.
 
