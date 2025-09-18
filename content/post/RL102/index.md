@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 title: "RL102: From Tabular Q-Learning to Deep Q-Learning (DQN)"
 date: 2025-09-16
 ---
@@ -22,6 +22,11 @@ I provide a very short formal introduction to the RL terminology used in this po
 In tabular RL, states and actions are discrete, so in this setting it is possible to represent the world as a large table.
 Each entry corresponds to a state and can be subdivided by the number of possible actions in that state.
 
+<img style="width:70%" src="./img/q_table.svg"/>
+<p style="font-size: 14pt; text-align:center;">
+Illustration of a $Q$-Table representing the expected outcomes of actions for each state.
+</p>
+
 ## Action-Value Function ($Q$-function)
 
 One key element to solve the discounted [RL problem](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html) is the action-value function, or $Q$-function, noted $Q^{\pi}$ for a given policy $\pi$.
@@ -37,7 +42,7 @@ The $Q$-function can be estimated recursively, also known as the Bellman equatio
 <!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{s'\sim P}\left[ r(s,a) + \gamma \mathop{\mathbb{E}}_{a'\sim \pi}\left[ Q^{\pi}(s',a') \right] \right].-->
 
 
-<img style="width:60%" src="./img/q_eq24.svg"/>
+<img id="bellman-eq" style="width:60%" src="./img/q_eq24.svg"/>
 
 This rewrite allows to build an estimate of the $Q$-value without having to wait for terminal states.
 It is the formula used in practice.
@@ -66,17 +71,13 @@ In the tabular case, this action is found by enumerating all possible actions.
 
 For the rest of this blog post, I will drop the $\pi$ superscript from $Q^{\pi}$ so as not to overload the notation (more indices are coming), but unless otherwise noted, $Q$ will always be $Q^{\pi}$.
 
-<img style="width:100%" src="./img/q_table_fqi.svg"/>
-<p style="font-size: 14pt; text-align:center;">
-Illustration of a $Q$-Table (left) and Fitted Q-Iteration (FQI) value estimator (right).
-Compared to the $Q$-Table, which is limited to discrete states, the FQI value estimator approximates the $Q$-value for continuous state spaces.
-</p>
-
 ## $Q$-Learning
 
-For discrete states and actions, the $Q$-learning algorithm can be used to estimate the $Q$-function of a policy, in this particular case represented as a lookup table ($Q$-table, shown above).
+For discrete states and actions, the $Q$-learning algorithm can be used to estimate the $Q$-function of a policy, in this particular case represented as a lookup table ($Q$-table, shown [above](#tabular-rl-a-discrete-world)).
 
-The idea is to start with an initial estimate for the first iteration ($n = 0$)[^initial-estimate] and slowly update the estimate over time according to the Bellman equations (see previous section).
+### An iterative algorithm
+
+The idea is to start with an initial estimate for the first iteration ($n = 0$)[^initial-estimate] and slowly update the estimate over time according to the [Bellman equations](#bellman-eq).
 For each transition tuple $(s_t, a_t, r_t, s_{t+1})$, we compute the error between the <span style="color: #1864AB">estimation</span>  and the <span style="color: #A61E4D">target</span> value and update the estimate with a learning rate $\eta$:
 
 $$
@@ -94,23 +95,27 @@ Illustration of a $Q$-function approximated by a lookup table (tabular case)
 Illustration of a $Q$-function approximated using regression (FQI)
 </p>-->
 
-<div class="d-flex align-items-baseline">
-{{< figure src="./img/tabular_limit_1.svg" class="img-responsive flex-wrap w-50" caption="fig 1" >}}
-{{< figure src="./img/tabular_limit_2.svg" class="img-responsive flex-wrap w-50" caption="fig 2" >}}
-</div>
-<p style="font-size: 14pt; text-align:center;">
-Illustration of a $Q$-function approximated by a lookup table (left, tabular case) and using regression (right, FQI)
-</p>
-
+### Limitations of $Q$-learning
 
 The main limitation of $Q$-learning and its $Q$-table is that it can only handle discrete states.
 The size of the table grows with the number of states, which becomes intractable when this number is infinite (continuous states).
 
-Moreover, it does not provide any generalization as shown in the first picture: knowing the $Q$-values for some states does not help to predict the $Q$-values of unseen states.
+<img width="50%"  src="./img/tabular_limit_1.svg"/>
+<p style="font-size: 14pt; text-align:center;">
+Illustration of a $Q$-function approximated by a lookup table (tabular case).
+</p>
+
+Moreover, it does not provide any generalization (as shown in the picture above): knowing the $Q$-values for some states does not help to predict the $Q$-values of unseen states.
 
 ## Function Approximation and Fitted Q-Iteration (FQI)
 
-A straightforward extension to $Q$-learning is to estimate the $Q$-function using function approximation instead of a $Q$-table, displayed in the previous section.
+A straightforward extension to $Q$-learning is to estimate the $Q$-function using function approximation instead of a $Q$-table, as displayed in the figure below:
+
+<img style="width:100%" src="./img/q_table_fqi.svg"/>
+<p style="font-size: 14pt; text-align:center;">
+Illustration of a $Q$-Table (left) and Fitted Q-Iteration (FQI) value estimator (right).
+Compared to the $Q$-Table, which is limited to discrete states, the FQI value estimator approximates the $Q$-value for continuous state spaces.
+</p>
 
 ### A Regression Problem
 
@@ -129,6 +134,15 @@ where $\color{#1864AB}{X = (s_t, a_t)}$ is the input, $\color{#A61E4D}{Y = r_t +
 
 This is similar to what the $Q$-learning algorithm does.
 
+<div class="d-flex align-items-baseline">
+{{<figure src="./img/tabular_limit_1.svg" class="img-responsive flex-wrap w-50">}}
+{{<figure src="./img/tabular_limit_2.svg" class="img-responsive flex-wrap w-50">}}
+</div>
+<p style="font-size: 14pt; text-align:center;">
+Illustration of a $Q$-function approximated by a lookup table (left, tabular case) and using regression (right, FQI)
+</p>
+
+
 Since the target $\color{#A61E4D}{Y}$ used to update $Q_{\theta}$ depends on $Q_{\theta}$ itself, we need to iterate.
 
 Computing an iterative approximation of the $Q$-function using regression is the main idea behind the [Fitted Q-Iteration](https://www.jmlr.org/papers/volume6/ernst05a/ernst05a.pdf) algorithm (FQI), presented below.
@@ -141,6 +155,8 @@ In Python code, this is how the FQI algorithm looks like:
 initial_targets = rewards
 # Initial Q-value estimate
 qf_input = np.concatenate((states, actions))
+# qf_model can be any sklearn regression model
+# for instance: qf_model = LinearRegression()
 qf_model.fit(qf_input, initial_targets)
  
 for _ in range(N_ITERATIONS):
@@ -163,9 +179,11 @@ FQI is a step toward a more practical algorithm, but it still has some limitatio
 2. A loop over actions is needed to obtain $\max_{a' \in \mathcal{A}}Q^{n-1}_\theta(\ldots)$, which is inefficient
 3. Because $Q_\theta^{n}$ depends on $Q_\theta^{n-1}$, this leads to instability (the regression target is constantly moving)
 
-## Deep Q-Learning (DQN)
+## Deep Q-Learning (DQN) - Extending FQI
 
 The [Deep Q-Learning](https://arxiv.org/abs/1312.5602) (DQN) algorithm introduces several components to overcome the limitations of FQI.
+
+### Experience Replay
 
 First, instead of having a fixed dataset of transitions, DQN uses [experience replay](https://apps.dtic.mil/sti/tr/pdf/ADA261434.pdf), also called a replay buffer.
 
@@ -188,14 +206,18 @@ This breaks the correlation between consecutive samples, allows the agent to lea
 DQN replay buffer sampling.
 </p>
 
-DQN collects samples using an $\epsilon$-greedy strategy (see below): at each step, it chooses a random action with a probability $\epsilon$, or otherwise follows the greedy policy (take the action with the highest $Q$-value in that state).
+### $\epsilon$-greedy Exploration
+
+<img style="width:60%" src="./img/epsilon_greedy.svg"/>
+
+DQN collects samples using an $\epsilon$-greedy strategy: at each step, it chooses a random action with a probability $\epsilon$, or otherwise follows the greedy policy (take the action with the highest $Q$-value in that state).
 
 To balance exploration and exploitation, DQN starts with $\epsilon_\text{initial} = 1$ (random policy) and linearly decreases its value until it reaches its final value, usually $\epsilon_\text{final} = 0.01$.
 
-<img style="width:100%" src="./img/dqn.svg"/>
-<p style="font-size: 14pt; text-align:center;">
-  Deep Q-Network (DQN) and its main components.
-</p>
+### $Q$-Network and Target $Q$-network
+
+<img style="width:100%" src="./img/target_net.svg"/>
+
 
 Like [Neural FQI](https://link.springer.com/chapter/10.1007/11564096_32) (NFQ), DQN uses a neural network to approximate the $Q$-function.
 However, to avoid the loop over actions of FQI, it outputs all the $Q$-values for a given state.
@@ -203,20 +225,33 @@ However, to avoid the loop over actions of FQI, it outputs all the $Q$-values fo
 Finally, to stabilize learning, DQN uses an old copy of the $Q$-network $Q_{\theta_\text{targ}}$ to compute the regression target.
 This second network, the target network, is updated every $k$ steps, so that it slowly follows the online $Q$-network.
 
-Overall, the DQN algorithm, shown below, is very similar to the FQI algorithm, the main difference being that DQN alternates between collecting new transitions and updating its network.
+### The Full DQN Algorithm
+
+<img style="width:100%" src="./img/dqn.svg"/>
+<p style="font-size: 14pt; text-align:center;">
+  Deep Q-Network (DQN) and its main components.
+</p>
+<img style="width:100%" src="https://araffin.github.io/slides/dqn-tutorial/images/dqn/annotated_dqn.png"/>
+<p style="font-size: 14pt; text-align:center;">
+  Annotated DQN algorithm from the <a href="https://arxiv.org/abs/1312.5602">DQN paper</a>.
+</p>
+
+Overall, the DQN algorithm is very similar to the FQI algorithm, the main difference being that DQN alternates between collecting new transitions and updating its network.
 
 <img style="width:100%" src="./img/dqn_algo.svg"/>
 
+## Beyond DQN: Algorithms for Continuous Action Spaces (DDPG, TD3, SAC, ...)
 
-Or, directly annotating the DQN algorithm from the DQN paper:
+In this post, I started from the tabular case, where you can use the $Q$-learning algorithm to estimate the $Q$-value function, represented as a table.
 
-<img style="width:100%" src="https://araffin.github.io/slides/dqn-tutorial/images/dqn/annotated_dqn.png"/>
+To extend the idea of $Q$-learning to continuous states, FQI replaces the $Q$-table with function approximation.
+It then refines its estimate iteratively, solving a regression problem at each step.
 
+Finally, DQN introduces several components to overcome the limitations of FQI.
+Notably it uses a neural network for faster inference and a replay buffer to re-use past data.
 
-## Beyond DQN: Continuous Action Space (DDPG, TD3, SAC, ...)
-
-The key components of DQN ($Q$-network, target network, replay buffer) are at the core of Deep RL algorithms for continuous control used on real robots such as Soft Actor-Critic (SAC).
-I will introduce these algorithms in a following blog post.
+The key components of DQN ($Q$-network, target network, replay buffer) are at the core of Deep RL algorithms for continuous control used on real robots, such as Soft Actor-Critic (SAC).
+I will introduce these algorithms in a future blog post.
 
 ## Appendix: RL101
 
