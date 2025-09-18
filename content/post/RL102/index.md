@@ -33,7 +33,7 @@ One key element to solve the discounted [RL problem](https://spinningup.openai.c
 It is defined as the expected discounted return starting in state $s$, taking action $a$, and following policy $\pi$:
 
 <!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{\tau \sim \pi}{r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + \ldots \left| s_t = s, a_t = a\right.}.-->
-<img style="width:80%" src="./img/q_eq23.svg"/>
+<img style="height: 70px;" src="./img/q_eq23.svg"/>
 
 In other words, the $Q$-function gives an estimate of *how good it is to take the action $a$ in state $s$ while following a policy $\pi(s)$*.
 
@@ -42,7 +42,7 @@ The $Q$-function can be estimated recursively, also known as the Bellman equatio
 <!--Q^{\pi}(s, a) = \mathop{\mathbb{E}}_{s'\sim P}\left[ r(s,a) + \gamma \mathop{\mathbb{E}}_{a'\sim \pi}\left[ Q^{\pi}(s',a') \right] \right].-->
 
 
-<img id="bellman-eq" style="width:60%" src="./img/q_eq24.svg"/>
+<img id="bellman-eq" style="height: 85px;" src="./img/q_eq24.svg"/>
 
 This rewrite allows to build an estimate of the $Q$-value without having to wait for terminal states.
 It is the formula used in practice.
@@ -51,7 +51,7 @@ By definition of the optimal policy, which selects the actions that **max**imize
 
 <!--Q^{\ast}(s,a) = \mathop{\mathbb{E}}_{s'\sim P}\left[ r(s,a) + \gamma \boldsymbol{\max_{a'}} \color{#5F3DC4}{Q^{\ast}(s',a')} \right].-->
 
-<img style="width:60%" src="./img/q_eq25.svg"/>
+<img style="height: 60px;" src="./img/q_eq25.svg"/>
 
 The other way around, if we have the optimal action-value function $Q^\ast$, we can retrieve the action taken by the optimal policy $\pi^*$ using:
 
@@ -128,7 +128,7 @@ In other words, the $Q$-value estimation problem can be formulated as a regressi
 \frac{1}{2} \bigl(\color[rgb]{0.65,0.12,0.30}{Y} - \color[rgb]{0.09,0.39,0.67}{f_{\theta}(X)}\bigr)^2
 \end{align}-->
 
-<img style="width:50%" src="./img/fqi_eq29.svg"/>
+<img style="height: 110px;" src="./img/fqi_eq29.svg"/>
 
 where $\color{#1864AB}{X = (s_t, a_t)}$ is the input, $\color{#A61E4D}{Y = r_t + \gamma \cdot \max_{a' \in \mathcal{A}} \ldots }$ is the target, $\theta$ are the parameters to be optimized[^regression], and $\mathcal{L}$ is the loss function.
 
@@ -264,7 +264,7 @@ More formally, the goal is to maximize the expectation of the sum of discounted 
 
 <!--J = \sum_t \mathbb{E}_{(\mathbf{s}_t,\mathbf{a}_t)\sim\rho_\pi}\left[ \gamma^t \, r(\mathbf{s}_t,\mathbf{a}_t) \right]-->
 
-<img style="width:50%" src="./img/rl_obj.svg"/>
+<img style="height: 60px;" src="./img/rl_obj.svg"/>
 
 where $\gamma \in [0,1)$ is the discount factor and represents a trade-off between maximizing short-term and long-term rewards.
 The agent-environment interactions are often broken down into sequences called *episodes*, that end when the agent reaches a terminal state.
