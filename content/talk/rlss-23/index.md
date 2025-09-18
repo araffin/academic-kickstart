@@ -24,6 +24,7 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
+url_project: https://araffin.github.io/post/rl102/
 url_slides: slides/dqn-tutorial/
 url_code: https://github.com/araffin/rlss23-dqn/
 
@@ -51,3 +52,5 @@ projects:
 # Enable math on this page?
 math: false
 ---
+
+A blog post of this talk can be found here: https://araffin.github.io/post/rl102/
