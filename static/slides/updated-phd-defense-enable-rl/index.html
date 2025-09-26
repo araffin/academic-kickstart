@@ -301,7 +301,7 @@
                             <li class="fragment">Performance checked</li>
                             <li class="fragment">Software best practices (96% code coverage, type checked, ...)</li>
                             <!-- <li class="fragment">3 types of tests (run, unit tests, performance)</li> -->
-                            <li class="fragment">Active community (11k+ stars, 3500+ citations, 10M+ downloads)</li>
+                            <li class="fragment">Active community (11k+ stars, 3700+ citations, 12M+ downloads)</li>
                             <li class="fragment">Fully documented</li>
                         </ul>
                         <aside class="notes">
@@ -316,37 +316,6 @@
                     <img src="images/outlook/sb3_rl_zoo.png" alt="">
                     <aside class="notes">
                         What am I using to run RL experiment?<br>
-                        why? features?
-                    </aside>
-                </section>
-
-                <section>
-                    <div class="row">
-                        <div class="col-xs-12">
-                            <h4>RL Zoo: Reproducible Experiments</h4>
-                            <p class="medium-text">
-                                <a href="https://github.com/DLR-RM/rl-baselines3-zoo">
-                                    https://github.com/DLR-RM/rl-baselines3-zoo
-                                </a>
-                            </p>
-                        </div>
-
-                    </div>
-                    <div class="row medium-text">
-                        <div class="col-xs-8">
-                            <ul>
-                                <li class="fragment">Training, loading, plotting, hyperparameter optimization</li>
-                                <!-- <li class="fragment">W&B integration</li> -->
-                                <li class="fragment">Everything that is needed to reproduce the experiment is logged</li>
-                                <li class="fragment">200+ trained models with tuned hyperparameters</li>
-                            </ul>
-                        </div>
-                        <div class="col-xs-4">
-                            <img src="https://github.com/DLR-RM/rl-baselines3-zoo/raw/master/images/car.jpg" class="shadow" alt="">
-                        </div>
-                    </div>
-
-                    <aside class="notes">
                         RL Zoo: log everything that is needed to reproduce/compare automatically <br>
                         Minimize potential mistake when running experiments <br>
                     </aside>
@@ -485,6 +454,10 @@
                         <!-- <li style="color:grey;">Integrating Pose Estimation</li> -->
                         <li style="font-weight:bold;">Combining Pose Estimation/Oscillators and RL</li>
                     </ol>
+                    <aside class="notes">
+                        So far learn from scratch <br>
+                        now: include expert/prior knowledge to learn faster/better
+                    </aside>
                 </section>
 
                 <section>
@@ -589,8 +562,7 @@
                     </div>
                     <aside class="notes">
                         Reduces search space<br>
-                        RL only a delta, safer, also about action space<br>
-                        more on cost of generality later
+                        RL only a delta, safer, also about action space
                     </aside>
                 </section>
 
@@ -688,6 +660,8 @@
                         </div>
                     </div>
                     <aside class="notes">
+                        For the neck task: pose estimation<br>
+                        if inverted: feedforward controller, similar to open-loop
                     </aside>
                 </section>
 
@@ -704,7 +678,6 @@
 
                 <section>
                     <h4>Neck Control Results</h4>
-                    <!-- TODO: remove HER?  -->
                     <div class="col-xs-12">
                         <img src="images/neck/Training_Success_Rate.svg" style="max-width:70%;"/>
                     </div>
@@ -722,7 +695,7 @@
                         </li>
                        <li class="fragment">
                         Sample efficiency <br>
-                        <span class="medium-text fragment">➜ <b>prior knowledge, recent algorithms</b></span>
+                        <span class="medium-text fragment">➜ <b>prior knowledge, sample-efficient algorithms (DroQ in SBX)</b></span>
                         </li>
                        <li class="fragment">
                         Real-time constraints <br>
@@ -730,7 +703,8 @@
                        </li>
                        <li class="fragment">
                         Computational resource constraints <br>
-                        <span class="medium-text fragment">➜ <b>open-loop oscillators, deploy with ONNX, fast pose estimation</b></span>
+                        <!--, fast pose estimation-->
+                        <span class="medium-text fragment">➜ <b>open-loop oscillators, export SB3 policies (ONNX)</b></span>
                         </li>
                     </ol>
 
@@ -766,7 +740,7 @@
                     <h3>Questions?</h3>
                     <div class="row middle-xs">
                         <div class="col-xs-12">
-                            <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                            <video src="https://b2drop.eudat.eu/s/gGDmQXF7YMpdtg8/download/bert_outdoor.mp4" controls muted></video>
                         </div>
                     </div>
                 </section>
@@ -774,6 +748,16 @@
                 <section>
                     <h4>Backup Slides</h4>
                 </section>
+
+                <section>
+                    <h3>Learning from human feedback</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-12">
+                            <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                        </div>
+                    </div>
+                </section>
+
                 <section>
                     <h4>Simulation to reality (2)</h4>
                     <p class="small-text">...in reality.</p>
@@ -913,6 +897,41 @@
                         </div>
                     </div>
                 </section>
+
+                <section>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <h4>RL Zoo: Reproducible Experiments</h4>
+                            <p class="medium-text">
+                                <a href="https://github.com/DLR-RM/rl-baselines3-zoo">
+                                    https://github.com/DLR-RM/rl-baselines3-zoo
+                                </a>
+                            </p>
+                        </div>
+
+                    </div>
+                    <div class="row medium-text">
+                        <div class="col-xs-8">
+                            <ul>
+                                <li class="fragment">Training, loading, plotting, hyperparameter optimization</li>
+                                <!-- <li class="fragment">W&B integration</li> -->
+                                <li class="fragment">Everything that is needed to reproduce the experiment is logged</li>
+                                <li class="fragment">200+ trained models with tuned hyperparameters</li>
+                            </ul>
+                        </div>
+                        <div class="col-xs-4">
+                            <img src="https://github.com/DLR-RM/rl-baselines3-zoo/raw/master/images/car.jpg" class="shadow" alt="">
+                        </div>
+                    </div>
+
+                    <aside class="notes">
+                        RL Zoo: log everything that is needed to reproduce/compare automatically <br>
+                        Minimize potential mistake when running experiments <br>
+                    </aside>
+
+                </section>
+
+
                 <section>
                     <h4>Plotting</h4>
                     <div class="row medium-text">
@@ -928,9 +947,8 @@
                     </div>
                 </div>
                 <aside class="notes">
-                    All experiments are formatted the same,
-                    makes it easy to plot/compare/follow best practices
-
+                    All experiments are formatted the same,<br>
+                    makes it easy to plot/compare/follow best practices<br>
                 </aside>
 
                 </section>
