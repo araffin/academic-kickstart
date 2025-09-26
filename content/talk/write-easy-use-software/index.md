@@ -25,7 +25,7 @@ featured: false
 
 url_project: https://open-hardware-robots.github.io/CoRL2025/
 url_slides: slides/write-easy-to-use-robot-software/
-url_video:
+url_video: https://www.youtube.com/watch?v=ZVPIJzF1df4
 
 
 #image:
