@@ -397,7 +397,7 @@
                             <img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:70%;"/>
                         </div>
                         <p class="xsmall-text">
-                            Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+                            Antonin Raffin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
                         </p>
                         <aside class="notes">
                             alternative: low-pass filter
@@ -411,21 +411,23 @@
                                     \[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
                                 </div> -->
                             <div class="col-xs-12">
-                                <img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:60%;"/>
                             </div>
                             <div class="col-xs-6 fragment">
+                                <img src="images/unstructured.svg" width="90%" class="" alt="Independent noise"/>
+
                                     Independent Gaussian noise:
                                     \[ \epsilon_t \sim \mathcal{N}(0, \sigma) \]
                                     \[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t \]
                             </div>
                             <div class="col-xs-6 fragment">
+                                <img src="images/gsde.svg" width="90%" class="" alt="gSDE"/>
                                 gSDE:
                                 \[ \theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) \]
                                 \[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(z_t; \theta_{\epsilon}) \]
                             </div>
                             <div class="col-xs-12">
                                 <p class="medium-text" style="margin-bottom: 0;">
-                                Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+                                Antonin Raffin, Jens Kober & Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL, 2022.
                                 </p>
                             </div>
                         </div>
@@ -829,7 +831,7 @@
                         </div>
                     </div>
                     <p class="xsmall-text">
-                        Raffin, Antonin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
+                        Antonin Raffin, Jens Kober, and Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL. PMLR, 2022.
                     </p>
                 </section>
 
