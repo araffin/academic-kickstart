@@ -7,7 +7,7 @@ date: 2025-07-01
 This second post details how I tuned the Soft-Actor Critic (SAC) algorithm to learn as fast as PPO in the context of a massively parallel simulator (thousands of robots simulated in parallel).
 If you read along, you will learn how to automatically tune SAC for speed (i.e., minimize wall clock time), how to find better action boundaries, and what I tried that didn't work.
 
-- [Part I](../sac-massive-sim/) is about analysing why SAC doesn't work how of the box on Isaac Sim environments.
+- [Part I](../sac-massive-sim/) analyzes why SAC doesn't work out of the box on Isaac Sim environments.
 - Part II is about tuning SAC for speed and making it work as good as PPO.
 
 ## In the Previous Episode...
