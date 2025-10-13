@@ -301,8 +301,8 @@ If you manage to reliably make SAC work with an unbounded Gaussian distribution,
 
 ### KL Divergence Adaptive Learning Rate
 
-One component of PPO that allows for better performance is the learning rate schedule (although it is not critical, it ease hyperparameter tuning).
-It automatically adjusts the learning rate to maintain a constant KL divergence between two updates, ensuring that the new policy remains close to the previous one (and ensuring that the learning rate is large enough too).
+One component of PPO that allows for better performance is the learning rate schedule (although it is not critical, it eases hyperparameter tuning).
+It automatically adjusts the learning rate to maintain a constant KL divergence between two updates, ensuring that the new policy remains close to the previous one (and ensuring that the learning rate is large enough, too).
 It should be possible to do something similar with SAC.
 However, when I tried to approximate the KL divergence using either the log probability or the extracted Gaussian parameters (mean and standard deviation), it didn't work.
 The KL divergence values were too large and inconsistent.
@@ -318,8 +318,8 @@ Rather than approximating only the expected return, TQC models the distribution 
 TQC's performance tends to be on par with SAC's, but it can outperform SAC in [harder environments]((https://araffin.github.io/slides/recent-advances-rl/#/9)) (at the cost of a slightly more expensive gradient step).
 TQC also has a parameter that controls the overestimation bias of the Q-value function (how many top quantiles to drop).
 
-While writting this blog (and doing experiments), TQC tended to be more easy to tune.
-However, after finding good hyperparmaters for speed, SAC was faster and reach equivalent performance compared to TQC (except on the Disney robot env where TQC tend to work better).
+While writing this blog (and doing experiments), TQC tended to be easier to tune.
+However, after finding good hyperparameters for speed, SAC was faster and reached equivalent performance compared to TQC (except on the Disney robot env where TQC tends to work better).
 
 <!-- and also tried to limit the overestimation of the $Q$-value by dropping more quantiles:
 ```python
