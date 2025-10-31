@@ -31,6 +31,14 @@ date_format = "January 2006"
   """
 
 [[experience]]
+  title = "PhD in Robotics"
+  company = "Technical University of Munich (TUM)"
+  location = "Munich"
+  date_start = "2018-10-16"
+  date_end = "2025-10-28"
+  description = "PhD Thesis: Enabling Reinforcement Learning on Real Robots"
+
+[[experience]]
   title = "Research Engineer"
   company = "ENSTA ParisTech - U2IS robotics lab"
   company_url = ""
