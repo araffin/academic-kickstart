@@ -4,7 +4,7 @@ event: PhD Defense
 event_url:
 location: TUM, Munich, Germany
 summary:
-abstract:
+abstract: This dissertation makes several contributions to the training of reinforcement learning agents directly on real robots. It introduces a reliable software suite and a new exploration strategy to replace the standard step-based one. The thesis also explores additional types of expert knowledge to guide RL, focusing on an elastic neck and quadruped locomotion. The presented approaches are extensively validated through experiments on four different robots.
 
 # Talk start and end times.
 #   End time can optionally be hidden by prefixing the line with `#`.
@@ -25,7 +25,7 @@ featured: false
 
 url_project:
 url_slides: slides/updated-phd-defense-enable-rl/
-url_video:
+url_video: https://www.youtube.com/watch?v=3UKVTJU89Lc
 
 
 #image:
