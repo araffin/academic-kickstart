@@ -17,7 +17,8 @@ Note: this post is part of my PhD Thesis (to be published).
 While FQI and DQN algorithms can handle continuous state spaces, they are still limited to discrete action spaces.
 Indeed, <span style="color:#5F3DC4">all possible actions</span> 
 ($\color{#5F3DC4}{a \in \mathcal{A}}$) must be enumerated to compute $\max_{a' \in \mathcal{A}}Q^{n-1}_\theta(\ldots)$
-(see [part I](../rl102/#the-full-dqn-algorithm)), used to update the $Q$-value estimate and select the action according to the greedy policy[^greedy].
+(see [part I](../rl102/#the-full-dqn-algorithm)).
+This $\max$ operation is used to update the $Q$-value estimate and select the action according to the greedy policy[^greedy].
 
 One solution to enable $Q$-learning in continuous action space is to parametrize the $Q$-function so that its maximum can be easily and analytically determined.
 This is what the [Normalized Advantage Function (NAF)](https://arxiv.org/abs/1603.00748) does by restricting the $Q$-function to a function quadratic in $a$.
@@ -40,13 +41,14 @@ The DDPG actor's loss is therefore:
 <!--\end{align}-->
 <img style="height: 50px;" src="./img/ddpg.svg"/>
 
-For the update of the $Q$-function $Q_\theta$, DDPG uses the same regression target as DQN.
-
 <img width="100%"  src="./img/ddpg_grad_flow.svg"/>
 <p style="font-size: 14pt; text-align:center;">
   DDPG update of the actor network.
   The gradient computed using the DDPG loss is backpropagated through the $Q$-network to update the actor network so that it maximizes the $Q$-function.
 </p>
+
+For the update of the $Q$-function $Q_\theta$, DDPG uses the same regression target as DQN.
+
 
 DDPG extends DQN to continuous actions but has some practical limitations.
 $\pi_{\phi}$ tends to exploit regions of the state space where the $Q$-function [overestimates the $Q$-value](https://arxiv.org/abs/1802.09477), as shown below.
