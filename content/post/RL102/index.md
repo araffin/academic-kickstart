@@ -8,7 +8,7 @@ This blog post is meant to be a practical introduction to (deep) reinforcement l
 For a more in-depth and theoretical introduction, I recommend reading the [RL Bible](http://incompleteideas.net/book/the-book-2nd.html) by Sutton and Barto.
 
 The plan for this post is to start from tabular Q-learning and work our way up to Deep Q-learning (DQN). 
-In a following post, I will continue on to the Soft Actor-Critic (SAC) algorithm and its extensions.
+In a [following post (RL103)](../rl103), I continue on to the Soft Actor-Critic (SAC) algorithm and its extensions.
 
 The associated code and notebooks for this tutorial can be found on GitHub: https://github.com/araffin/rlss23-dqn-tutorial
 
@@ -254,7 +254,7 @@ Finally, DQN introduces several components to overcome the limitations of FQI.
 Notably it uses a neural network for faster inference and a replay buffer to re-use past data.
 
 The key components of DQN ($Q$-network, target network, replay buffer) are at the core of Deep RL algorithms for continuous control used on real robots, such as Soft Actor-Critic (SAC).
-I will introduce these algorithms in a future blog post.
+I introduce these algorithms in the [next blog post (RL103)](../rl103).
 
 ## Appendix: RL101
 
@@ -274,6 +274,35 @@ The agent-environment interactions are often broken down into sequences called *
 
 In the example of learning to walk, if the goal is to achieve the fastest speed, an immediate reward can be the distance traveled between two timesteps.
 The state would be the current information about the robot (joint positions, velocities, torques, linear acceleration, ...) and the action would be a desired motor position.
+
+## Appendix: DQN Code
+
+Similar to FQI, the [DQN update](https://github.com/DLR-RM/stable-baselines3/blob/c6ce50fc7020eb8c009d9579e0c0dbbdba024bc0/stable_baselines3/dqn/dqn.py#L187) looks like that:
+
+```python
+# Sample replay buffer
+replay_data = replay_buffer.sample(batch_size)
+
+with th.no_grad():
+    # Compute the next Q-values using the target network
+    next_q_values = q_net_target(replay_data.next_observations)
+    # Follow greedy policy: use the one with the highest value
+    next_q_values, _ = next_q_values.max(dim=1)
+    # 1-step TD target (handle both terminated and not terminated states in one line)
+    target_q_values = replay_data.rewards + (1 - replay_data.terminated) * gamma * next_q_values
+
+# Get current Q-values estimates
+current_q_values = q_net(replay_data.observations)
+# Retrieve the q-values for the actions from the replay buffer
+current_q_values = th.gather(current_q_values, dim=1, index=replay_data.actions.long())
+
+# Compute loss
+loss = F.mse_loss(current_q_values, target_q_values)
+# Optimize the policy
+policy.optimizer.zero_grad()
+loss.backward()
+policy.optimizer.step()
+```
 
 
 
