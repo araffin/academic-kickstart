@@ -73,7 +73,7 @@ For the rest of this blog post, I will drop the $\pi$ superscript from $Q^{\pi}$
 
 ## $Q$-Learning
 
-For discrete states and actions, the $Q$-learning algorithm can be used to estimate the $Q$-function of a policy, in this particular case represented as a lookup table ($Q$-table, shown [above](#tabular-rl-a-discrete-world)).
+For discrete states and actions, the [$Q$-learning algorithm](https://en.wikipedia.org/wiki/Q-learning) can be used to estimate the $Q$-function of a policy, in this particular case represented as a lookup table ($Q$-table, shown [above](#tabular-rl-a-discrete-world)).
 
 ### An iterative algorithm
 
