@@ -6,7 +6,7 @@ date: 2025-12-12
 
 This second blog post continues my practical introduction to (deep) reinforcement learning, presenting the main concepts and providing intuitions to understand the more recent Deep RL algorithms.
 
-In a [first post (RL102)](../rl102), I started from tabular Q-learning and work my way up to Deep Q-learning (DQN). 
+In a [first post (RL102)](../rl102), I started from tabular Q-learning and worked my way up to Deep Q-learning (DQN). 
 In this second post, I continue on to the Soft Actor-Critic (SAC) algorithm and its extensions.
 
 Note: this post is part of my PhD Thesis (to be published).
@@ -32,7 +32,8 @@ In other words, $\pi_{\phi}$ is the actor network with parameters $\phi$ and out
 \end{align}
 
 This idea, developed by the [Deep Deterministic Policy Gradient (DDPG)](https://arxiv.org/abs/1509.02971) algorithm, provides an explicit deterministic policy $\pi_{\phi}$ for continuous actions.
-Since $Q_\theta$ and $\pi_{\phi}$ are both differentiable, the actor network $\pi_{\phi}$ is directly trained to maximize $Q_\theta(s, \pi_{\phi}(s))$ using samples from the replay buffer $\mathcal{D}$ as illustrated below:
+Since $Q_\theta$ and $\pi_{\phi}$ are both differentiable, the actor network $\pi_{\phi}$ is directly trained to maximize $Q_\theta(s, \pi_{\phi}(s))$ using samples from the replay buffer $\mathcal{D}$ (as illustrated in the figure below).
+The DDPG actor's loss is therefore:
 
 <!--\begin{align}-->
   <!--\mathcal{L}_\pi(\phi, \mathcal{D}) = \max_{\phi} \mathbb{E}_{s \sim \mathcal{D}}\left[ Q_\theta(s, \pi_\phi(s)) \right].-->
@@ -50,15 +51,16 @@ For the update of the $Q$-function $Q_\theta$, DDPG uses the same regression tar
 DDPG extends DQN to continuous actions but has some practical limitations.
 $\pi_{\phi}$ tends to exploit regions of the state space where the $Q$-function [overestimates the $Q$-value](https://arxiv.org/abs/1802.09477), as shown below.
 
-These regions are usually those that are not well covered by samples from the buffer $\mathcal{D}$.
-Because of this interaction between the actor and critic networks, DDPG is also often unstable in practice (divergent behavior).
-
 <img width="100%"  src="./img/q_value_overestimation.svg"/>
 <p style="font-size: 14pt; text-align:center;">
   Illustration of the overestimation and extrapolation error when approximating the $Q$-function.
   In regions where there is training data (black dots), the approximation matches the true $Q$-function.
   However, outside the training data support, there may be extrapolation error (in red) and overestimation that the actor network can exploit.
 </p>
+
+These regions are usually those that are not well covered by samples from the buffer $\mathcal{D}$.
+Because of this interaction between the actor and critic networks, DDPG is also often unstable in practice (divergent behavior).
+
 
 ## Twin Delayed DDPG (TD3) and Soft Actor-Critic (SAC)
 
@@ -74,8 +76,8 @@ A common approach is to use a [step-based Gaussian noise](https://arxiv.org/abs/
 <!--\begin{align}
   \mathbf{a}_t = \pi_{\phi}(\mathbf{s}_t) + \epsilon_t,  \epsilon_t \sim \mathcal{N}(0, \sigma^2).
 \end{align}-->
-<img style="height: 40px;" src="./img/eq2161.svg"/>
-<img style="height: 40px;" src="./img/eq2162.svg"/>
+<img style="height: 25px;" src="./img/eq2161.svg"/>
+<img style="height: 25px;" src="./img/eq2162.svg"/>
 
 
 While the standard deviation $\sigma$ is usually kept constant, it is a critical hyperparameter that gives a compromise between exploration and exploitation.
@@ -90,14 +92,14 @@ To better balance exploration and exploitation, [Soft Actor-Critic (SAC)](https:
 
 
 where <span style="color:#006400">$\mathcal{H}$ is the policy entropy</span> and <span style="color:#006400">$\alpha$ is the entropy temperature</span>, allowing a trade-off between the two objectives.
-This objective encourages exploration by maximizing the entropy of the policy while still solving the task by maximizing the expected return.
+This objective encourages exploration by maximizing the entropy of the policy while still solving the task by maximizing the expected return (classic RL objective).
 
-SAC learns a stochastic policy using a squashed Gaussian distribution, and incorporates the clipped double $Q$-learning trick from TD3.
+SAC learns a stochastic policy using a [squashed Gaussian distribution](../sac-massive-sim/#sac-squashed-gaussian), and incorporates the clipped double $Q$-learning trick from TD3.
 In its [latest iteration](https://arxiv.org/abs/1812.05905), SAC automatically adjusts the entropy coefficient $\alpha$, eliminating the need to tune this crucial hyperparameter.
 
 <img style="width:100%" src="./img/sac_algo.svg"/>
 
-In summary, as shown in the algorithm block above, SAC combines several key elements from the algorithms presented in this [blog post serie](../rl102).
+In summary, as shown in the algorithm block above, SAC combines several key elements from the algorithms presented in this [blog post series](../rl102).
 It uses the update rule from FQI and adopts the Q-network, target network and replay buffer from DQN to learn the $Q$-function.
 
 SAC also incorporates techniques from DDPG to handle continuous actions, uses the clipped double $Q$-learning trick from TD3 to reduce overestimation bias, and optimizes the maximum entropy objective with a stochastic policy to balance exploration and exploitation.
@@ -121,7 +123,7 @@ The figure below illustrates the benefits of learning the distribution of return
 </p>
 
 A key idea to improve sample efficiency is to perform multiple gradient updates for each data collection step.
-However, simply increasing the update-to-data (UTD) ratio may not lead to better performance due to the overestimation bias.
+However, simply increasing the [update-to-data (UTD) ratio](../tune-sac-isaac-sim/#replay-ratio) may not lead to better performance due to the overestimation bias.
 
 To address this issue, the algorithms [REDQ](https://arxiv.org/abs/2101.05982) and [DroQ](https://arxiv.org/abs/2110.02034) rely on ensembling techniques (explicit for REDQ, implicit for DroQ with dropout).
 Finally, a new algorithm, [CrossQ](https://arxiv.org/abs/1902.05605), takes a different approach by removing the target network and using batch normalization to stabilize learning[^to-be-continued].
