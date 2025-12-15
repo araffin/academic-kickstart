@@ -12,7 +12,7 @@ In a [following post (RL103)](../rl103), I continue on to the Soft Actor-Critic 
 
 The associated code and notebooks for this tutorial can be found on GitHub: https://github.com/araffin/rlss23-dqn-tutorial
 
-Note: this post is a written version of the [tutorial](https://araffin.github.io/talk/rlss-23/) I gave at the [RL Summer School 2023](https://rlsummerschool.com/). It is also part of my PhD Thesis (to be published).
+Note: this post is a written version of the [tutorial](https://araffin.github.io/talk/rlss-23/) I gave at the [RL Summer School 2023](https://rlsummerschool.com/). It is also part of my [PhD Thesis](https://mediatum.ub.tum.de/?id=1743420).
 
 Note: I assume you are familiar with basic RL concepts, if not please have a look at this [RL 101](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html) tutorial.
 I provide a very short formal introduction to the RL terminology used in this post at the end of it.

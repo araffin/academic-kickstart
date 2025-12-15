@@ -9,7 +9,7 @@ This second blog post continues my practical introduction to (deep) reinforcemen
 In a [first post (RL102)](../rl102), I started from tabular Q-learning and worked my way up to Deep Q-learning (DQN). 
 In this second post, I continue on to the Soft Actor-Critic (SAC) algorithm and its extensions.
 
-Note: this post is part of my PhD Thesis (to be published).
+Note: this post is part of my [PhD Thesis](https://mediatum.ub.tum.de/?id=1743420).
 
 
 ## FQI and DQN Limitations

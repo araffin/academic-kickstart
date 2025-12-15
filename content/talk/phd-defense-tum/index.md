@@ -23,9 +23,10 @@ tags:
 # Is this a featured talk? (true/false)
 featured: false
 
-url_project:
+url_project: https://mediatum.ub.tum.de/?id=1743420
 url_slides: slides/updated-phd-defense-enable-rl/
 url_video: https://www.youtube.com/watch?v=3UKVTJU89Lc
+url_pdf: https://mediatum.ub.tum.de/doc/1743420/1743420.pdf
 
 
 #image:
