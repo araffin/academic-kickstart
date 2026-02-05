@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Recent Advances in Reinforcement Learning for Continuous Control | SOTA Early 2026</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+        <link rel="stylesheet" href="dist/reveal.css">
+        <link rel="stylesheet" href="dist/theme/white.css" id="theme">
+        <!-- Add DLR logo -->
+        <link rel="stylesheet" href="css/dlr.css">
+        <!-- Grid system: http://flexboxgrid.com/ -->
+        <link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+        <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+    </head>
+    <body>
+        <div class="side-block">
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <header>
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Recent Advances in RL for Continuous Control | SOTA Early 2026 &middot; Mannheim RL Workshop &middot; 06.02.2026
+                </header>
+                <section data-background-image="images/bg_image.jpg">
+                    <div class="row bottom-xs">
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <h2 id='main-title'>Recent Advances in RL for Continuous Control</h2>
+                                <h3 id="subtitle">Early 2026 update | Model free RL</h3>
+                            </div>
+                            <div class="col-xs-12">
+                                <img class="shadow" style="max-width: 45%" src="images/surface_avatar.jpg">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 xsmall-text">
+                            Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
+                            <span class="italic">German Aerospace Center (DLR)</span><br>
+                            <a href="https://araffin.github.io/">https://araffin.github.io/</a>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>RL 101</h4>
+
+                    <div class="r-stack">
+                        <img class="fragment shadow" src="https://araffin.github.io/slides/phd-defense-enable-rl/images/rl101/bert_surface.png">
+                        <img class="fragment" src="https://araffin.github.io/slides/phd-defense-enable-rl/images/rl101/bert_agent_text.png">
+                        <img class="fragment" src="https://araffin.github.io/slides/phd-defense-enable-rl/images/rl101/bert_env_text.png">
+                        <img class="fragment" src="https://araffin.github.io/slides/phd-defense-enable-rl/images/rl101/bert_rl_full.png">
+                    </div>
+                    <aside class="notes">
+                        Explain the goal of RL
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Two lines of improvements</h3>
+
+                    <div class="row">
+                        <div class="col-xs-6 fragment">
+                            <img src="images/sample_efficiency.png" class="shadow">
+                            <p>
+                                Sample efficiency<sup class="fragment">*</sup><br>
+                                <span class="small-text">
+                                    Ex: real robot, slow simulation
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-xs-6 fragment">
+                            <img src="images/time_efficiency.png" class="shadow">
+                            <p>
+                                Speed<br>
+                                <span class="small-text">
+                                    Ex: fast simulation on GPU, slow algorithm
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Today focus, another line: improve performance
+                    </aside>
+                </section>
+
+                <section>
+                    <h4>Outline</h4>
+                    <ol>
+                        <li style="font-weight: bold;">RL 103 (from DQN to SAC)</li>
+                        <li style="color:lightgrey;">Improving Sample-Efficiency</li>
+                        <li style="color:lightgrey;">Faster Training</li>
+                    </ol>
+                    <aside class="notes">
+
+                    </aside>
+                </section>
+                <section>
+                    <section>
+                        <h3>From DQN to SAC (in 10 minutes)</h3>
+                        <p class="medium-text">
+
+                        </p>
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <img style="max-width:50%" src="images/rl_102.png" alt="">
+                            <p class="small-text">
+                                From Tabular Q-Learning to Deep Q-Learning (DQN)
+                                <a href="https://araffin.github.io/post/rl102/">
+                                    https://araffin.github.io/post/rl102/
+                                </a>
+                            </p>
+                        </div>
+                        <div class="col-xs-6">
+                            <img style="max-width:50%" src="images/rl_103.png" alt="">
+                            <p class="small-text">
+                                From Deep Q-Learning (DQN) to Soft Actor-Critic (SAC) and Beyond
+                                <a href="https://araffin.github.io/post/rl103/">
+                                    https://araffin.github.io/post/rl103/
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+
+                    </section>
+                    <section>
+                        <h3>Deep Q-Network (DQN)</h3>
+                        <div class="row">
+                            <div class="col-xs-7">
+                                <img src="https://araffin.github.io/slides/dqn-tutorial/images/dqn_nature.png" alt="DQN" style="max-height: 80%">
+                            </div>
+                            <div class="col-xs-5">
+                                <video style="width: 80%" src="https://huggingface.co/sb3/a2c-BreakoutNoFrameskip-v4/resolve/main/replay.mp4" controls></video>
+                            </div>
+                        </div>
+                        <p class="xsmall-text">
+                            Mnih, Volodymyr, et al. "Playing atari with deep reinforcement learning." (2013).
+                        </p>
+                    </section>
+                    <section>
+                        <h3>RL Objective</h3>
+                        <p>
+                            Maximize the sum of discounted reward
+                        </p>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="fragment" style="font-size:80%; text-align:center">
+                                    \[\begin{aligned}
+                                    J(\pi) = \mathop{\mathbb{E}}[r_0 + \gamma r_{1} + \gamma^2 r_{2} + ...].
+                                    \end{aligned} \]
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                         <h5>Action-Value Function: $Q$-Value</h5>
+                         <p>How good is it to take action $a$ in state $s$?</p>
+                         <div class="row">
+                             <div class="col-xs-12">
+                                <div class="fragment" style="font-size:80%; text-align:center;">
+                                    \[\begin{aligned}
+                                    Q^\pi(s, a) = \mathop{\mathbb{E}}[r_t + \gamma r_{t+1} + \gamma^2 r_{t+2} + ... | s_t=s, a_t=a].
+                                    \end{aligned} \]
+                                </div>
+                                <p class="fragment medium-text">
+                                    \[\begin{aligned}
+                                    \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
+                                    \end{aligned} \]
+                                </p>
+                                <div class="fragment" style="font-size:80%; text-align:center">
+                                    <span>Bellman equation (practical):</span>
+                                    \[\begin{aligned}
+                                        Q^{\pi}(s, a) &= \mathbb{E}[r_t + \gamma \mathbb{E}_{a'\sim \pi}{Q^{\pi}(s_{t+1},a')}].
+                                    \end{aligned}\]
+                                </div>
+
+                             </div>
+                         </div>
+                    </section>
+
+                    <section>
+                        <h3>DQN Components</h3>
+                        <div class="row bottom-xs medium-text">
+                            <div class="col-xs-12">
+                                <img src="images/dqn/dqn.svg" width="80%">
+                                <p class="small-text">
+                                    <a href="https://github.com/araffin/rlss23-dqn-tutorial">
+                                        RL Summer School 2023 - DQN Tutorial
+                                    </a>
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>The training loop</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img src="./images/dqn/dqn_loop.png" alt="DQN" style="max-height: 80%">
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Extending DQN to Continuous Actions (DDPG)</h3>
+                        <p class="fragment medium-text">
+                            Discrete actions:
+                            \[\begin{aligned}
+                            \pi(s) = \argmax_{a \in A} Q^\pi(s, a)
+                            \end{aligned} \]
+                        </p>
+                        <p class="fragment">
+                            Learn to maximize the $Q$-function using $\pi_{\phi}$.
+                        </p>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <div class="fragment" style="font-size:80%; text-align:center">
+                                    \[\begin{aligned}
+                                    \max_{a \in A} Q_\theta(s, a) \approx Q_\theta(s, \pi_{\phi}(s)).
+                                    \end{aligned} \]
+                                </div>
+                            </div>
+                        </div>
+                        <p class="xsmall-text">
+                            Lillicrap, Timothy P., et al. "Continuous control with deep reinforcement learning." (2015).
+                            <br>
+                            Korkmaz, Yigit, et al. "Actor-Free Continuous Control via Structurally Maximizable Q-Functions." (2025).
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Deep Deterministic Policy Gradient (DDPG)</h3>
+                        <!--<img style="width: 80%" src="images/dqn/ddpg.svg">-->
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="images/DDPGLoss.mp4" controls></video>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Overestimation bias</h3>
+                        <!--<img class="fragment" style="width: 80%" src="images/dqn/q_value_overestimation.svg">-->
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="images/QOverestimation.mp4" controls></video>
+                            </div>
+                        </div>
+
+                        <p class="fragment">
+                            TD3: select the min of $Q^1_\theta$ and $Q^2_\theta$
+                        </p>
+                        <p class="xsmall-text">
+                            Fujimoto, Scott, Herke Hoof, and David Meger. "Addressing function approximation error in actor-critic methods. (TD3)" (2018).
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Soft Actor-Critic (SAC)</h3>
+                        <p class="fragment">
+                            SAC $\approx$ DQN + DDPG + TD3 + Maximum entropy RL
+                        </p>
+                        <p class="fragment">
+                            Maximum <span style="color:darkgreen;">entropy</span> RL: encourage <span style="color:darkgreen;">exploration</span> while still <span style="color:darkblue;">solving the task</span>
+                        </p>
+                        <div class="fragment" style="font-size:80%; text-align:center">
+                            \[\begin{aligned}
+                            J(\pi) = \mathop{\mathbb{E}}[\sum_{t}{\textcolor{darkblue}{\gamma^t r(s_t, a_t)} + \textcolor{darkgreen}{\alpha\mathcal{H}(\pi({\,\cdot\,}|s_t))}}].
+                            \end{aligned} \]
+                        </div>
+                        <p class="medium-text fragment">
+                            Ex: Avoid the variance of the Gaussian distribution to collapse too early
+                        </p>
+                        <p class="xsmall-text">
+                            Haarnoja, Tuomas, et al. "Soft actor-critic: Off-policy maximum entropy deep reinforcement learning with a stochastic actor." (2018).
+                        </p>
+
+                    </section>
+                    <section>
+                        <h3>Questions?</h3>
+                    </section>
+                    <section>
+                        <h3>Annotated DQN Algorithm</h3>
+                        <img src="https://araffin.github.io/slides/dqn-tutorial/images/dqn/annotated_dqn.png" style="max-height:100%;">
+                    </section>
+                </section>
+                <section>
+                    <h4>Outline</h4>
+                    <ol>
+                        <li style="color: grey;">RL 103 (from DQN to SAC)</li>
+                        <li style="font-weight: bold;">Improving Sample-Efficiency</li>
+                        <li style="color:lightgrey;">Faster Training</li>
+                    </ol>
+                    <aside class="notes">
+
+                    </aside>
+                </section>
+                <section>
+                    <h3>Beyond SAC: TQC, DroQ, SimBa, ...</h3>
+                </section>
+                <section>
+                    <h3>Stochastic Environments</h3>
+                    <p class="small-text">Same state $s_t$, same action $a_t$, different outcome $r(s_t, a_t)$</p>
+                    <img class="" style="max-width: 50%" src="images/dqn/norbert_cliff.png">
+                </section>
+                <section>
+                    <h3>Distributional RL</h3>
+                    <img class="fragment" style="width: 60%; margin: 0;" src="images/dqn/distributional_rl.png">
+                    <p class="fragment medium-text">TQC $\approx$ SAC + quantile regression (truncated)</p>
+                    <p class="xsmall-text">
+                        Kuznetsov, Arsenii, et al. "Controlling overestimation bias with truncated mixture of continuous distributional quantile critics." (2020).
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Higher replay ratio (REDQ, DroQ)</h3>
+                    <div class="medium-text" style="margin-top: 3em;">
+                        <p class="fragment"><b>Idea:</b> re-use samples from the replay buffer more</p>
+                        <p class="fragment"><b>Issue:</b> Naive scaling doesn't work (overestimation, extrapolation errors, loss of plasticity, ...)</p>
+                        <p class="fragment"><b>Solution(s)?</b> explicit (REDQ)/ implicit (DroQ) ensembles, regularization, ...</p>
+                    </div>
+                    <p class="xsmall-text bottom-xs" style="margin-top: 8em;">
+                        Chen, Xinyue, et al. "Randomized ensembled double q-learning: Learning fast without a model." (2021).
+                        <br>
+                        Hiraoka, Takuya, et al. "Dropout q-functions for doubly efficient reinforcement learning." (2021).
+                        <br>
+                        D'Oro, Pierluca, et al. "Sample-efficient reinforcement learning by breaking the replay ratio barrier." (2022).
+                        <br>
+                        Hussing, Marcel, et al. "Dissecting deep rl with high update ratios: Combatting value overestimation and divergence." (2024).
+                        <br>
+                        Voelcker, Claas A., et al. "MAD-TD: Model-augmented data stabilizes high update ratio rl." (2025)
+                        <br>
+                        Lee, Hojoon, et al. "Hyperspherical normalization for scalable deep reinforcement learning. (SimBaV2)" (2025)
+                    </p>
+                </section>
+                <section>
+                    <h3>$Q$-value Network and Replay Ratio</h3>
+                    <h6 data-fragment-index="1" class="fragment">SAC (RR=1)</h6>
+                    <img data-fragment-index="1" class="fragment" style="max-width: 50%;" src="images/sac_net.png">
+                    <p data-fragment-index="2" class="fragment xsmall-text" style="margin-top: 0;">
+                        Note: policy delay = replay ratio (RR) for both SAC and DroQ
+                    </p>
+                    <h6 data-fragment-index="2" class="fragment">DroQ (RR=20)</h6>
+                    <img data-fragment-index="2" class="fragment" style="max-width: 100%; margin-bottom:0;" src="images/droq_net.png">
+                    <p data-fragment-index="2" class="fragment xsmall-text" style="margin-top: 0;">
+                        Hiraoka, Takuya, et al. "Dropout q-functions for doubly efficient reinforcement learning." (2021).
+                    </p>
+
+
+                </section>
+                <section>
+                    <h4>RL from scratch in 10 minutes (DroQ)</h4>
+                    <div class="row middle-xs">
+                        <div class="col-xs-12">
+                            <video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls></video>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <p class="small-text">Using SB3 + Jax = SBX:
+                                <a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Bigger net (BRO, SimBa, ...)</h3>
+                    <h6 data-fragment-index="1" class="fragment">SAC</h6>
+                    <img data-fragment-index="1" class="fragment" style="max-width: 50%;" src="images/sac_net.png">
+
+                    <h6 data-fragment-index="2" class="fragment">SimBa</h6>
+                    <img data-fragment-index="2" class="fragment" style="max-width: 100%; margin-bottom:0;" src="images/simba_net.png">
+                    <p data-fragment-index="2" class="fragment xsmall-text" style="margin-top: 0;">
+                        Nauman, Michal, et al. "Bigger, regularized, optimistic: scaling for compute and sample efficient continuous control." (2024)
+                        <br>
+                        Lee, Hojoon, et al. "Simba: Simplicity bias for scaling up parameters in deep reinforcement learning." (2024).
+                        <br>
+                        Lee, Hojoon, et al. "Hyperspherical normalization for scalable deep reinforcement learning. (SimBaV2)" (2025)
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Additional readings</h3>
+                    <ul>
+                        <li class="fragment">CrossQ (BN, removing target)</li>
+                        <li class="fragment">XQN (BN, weight norm, C51 critic)</li>
+                        <li class="fragment">TD7, MR.Q (representation learning)</li>
+                    </ul>
+                    <p class="fragment xsmall-text">
+                        Fujimoto, Scott, et al. "For sale: State-action representation learning for deep reinforcement learning. (TD7)" (2023)
+                        <br>
+                        Bhatt, Aditya, et al. "Crossq: Batch normalization in deep reinforcement learning for greater sample efficiency and simplicity." (2024).
+                        <br>
+                        Fujimoto, Scott, et al. "Towards general-purpose model-free reinforcement learning (MR.Q)" (2025).
+                        <br>
+                        Palenicek, Daniel, et al. "XQC: Well-conditioned Optimization Accelerates Deep Reinforcement Learning." (2026).
+                    </p>
+                </section>
+
+
+                <!--<section>
+                    <h3>Questions?</h3>
+                </section>-->
+                <section>
+                    <h4>Outline</h4>
+                    <ol>
+                        <li style="color: grey;">RL 103 (from DQN to SAC)</li>
+                        <li style="color: grey;">Improving Sample-Efficiency</li>
+                        <li style="font-weight: bold;">Faster Training</li>
+                    </ol>
+                    <aside class="notes">
+
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>JIT compilation</h3>
+                    <img data-fragment-index="1" class="fragment" style="width: 70%" src="images/sb3_sbx.svg">
+                    <p data-fragment-index="1" class="fragment medium-text">Stable-Baselines3 (PyTorch) vs SBX (Jax)</p>
+                    <p class="medium-text fragment">
+                        PyTorch compile:
+                        <a href="https://github.com/pytorch-labs/LeanRL/">LeanRL</a>(5x boost)
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Massive Parallel Sim</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-12">
+                            <video style="width: 80%" src="https://b2drop.eudat.eu/public.php/dav/files/RKCWddABEtj5MFT/" controls></video>
+                        </div>
+                    </div>
+                    <!-- Also talk about differentiable sim? -->
+                    <p class="fragment">Thousands of robots in parallel, learn in minutes</p>
+                    <p class="fragment small-text">Ex: MJX (MuJoCo), Isaac Sim, Genesis, ...</p>
+                    <aside class="notes">
+                        Also: differentiable sim
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Optimizing for speed</h3>
+
+                    <img class="fragment" style="width: 70%" src="https://araffin.github.io/post/sac-massive-sim/img/learning_curve.svg">
+                    <p class="small-text fragment">
+                        <a href="https://araffin.github.io/post/sac-massive-sim/">
+                            Getting SAC to Work on a Massive Parallel Simulator (2025).
+                            <br>
+                            https://araffin.github.io/post/sac-massive-sim/
+                        </a>
+                    </p>
+                    <aside class="notes">
+                        Why? fine tune on the real robot!
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Fast TD3</h3>
+                    <ul>
+                        <li class="fragment">Large mini-batch size (similar to PPO)</li>
+                        <li class="fragment">Bigger network</li>
+                        <li class="fragment">Distributional critic</li>
+                        <li class="fragment">and more ... (ex: n-step return)</li>
+                    </ul>
+                    <p class="fragment xsmall-text">
+                        Li, Zechu, et al. "Parallel $Q$-Learning: Scaling Off-policy Reinforcement Learning." (2023)
+                        <br>
+                        Seo, Younggyo, et al. "FastTD3: Simple, Fast, and Capable Reinforcement Learning for Humanoid Control " (2025)
+                        <br>
+                        Voelcker, Claas, et al. "Relative Entropy Pathwise Policy Optimization. (REPPO)" (2026)
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Conclusion</h3>
+                    <ul>
+                        <li class="fragment">More sample-efficient algorithms (TQC, DroQ, ...)</li>
+                        <li class="fragment">Faster software (Jax, Torch compile)</li>
+                        <li class="fragment">Faster simulators (MJX, Isaac Sim, ...)</li>
+                        <li class="fragment">Current trend: more complex algorithms</li>
+                    </ul>
+                    <aside class="notes">
+                        Current trends: RAINBOW-style algorithm
+                        (combine everything), not so nice to implement/understand
+                        better would be more simplicity
+                    </aside>
+                </section>
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+
+                <section>
+                    <h3>Backup slides</h3>
+                </section>
+                <section>
+                    <h3>TQC Results</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-6"><img style="max-width: 100%" src="images/tqc_bidepal.jpeg"></div>
+                        <div class="col-xs-6">
+                            <video style="width: 80%" src="https://huggingface.co/sb3/tqc-BipedalWalkerHardcore-v3/resolve/main/replay.mp4" controls></video>
+
+                        </div>
+                    </div>
+
+                </section>
+                <section>
+                    <h3>DroQ Results</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-6"><img style="max-width: 100%" src="images/droq_hc.png"></div>
+                        <div class="col-xs-6">
+                            <video style="width: 80%" src="https://huggingface.co/sb3/tqc-HalfCheetah-v3/resolve/main/replay.mp4" controls></video>
+
+                        </div>
+                    </div>
+
+                </section>
+                <section>
+                    <h3>SimBa Results</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-6"><img style="max-width: 100%" src="images/simba.png"></div>
+                        <div class="col-xs-6">
+                            <video style="width: 80%" src="https://huggingface.co/sb3/tqc-HalfCheetahBulletEnv-v0/resolve/main/replay.mp4" controls></video>
+
+                        </div>
+                    </div>
+                    <p class="small-text">Note: can be combined with TQC/DroQ</p>
+
+                </section>
+
+                <section>
+                    <h3>PPO recipe</h3>
+
+                    <ul>
+                        <li class="fragment">Large mini-batch size (6400 - 25600 transitions)</li>
+                        <li class="fragment">Bigger network</li>
+                        <li class="fragment">KL adaptive learning rate schedule</li>
+                        <li class="fragment">Unbounded action space</li>
+                    </ul>
+                    <p class="small-text fragment">
+                        <a href="https://araffin.github.io/post/sac-massive-sim/">
+                            Getting SAC to Work on a Massive Parallel Simulator (2025).
+                        </a>
+                    </p>
+
+                </section>
+
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/math/math.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                // Display the page number of the current slide
+                slideNumber: true,
+
+                // Add the current slide number to the URL hash so that reloading the
+                // page/copying the URL will return you to the same slide
+                hash: true,
+
+                // Push each slide change to the browser history. Implies `hash: true`
+                // history: false,
+
+                // math: {
+                //  mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                //  config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                //  // pass other options into `MathJax.Hub.Config()`
+                //  // TeX: { Macros: macros }
+                // },
+
+                // Use local version of katex
+                katex: {
+                  local: 'dist/katex',
+                },
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+            });
+        </script>
+    </body>
+</html>
