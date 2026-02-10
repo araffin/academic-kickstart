@@ -41,6 +41,12 @@ The DDPG actor's loss is therefore:
 <!--\end{align}-->
 <img style="height: 50px;" src="./img/ddpg.svg"/>
 
+<video controls src="https://araffin.github.io/slides/advances-rl-sota-2026/images/DDPGLoss.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">
+  An animation of the DDPG update of the actor network.
+</p>
+
 <img width="100%"  src="./img/ddpg_grad_flow.svg"/>
 <p style="font-size: 14pt; text-align:center;">
   DDPG update of the actor network.
@@ -72,7 +78,13 @@ To overcome the limitations of DDPG, [Twin Delayed DDPG (TD3)](https://arxiv.org
 2. Delayed policy updates: TD3 updates the policy network less frequently than the $Q$-networks, allowing the policy network to converge before being updated.
 3. Target action noise: TD3 adds noise to the target action during the $Q$-network update step.
   This makes it harder for the actor to exploit the learned $Q$-function.
-  
+
+<video controls src="https://araffin.github.io/slides/advances-rl-sota-2026/images/QOverestimation.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">
+  An animation of the overestimation and extrapolation error and how TD3 tries to reduce it.
+</p>
+
 Since TD3 learns a deterministic actor network $\pi_{\phi}$, it relies on external noise during the exploration phase.
 A common approach is to use a [step-based Gaussian noise](https://arxiv.org/abs/2005.05719):
 <!--\begin{align}

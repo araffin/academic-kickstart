@@ -25,7 +25,7 @@ featured: false
 
 url_project:
 url_slides: slides/advances-rl-sota-2026/
-url_video:
+url_video: https://www.youtube.com/watch?v=Sb0dgmxbGZY
 
 
 #image:

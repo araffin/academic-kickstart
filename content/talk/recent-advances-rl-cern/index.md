@@ -25,7 +25,7 @@ featured: false
 
 url_project:
 url_slides: slides/recent-advances-rl/
-url_video:
+url_video: https://www.youtube.com/watch?v=Sb0dgmxbGZY
 
 
 #image:
