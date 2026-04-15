@@ -99,8 +99,9 @@ While the standard deviation $\sigma$ is usually kept constant, it is a critical
 To better balance exploration and exploitation, [Soft Actor-Critic (SAC)](https://arxiv.org/abs/1801.01290), successor of [Soft Q-Learning (SQL)](https://arxiv.org/abs/1702.08165), optimizes the maximum-entropy objective, which is slightly different from the [classical RL objective](../rl102#appendix-rl101):
 
 <!--\begin{align}
+  https://viereck.ch/latex-to-svg/
   \label{eq:2_maxent_objective}
-  J(\pi) = \sum_{t} \mathbb{E}_{(\mathbf{s}_t, \mathbf{a}_t) \sim \rho_\pi}\!\left[ \gamma^t\, r(\mathbf{s}_t,\mathbf{a}_t) + \color{#006400}{\alpha\,\mathcal{H}(\pi(\cdot \mid \mathbf{s}_t))} \right]
+  J(\pi) = \sum_{t} \mathbb{E}_{(\mathbf{s}_t, \mathbf{a}_t) \sim \rho_\pi}\!\left[ \gamma^t [r(\mathbf{s}_t,\mathbf{a}_t) + \color{#006400}{\alpha\,\mathcal{H}(\pi(\cdot \mid \mathbf{s}_t))}] \right]
 \end{align}-->
 <img style="height: 55px;" src="./img/eq217.svg"/>
 
