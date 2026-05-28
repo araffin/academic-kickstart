@@ -26,7 +26,7 @@ featured: false
 
 # url_project: https://araffin.github.io/post/rl102/
 url_slides: slides/rlss26-bbo-pg/
-url_code: github.com/araffin/rlss26-pg-tutorial
+url_code: https://github.com/araffin/rlss26-pg-tutorial
 
 
 #image:
