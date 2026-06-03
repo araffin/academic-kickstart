@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Exploration in Continuous Control RL</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+        <link rel="stylesheet" href="dist/reveal.css">
+        <link rel="stylesheet" href="dist/theme/white.css" id="theme">
+        <!-- Add DLR logo -->
+        <link rel="stylesheet" href="css/dlr.css">
+        <!-- Grid system: http://flexboxgrid.com/ -->
+        <link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+        <link rel="stylesheet" href="plugin/highlight/atom-one-dark.css" id="highlight-theme">
+    </head>
+    <body>
+        <div class="side-block">
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <header>
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Exploration in Continuous Control RL &middot; ICRA 26 Xplore Workshop &middot; 05.06.2026
+                </header>
+
+                <section data-background-image="images/bg_image.jpg">
+                    <div class="row bottom-xs">
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <h2 id="main-title">Exploration in Continuous Control RL</h2>
+                            </div>
+                            <div class="col-xs-12">
+                                <img class="" style="max-width: 60%" src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/mosaic2.jpg">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 xsmall-text">
+                            Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
+                            <span class="italic">German Aerospace Center (DLR)</span><br>
+                            <a href="https://araffin.github.io/">https://araffin.github.io/</a>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>What is Exploration in RL?</h3>
+                    <div class="r-stack">
+                        <img data-fragment-index="1" style="max-width: 70%;" class="fragment current-visible" src="images/line_follower/line_following.png">
+                        <img data-fragment-index="2" style="max-width: 70%;" class="fragment current-visible" src="images/line_follower/line_following_2.png">
+                        <img data-fragment-index="3" style="max-width: 70%;" class="fragment current-visible" src="images/line_follower/line_following_3.png">
+                        <img data-fragment-index="4" style="max-width: 70%;" class="fragment" src="images/line_follower/line_following_4.png">
+                    </div>
+
+                    <p class="fragment medium-text" data-fragment-index="2">
+                        $a_t = \mu(s_t; \theta)$, $\quad$ deterministic controller
+                    </p>
+                    <p class="fragment medium-text" data-fragment-index="3">
+                        $a_t \sim \pi_\theta(a_t | s_t) = f(\mu, \textcolor{6741d9}{\epsilon}, \ldots)$,
+                        <span style="color: #6741d9;">stochastic</span> controller
+                    </p>
+
+                    <aside class="notes">
+                        we want to explore
+                        around the best known behavior
+
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>PD Controller as Policy</h3>
+                    <div style="text-align: left; margin-left: 20%;">
+                        <p class="fragment fade-in-then-semi-out">$a_t = \textcolor{#1864ab}{K_p} \textcolor{#a61e4d}{e_t} + \textcolor{#1864ab}{K_d}  \textcolor{#a61e4d}{\frac{e_t - e_{t -1}}{\Delta t}}$</p>
+                        <p class="fragment">$a_t = \begin{bmatrix} \textcolor{#1864ab}{K_p} &  \textcolor{#1864ab}{K_d} \end{bmatrix} \cdot \begin{bmatrix} \textcolor{#a61e4d}{e_t} \\ \textcolor{#a61e4d}{\frac{e_t - e_{t -1}}{\Delta t}} \end{bmatrix}$</p>
+                        <p class="fragment fade-in-then-semi-out">$a_t = \textcolor{#1864ab}{\theta}^\top \textcolor{#a61e4d}{s_t}$ &nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <p class="fragment" style="margin-left: -11%">$\mu_{\textcolor{#1864ab}{\theta}}(\textcolor{#a61e4d}{s_t}) = \textcolor{#1864ab}{\theta}^\top \textcolor{#a61e4d}{s_t}$
+                        &nbsp;&nbsp;&nbsp;&nbsp; a linear policy!
+                        </p>
+                    </div>
+                </section>
+
+                <section>
+                    <h4>Outline</h4>
+                    <ol class="">
+                        <li style="font-weight: bold;">Exploration in Parameter Space</li>
+                        <li style="color:lightgrey;">Exploration in Action Space</li>
+                        <li style="color:lightgrey;">Correlated Noise</li>
+                        <li style="color:lightgrey;">Guided Exploration</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Exploration in Parameter Space</h3>
+                        <p class="fragment">
+                            $a_t = \mu(s_t; \theta_{\mu} + \epsilon)$,
+                            $\quad \epsilon \sim \mathcal{N}(0, \sigma)$
+                        </p>
+                        <p class="fragment">
+                            $\epsilon$ is sampled once per episode
+                        </p>
+                        <p class="fragment medium-text">
+                            Example:
+                        </p>
+                        <p class="medium-text fragment">
+                            <!--$\tilde{K_p} = K_p + \epsilon$-->
+                            $\tilde{\theta} = \begin{bmatrix} K_p \\ K_d \end{bmatrix} + \begin{bmatrix} \epsilon_1 \\  \epsilon_2 \end{bmatrix}$
+                            <br>
+                            \[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Remarks</h3>
+                        <ul>
+                            <li class="fragment">Smooth exploration</li>
+                            <li class="fragment">Effective for sparse rewards</li>
+                            <li class="fragment">Does not use immediate reward</li>
+                            <li class="fragment">Does not scale easily</li>
+                        </ul>
+                    </section>
+                    <section>
+                        <h3>Example: BBO, Finite Differences</h3>
+                        <div class="r-stack">
+                            <img style="max-width: 70%;" class="fragment current-visible" src="https://araffin.github.io/slides/rlss26-bbo-pg/images/finite_diff/finite_diff_1.svg">
+                            <img style="max-width: 70%;" class="fragment current-visible" src="https://araffin.github.io/slides/rlss26-bbo-pg/images/finite_diff/finite_diff_2.svg">
+                            <img style="max-width: 70%;" class="fragment current-visible" src="https://araffin.github.io/slides/rlss26-bbo-pg/images/finite_diff/finite_diff_3.svg">
+                            <img style="max-width: 70%;" class="fragment current-visible" src="https://araffin.github.io/slides/rlss26-bbo-pg/images/finite_diff/finite_diff_4.svg">
+                            <img style="max-width: 70%;" class="fragment" src="https://araffin.github.io/slides/rlss26-bbo-pg/images/finite_diff/finite_diff_5.svg">
+                        </div>
+
+                        <aside class="notes">
+                            Same as episodic RL, can also talk about DMP
+                        </aside>
+                    </section>
+                    <section>
+                        <h3>Learning from human feedback</h3>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Raffin, Antonin "Enabling Reinforcement Learning on Real Robots." Diss. TUM, 2024.
+                        </p>
+
+                    </section>
+                    <section>
+                        <h4>Adapting quickly: Retrained from Space</h4>
+                        <div class="row">
+                            <div class="col-xs-1">
+                            </div>
+                            <div class="col-xs-11">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0&mute=1" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h3>Exploration in Action Space</h3>
+                        <img style="margin: 0;" src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/unstructured.svg" width="40%" class="" alt="Independent noise"/>
+
+                        <p class="fragment">
+                            $ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t$,
+                            $\quad \epsilon_t \sim \mathcal{N}(0, \sigma)$
+                        </p>
+                        <p class="fragment">
+                            $\epsilon_t$ is sampled at every step
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Remarks</h3>
+                        <ul>
+                            <li class="fragment">Effective in simulation (default)</li>
+                            <li class="fragment">Shaky behavior, dangerous for real robots</li>
+                            <li class="fragment">Real systems are low-pass filters</li>
+                        </ul>
+                    </section>
+                </section>
+
+                <section>
+                    <section>
+                        <h4>In between parameter and action space (1)</h4>
+                        <div class="row medium-text">
+                                 <!--<div class="col-xs-4">
+                                    Linear case:
+                                    \[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+                                </div>-->
+                            <div class="col-xs-6 fragment">
+                                <!--<img src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/unstructured.svg" width="80%" class="" alt="Independent noise"/>-->
+                                Independent Gaussian noise:
+                                <br>
+                                $\epsilon_t \sim \mathcal{N}(0, \sigma)$
+                                <br>
+                                sampled every steps
+                                \[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon_t \]
+                            </div>
+                            <div class="col-xs-6 fragment">
+                                <!--<img src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/gsde.svg" width="90%" class="" alt="gSDE"/>-->
+                                State Dependent Exploration:
+                                <br>
+                                $\theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) $
+                                <br>
+                                sampled every $n$ steps
+                                \[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(s_t; \theta_{\epsilon}) \]
+                            </div>
+                            <div class="col-xs-12">
+                             <img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/sde/mountain.png" class="shadow" alt="gSDE vs Independent noise" style="max-width:60%;"/>
+                            </div>
+                            <div class="col-xs-12">
+                                <p class="medium-text">
+                                Antonin Raffin, Jens Kober & Freek Stulp. "Smooth exploration for robotic reinforcement learning." CoRL, 2022.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h4>In between parameter and action space (2)</h4>
+                        <div class="row medium-text">
+                            <div class="col-xs-12 fragment">
+                                State Dependent Exploration (SDE):
+                                \[ \theta_{\epsilon} \sim \mathcal{N}(0, \sigma_{\epsilon}) \]
+                                \[ a_t = \mu(s_t; \theta_{\mu}) + \epsilon(s_t; \theta_{\epsilon}) \]
+                             </div>
+                             <div class="col-xs-12 fragment">
+                                Linear case:
+                                \[ a_t = (\theta_{\mu} + \theta_{\epsilon})^{\top}s_t \]
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Rückstieß, T., et al. "State-dependent exploration for policy gradient methods." ECML, 2008.
+                        </p>
+                    </section>
+                    <section>
+                        <h4>Trade-off between <br> return and continuity cost</h4>
+                        <div class="col-xs-12">
+                            <img src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/pareto_gsde.svg" style="max-width:60%;"/>
+                        </div>
+                        <aside class="notes">
+                            The n-step tricks was used by other (OpenAI param space/NoiseDQN)
+                            but not studied
+                        </aside>
+                    </section>
+
+                    <section>
+                        <h4>Results</h4>
+                        <div class="row">
+                            <div class="col-xs-1">
+                            </div>
+                            <div class="col-xs-11">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/f_FmDFrYkPM?start=26&rel=0&mute=1" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                    <ol class="">
+                        <li style="color:grey;">Exploration in Parameter Space</li>
+                        <li style="color:grey;">Exploration in Action Space</li>
+                        <li style="font-weight: bold;">Correlated Noise</li>
+                        <li style="color:lightgrey;">Guided Exploration</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h3>Correlated Noise</h3>
+
+                    <img style="margin: 0;" src="images/colored_noise.png" width="70%" alt="">
+
+                    <p class="medium-text fragment">
+                        $a_t = \mu(s_t) + \sigma(s_t) \varepsilon_t$
+                        ,
+                        $\quad \dot{\varepsilon_t} = \ldots$
+                    </p>
+                    <p class="medium-text fragment">
+                        Ex:
+                        $
+                        |\hat{\varepsilon}(f)|^{2} \propto f^{-\beta}, \quad \text{where} \quad \hat{\varepsilon}(f) = \mathcal{F}[\varepsilon(t)](f)
+                        $
+                        <br><br>
+                        White Noise ($\beta = 0$), Pink Noise ($\beta = 1$), Red/Brownian Noise ($\beta = 2$)
+                    </p>
+
+                    <div class="col-xs-12">
+                        <p class="xsmall-text" style="margin-bottom: 0;">
+                        Eberhard, Onno, et al. "Pink noise is all you need: Colored noise exploration in deep reinforcement learning." ICLR, 2023.
+                        </p>
+                    </div>
+
+                    <aside class="notes">
+                        Trajectories of pure noise agents on a bounded integrator env
+
+                        β=0: white noise (flat spectrum, no temporal correlation)
+                        <br>
+                        β=1: pink noise (1/f noise, moderate correlation)
+                        <br>
+                        β=2: red / Brownian noise (strong low‑frequency dominance, strong temporal correlation)
+                        Slides: https://iclr.cc/media/iclr-2023/Slides/12540.pdf
+                    </aside>
+
+                </section>
+
+                <section>
+                    <h3>Guided Exploration</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-6"><img src="images/guided_exploration.png" width="60%" alt=""></div>
+                        <div class="col-xs-6 medium-text">
+                            <img data-fragment-index="1" class="fragment" src="images/demos.png" width="80%" alt="">
+                            <ul>
+                                <li data-fragment-index="1" class="fragment">Guide RL with demonstrations</li>
+                                <li data-fragment-index="2" class="fragment">Exploration scale depends on the uncertainty</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="xsmall-text">
+                        Padalkar, Abhishek, et al. "Towards safe and efficient learning in the wild: Guiding RL with constrained uncertainty-aware movement primitives." RA-L (2025).
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Conclusion</h3>
+
+                    <ul>
+                        <li class="fragment">Exploration in parameter and action space</li>
+                        <li class="fragment">Smooth exploration for robots</li>
+                        <li class="fragment">Guided exploration</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+
+                <section>
+                    <h2>Backup Slides</h2>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="plugin/notes/notes.js"></script>
+        <script src="plugin/markdown/markdown.js"></script>
+        <script src="plugin/highlight/highlight.js"></script>
+        <script src="plugin/math/math.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                // Display the page number of the current slide
+                slideNumber: true,
+
+                // Add the current slide number to the URL hash so that reloading the
+                // page/copying the URL will return you to the same slide
+                hash: true,
+
+                // Push each slide change to the browser history. Implies `hash: true`
+                // history: false,
+
+                // math: {
+                //  mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                //  config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                //  // pass other options into `MathJax.Hub.Config()`
+                //  // TeX: { Macros: macros }
+                // },
+
+                // Use local version of katex
+                katex: {
+                  local: 'dist/katex',
+                },
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+            });
+        </script>
+    </body>
+</html>
