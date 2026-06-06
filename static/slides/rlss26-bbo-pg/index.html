@@ -66,9 +66,11 @@
                     <ul>
                         <li class="fragment">Learn directly a policy (no intermediate $Q^\pi_\theta(s, a)$)</li>
                         <li class="fragment">Policy from a control perspective</li>
-                        <li class="fragment">PG from a classification perspective</li>
+                        <li class="fragment">Policy gradient from a classification perspective</li>
                     </ul>
                     <aside class="notes">
+                        Motivation: at the core of A2C/PPO/SAC widely used
+                        and also deployed on real robots
                     </aside>
                 </section>
 
@@ -299,6 +301,27 @@
 
                 </section>
                 <section>
+                    <h3>Exploration in Parameter Space</h3>
+                    <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_3.png"/>
+
+                    <p>Finding better gains for the PD controller</p>
+                    <p class="fragment">
+                        $\tilde{\theta} = \begin{bmatrix} K_p \\ K_d \end{bmatrix} + \begin{bmatrix} \epsilon_1 \\  \epsilon_2 \end{bmatrix}$
+                    </p>
+                    <p class="fragment">
+                        \[ a_t = (\theta + \theta_{\epsilon})^{\top}s_t \]
+                    </p>
+                </section>
+                <section>
+                    <h3>A Simple Evolution Strategy (ES)</h3>
+                    <div class="r-stack">
+                        <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/es_0.svg">
+                        <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/es_1.svg">
+                        <img style="max-width: 70%;" class="fragment" src="images/finite_diff/es_2.svg">
+                    </div>
+                    <aside class="notes"></aside>
+                </section>
+                <section>
                     <section>
                         <h3>Transition: Finite Difference</h3>
                         <!--<div class="fragment fade-in-then-semi-out" style="font-size:80%; text-align:center">
@@ -306,10 +329,10 @@
                         </div>-->
                         <div class="r-stack">
                             <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/finite_diff_1.svg">
-                            <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/finite_diff_2.svg">
-                            <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/finite_diff_3.svg">
-                            <img style="max-width: 70%;" class="fragment current-visible" src="images/finite_diff/finite_diff_4.svg">
-                            <img style="max-width: 70%;" class="fragment" src="images/finite_diff/finite_diff_5.svg">
+                            <img style="max-width: 70%; position: relative; top: 6px; right:-1px;" class="fragment current-visible" src="images/finite_diff/finite_diff_2.svg">
+                            <img style="max-width: 70%; position: relative; top: 9px; right: 2px;" class="fragment current-visible" src="images/finite_diff/finite_diff_3.svg">
+                            <img style="max-width: 70%; position: relative; right: 3px;" class="fragment current-visible" src="images/finite_diff/finite_diff_4.svg">
+                            <img style="max-width: 70%; position: relative; right: 3px;" class="fragment" src="images/finite_diff/finite_diff_5.svg">
                         </div>
                         <aside class="notes"></aside>
                     </section>
@@ -411,6 +434,21 @@
                         </div>
                     </section>
                     <section>
+                        <h3>RL as classification</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img style="max-width: 30%; margin-top: -20px;" src="images/racing/action_space.svg">
+                                <p class="medium-text">
+                                    Discretized version: $\Delta \phi \in \set{-1, -0.5, 0.0, 0.5, 1.0}$</p>
+                                <ul>
+                                    <li class="fragment">Ex: taken action is $\Delta \phi = -1.0$ (left)</li>
+                                    <li class="fragment">Error reduced -> reinforce the taken action</li>
+                                    <li class="fragment">Error increased -> make the taken action less likely</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
                         <h3>Policy Gradient Loss (reminder)</h3>
                         <img style="max-width: 40%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/rl_obj.svg">
                         <img style="max-width: 70%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/pg_grad.svg">
@@ -439,6 +477,50 @@
                         <li class="fragment">Not a true gradient for the discounted case</li>
                     </ul>
                 </section>
+
+                <section>
+                    <h3>PG Training Loop</h3>
+                    <img width="100%" src="images/pg/pg_loop.svg" alt="">
+                </section>
+
+                <section>
+                    <h3>Exploration in Action Space</h3>
+                    <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_4.png"/>
+
+                    <p class="fragment">
+                        $a_t \sim \pi_\theta(a_t | s_t)$
+                        <span style="color: #6741d9;">stochastic</span> policy
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Action Distributions: Categorical</h3>
+                    <img style="margin: 0; width:50%;" src="images/classification/classification_2.svg"/>
+
+                    <p class="fragment">
+                        $$\pi_\theta(a_i \mid s_t) = \frac{\exp(z_{a_i})}{\sum_{j} \exp(z_{a_{j}})} $$
+                        $$\text{where} \quad z = \theta^\top s_t \quad \text{(logits)}$$
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Action Distributions: Gaussian</h3>
+                    <img style="margin: 0; width:30%;" src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/unstructured.svg"/>
+
+                    <p class="fragment">
+                        $\mu_\theta(s_t) = \theta^\top s_t, \ \sigma \ \text{(learnable param)}$
+                    </p>
+                    <p class="fragment">
+                        $$\pi_\theta(a_t \mid s_t) = \mathcal{N}(\mu_\theta(s_t), \sigma^2 I)$$
+                    </p>
+                    <aside class="notes">
+                        Example: sigma_0 = 1.0
+                        <br>
+                        Clip in practice (or used bounded dist),
+                        careful with action bounds
+                    </aside>
+                </section>
+
                 <section>
                     <h3>Questions?</h3>
                 </section>
@@ -453,6 +535,12 @@
 
                 <section>
                     <h2>Backup Slides</h2>
+                </section>
+
+                <section>
+                    <h4>TODO: how to train value fn</h4>
+                    + maybe action dist in PyTorch
+                    + expression of log prob for Gaussian dist
                 </section>
 
             </div>
