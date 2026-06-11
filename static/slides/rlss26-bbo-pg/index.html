@@ -300,16 +300,42 @@
                     </aside>
                 </section>
                 <section>
-                    <h3>Exploration in Parameter Space</h3>
-                    <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_3.png"/>
+                    <section>
+                        <h3>Exploration in Parameter Space</h3>
+                        <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_3.png"/>
 
-                    <p>Finding better gains for the PD controller</p>
-                    <p class="fragment">
-                        $\tilde{\theta} = \begin{bmatrix} K_p \\ K_d \end{bmatrix} + \begin{bmatrix} \epsilon_1 \\  \epsilon_2 \end{bmatrix}$
-                    </p>
-                    <p class="fragment">
-                        \[ a_t = (\theta + \theta_{\epsilon})^{\top}s_t \]
-                    </p>
+                        <p>Finding better gains for the PD controller</p>
+                        <p class="fragment">
+                            $\tilde{\theta} = \begin{bmatrix} K_p \\ K_d \end{bmatrix} + \begin{bmatrix} \epsilon_1 \\  \epsilon_2 \end{bmatrix}$
+                        </p>
+                        <p class="fragment">
+                            \[ a_t = (\theta + \theta_{\epsilon})^{\top}s_t \]
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Learning from human feedback</h3>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Raffin, Antonin "Enabling Reinforcement Learning on Real Robots." Diss. TUM, 2024.
+                        </p>
+
+                    </section>
+                    <section>
+                        <h4>Adapting quickly: Retrained from Space</h4>
+                        <div class="row">
+                            <div class="col-xs-1">
+                            </div>
+                            <div class="col-xs-11">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0&mute=1" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </section>
                 <section>
                     <h3>A Simple Evolution Strategy (ES)</h3>
