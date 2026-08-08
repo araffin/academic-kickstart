@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Making RL Work Out-of-the-Box (WIP)</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+        <link rel="stylesheet" href="dist/reveal.css">
+        <link rel="stylesheet" href="dist/theme/white.css" id="theme">
+        <!-- Add DLR logo -->
+        <link rel="stylesheet" href="css/dlr.css">
+        <!-- Grid system: http://flexboxgrid.com/ -->
+        <link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <!-- <link rel="stylesheet" href="plugin/highlight/monokai.css" id="highlight-theme"> -->
+        <link rel="stylesheet" href="dist/plugin/highlight/atom-one-dark.css" id="highlight-theme">
+    </head>
+    <body>
+        <div class="side-block">
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <header>
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Making RL Work Out-of-the-Box (WIP) &middot; RLC AutoRL Workshop &middot; 15.08.2026
+                </header>
+                <section data-background-image="images/bg_image.jpg">
+                    <div class="row bottom-xs">
+                        <div class="col-xs-12">
+                            <h1 id="main-title">Making RL Work <br> Out-of-the-Box</h1>
+                            <h3 style="margin-bottom: 0;" class="fragment" id="subtitle">(WIP)</h3>
+                        </div>
+                        <div class="col-xs-12">
+                            <img class="shadow" style="width: 50%" src="images/mosaic2_001.jpg">
+                        </div>
+                        <div class="col-xs-12 xsmall-text">
+                            Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
+                            <span class="italic">German Aerospace Center (DLR)</span><br>
+                            <a href="https://araffin.github.io/">https://araffin.github.io/</a>
+                        </div>
+                    </div>
+
+                </section>
+                <section>
+                    <h4>Outline</h4>
+                    <ol class="">
+                        <li style="font-weight: bold;">RL is hard</li>
+                        <li style="color:lightgrey;">$N$ implementation details of $Y$ (where $N >> 1$)</li>
+                        <li style="color:lightgrey;">Reducing algorithm and environment complexity</li>
+                        <li style="color:lightgrey;">Case study: SAC in IsaacSim (env design + HPO)</li>
+                    </ol>
+                     <aside class="notes">
+                          Hyperparam tuning is also tackled in RL Zoo,
+                          DroQ and IsaacSim
+                     </aside>
+                 </section>
+                 <section>
+                     <section>
+                         <h4>RL is Hard (Episode #5623)</h4>
+                         <div class="r-stack">
+                             <img class="shadow" width="90%" src="images/ppo_sb3_sbx_0.png">
+                             <img data-fragment-index="1" width="90%" class="fragment" src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/ppo_sb3_sbx.png">
+                         </div>
+                         <p data-fragment-index="1" class="fragment medium-text">There is only one line of code that is different.</p>
+                     </section>
+                     <section>
+                         <h3>RL is Hard (Episode #4352)</h3>
+                         <div class="row middle-xs">
+                             <div class="col-xs-6">
+                                 <img src="https://araffin.github.io/slides/rlvs-tips-tricks/images/a2c.png" alt="A2C" style="max-width: 100%">
+                                 <p class="xsmall-text caption">Which algorithm is better?</p>
+                             </div>
+                             <div class="col-xs-6">
+                                 <p class="medium-text fragment">
+                                     The only difference: the epsilon value to avoid division by zero in the optimizer
+                                     (one is <code class="medium-text">eps=1e-7</code>
+                                     the other <code class="medium-text">eps=1e-5</code>)
+                                 </p>
+                             </div>
+                         </div>
+                         <aside class="notes">
+                             A and B are actually the same RL algorithm (A2C),
+                             sharing the exact same code, same hardware, same hyperparameters...
+                             except the epsilon value to avoid division by zero in the optimizer
+                         </aside>
+                     </section>
+                 </section>
+                 <section>
+                     <section>
+                         <h4>Stable-Baselines3 (SB3)</h4>
+                         <div class="row">
+                            <div class="col-xs-12">
+                                Reliable RL Implementations
+                            </div>
+                         </div>
+                         <div class="row middle-xs">
+                            <div class="col-xs-4">
+                                <img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb_logo.png" class="shadow" alt="" style="max-width:100%">
+                            </div>
+                            <div class="col-xs-8">
+                                <img src="images/sb3/sb3_7.svg" alt="" style="max-width:80%">
+                            </div>
+                         </div>
+
+                         <p class="medium-text">
+                             <a href="https://github.com/DLR-RM/stable-baselines3">https://github.com/DLR-RM/stable-baselines3</a>
+                         </p>
+                         <p class="xsmall-text">
+                             Raffin, Antonin, et al. "Stable-baselines3: Reliable reinforcement learning implementations." JMLR (2021)
+                         </p>
+
+                         <aside class="notes">
+                         What it is? Why is it there? <br>
+                         Trusted implementations <br>
+                         Software used throughout the thesis
+                         </aside>
+                     </section>
+                     <section>
+                         <h4>Reliable Implementations?</h4>
+
+                         <img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/all_green.png" style="max-width: 50%" alt="">
+
+                         <ul class="medium-text">
+                             <li class="fragment">Performance checked</li>
+                             <li class="fragment">Software best practices (96% code coverage, type checked, ...)</li>
+                             <!-- <li class="fragment">3 types of tests (run, unit tests, performance)</li> -->
+                             <li class="fragment">Active community (13k+ stars, 5000+ citations, 20M+ downloads)</li>
+                             <li class="fragment">Fully documented</li>
+                         </ul>
+                         <aside class="notes">
+                              Maybe mention that we have different types of tests
+                              (run, unittest, performance)
+                         </aside>
+                     </section>
+                 </section>
+                <section>
+                    <section>
+                        <h4>Reproducible Reliable RL: SB3 + RL Zoo</h4>
+                        <img src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/outlook/sb3_rl_zoo.png" alt="">
+                        <aside class="notes">
+                            What am I using to run RL experiments?<br>
+                            RL Zoo: log everything that is needed to reproduce/compare automatically <br>
+                            Minimize potential mistake when running experiments <br>
+                            Also has hyperparam optim implemented.
+                        </aside>
+                    </section>
+                    <section>
+                        <h4>RL from scratch in 10 minutes</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/jaaGy4eQy6kkzek/download" controls muted></video>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <p class="small-text">Using SB3 + Jax = SBX:
+                                    <a href="https://github.com/araffin/sbx">https://github.com/araffin/sbx</a>
+                                </p>
+                            </div>
+                        </div>
+                        <aside class="notes">
+                            This uses everything I presented before<br>
+                            SB3 + SBX + RL Zoo
+                        </aside>
+                    </section>
+                </section>
+                <section>
+                      <ol class="">
+                          <li style="color: grey;">RL is hard</li>
+                          <li style="font-weight: bold;">$N$ implementation details of $Y$ (where $N >> 1$)</li>
+                          <li style="color:lightgrey;">Reducing algorithm and environment complexity</li>
+                          <li style="color:lightgrey;">Case study: SAC in IsaacSim (env design + HPO)</li>
+                      </ol>
+                </section>
+
+                <section>
+                    <section>
+                        <h5>The 37 Implementation Details of PPO</h5>
+                        <img class="shadow" style="max-width: 90%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bench/td_lambda.png" alt="">
+                        <p class="small-text">
+                            <a href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">
+                                https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h5>DQN: Hidden Details in the Appendix</h5>
+                        <img class="shadow" style="max-width: 70%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bench/dqn.png" alt="">
+                        <img class="shadow" style="max-width: 80%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bench/dqn_appendix.png" alt="">
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h4>Open RL Benchmark</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-7">
+                                <ul class="medium-text">
+                                    <li class="fragment">Large scale, multi library (SB3, CleanRL, torchRL, ...)</li>
+                                    <li class="fragment">Comprehensive tracked metrics, saved hyperparameters</li>
+                                    <li class="fragment">Reproducible experiments</li>
+                                    <li class="fragment">Easy access and visualization (cli)</li>
+                                </ul>
+                            </div>
+                            <div class="col-xs-5">
+                                <a href="https://wandb.ai/openrlbenchmark/sb3/workspace?workspace=user-araffin" target="_blank">
+                                    <img width="100%" src="https://araffin.github.io/slides/tips-reliable-rl/images/rl_zoo/wandb.png" class="shadow" alt="">
+                                </a>
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Huang, Shengyi, et al. "Open RL Benchmark: Comprehensive Tracked Experiments for RL." (2024).
+                        </p>
+                        <aside class="notes">
+                            We benchmarked all algorithms on many tasks
+                            and the logs/results are available online
+                        </aside>
+
+                    </section>
+                    <section>
+                        <h4>Open RL Benchmark Study</h4>
+                        <div class="col-xs-12">
+                            <img src="images/ppo_mc.png" style="max-width: 80%;" class="shadow" alt="">
+                        </div>
+                        <aside class="notes">
+                        </aside>
+
+                    </section>
+
+                </section>
+
+                <section>
+                      <ol class="">
+                          <li style="color: grey;">RL is hard</li>
+                          <li style="color: grey;">$N$ implementation details of $Y$ (where $N >> 1$)</li>
+                          <li style="font-weight: bold;">Reducing algorithm and environment complexity</li>
+                          <li style="color:lightgrey;">Case study: SAC in IsaacSim (env design + HPO)</li>
+                      </ol>
+                      <aside class="notes">
+                          An example on how to remove the $N$ implementation details
+                          and complex reward engineering by using more specialized solutions.
+                          Note: also combined with HPO after.
+                      </aside>
+                </section>
+                <section>
+                    <section>
+                        <h4>An Open-Loop Baseline for RL Locomotion Tasks</h4>
+                        <div class="row middle-xs">
+
+                            <div class="col-xs-6 small-text fragment" data-fragment-index="1">
+                                <p>Periodic Policy</p>
+                                <div>
+                                    \[\begin{aligned}
+                                    q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
+                                    \dot{\theta_i}(t)  &amp;= \begin{cases}
+                                        \textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+                                        \textcolor{#862e9c}{\omega_\text{stance}}  &amp;\text{otherwise.}
+                                    \end{cases}
+
+                                    \end{aligned} \]
+                                </div>
+                            </div>
+                            <div class="col-xs-6 fragment" data-fragment-index="1">
+                                <img src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/sin_wave.png" class="shadow" alt="">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 xsmall-text">
+                            <p>
+                                Raffin et al. "An Open-Loop Baseline for Reinforcement Learning Locomotion Tasks", RLJ 2024.<br>
+                                <b>Outstanding Paper Award on Empirical Resourcefulness in RL</b>
+                            </p>
+                        </div>
+                        <aside class="notes">
+                            Searching for the simplest baseline for locomotion.<br>
+                            highlight strengths/weaknesses of RL.<br>
+                            Show the use of prior knowledge<br>
+                            more specialized but still model free and simple, optimize with BBO
+                        </aside>
+                    </section>
+                    <section>
+                        <h4>Cost of generality vs prior knowledge</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/ykDPMM7F9KFyLgi/download" controls muted></video>
+                            </div>
+                        </div>
+                        <aside class="notes">
+                            highlight shortcomings of RL using simple baseline,
+                            no randomization, no reward engineering -> why? <br>
+                            open-loop oscillators good starting point for locomotion
+                        </aside>
+
+                    </section>
+                    <section>
+                        <h3>Learning from human feedback</h3>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Raffin, Antonin "Enabling Reinforcement Learning on Real Robots." Diss. TUM, 2024.
+                        </p>
+
+                    </section>
+                    <section>
+                        <h4>Adapting quickly: Retrained from Space</h4>
+                        <div class="row">
+                            <div class="col-xs-1">
+                            </div>
+                            <div class="col-xs-11">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0&mute=1" allowfullscreen width="50%" height="auto" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <section>
+                      <ol class="">
+                          <li style="color: grey;">RL is hard</li>
+                          <li style="color: grey;">$N$ implementation details of $Y$ (where $N >> 1$)</li>
+                          <li style="color: grey;">Reducing algorithm and environment complexity</li>
+                          <li style="font-weight: bold;">Case study: SAC in IsaacSim (env design + HPO)</li>
+                      </ol>
+                </section>
+
+                <section>
+                    <h3>Making SAC work on Massive Parallel Sim</h3>
+                    <div class="row middle-xs">
+                        <div class="col-xs-12">
+                            <video style="width: 80%" src="https://b2drop.eudat.eu/public.php/dav/files/RKCWddABEtj5MFT/" controls></video>
+                        </div>
+                    </div>
+                    <p class="small-text" style="margin-top: -1%;">
+                        <a href="https://araffin.github.io/post/sac-massive-sim/">
+                            Getting SAC to Work on a Massive Parallel Simulator (2025).
+                            <br>
+                            https://araffin.github.io/post/sac-massive-sim/
+                        </a>
+                    </p>
+                    <aside class="notes">
+                        What is massive parallel sim? (what matters is training time)<br>
+                        current trend: PPO, PPO, PPO
+                    </aside>
+                </section>
+
+                <section>
+                    <h4>Out of the box</h4>
+                    <div class="row middle-xs">
+                        <div class="col-xs-12">
+                            <video style="width: 80%" src="https://b2drop.eudat.eu/public.php/dav/files/z5LFrzLNfrPMd9o/limits_train.mp4" controls></video>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        What happens when training SAC on it out of the box.
+                    </aside>
+                </section>
+
+                <section>
+                    <h4>Action Space and Action Dist</h4>
+                    <div class="r-stack" style="margin-bottom: 0;">
+                        <img width="80%" class="fragment current-visible" src="images/sac_sim/action_space.svg">
+                        <img width="80%" class="shadow fragment current-visible" src="images/sac_sim/rlvs_normalize.png">
+                        <img width="80%" class="shadow fragment" src="https://araffin.github.io/post/sac-massive-sim/img/squashed_vs_gaussian.svg">
+
+                    </div>
+                    <aside class="notes">
+                        First problem: action space design (made for PPO).
+                    </aside>
+                </section>
+
+                <section>
+                    <h4>Optimizing for speed</h4>
+                    <div class="r-stack" style="margin-bottom: 0;">
+                        <img width="100%" class="fragment current-visible" src="images/sb3/tune_sac.svg">
+                        <img width="100%" class="fragment" src="https://araffin.github.io/post/tune-sac-isaac-sim/img/learning_curve_unitree.svg">
+                    </div>
+                    <aside class="notes">
+                        After fixing action space, still not as good as PPO<br>
+                        but SAC can be optimized too (with care)
+                    </aside>
+                </section>
+
+
+                <section>
+                    <h3>Conclusion</h3>
+                    <ul>
+                        <li class="fragment">Software engineering for reliable implementations</li>
+                        <li class="fragment">Experiments database (OpenRL Benchmark)</li>
+                        <li class="fragment">Reducing complexity</li>
+                        <li class="fragment">Automatic hyperparameter tuning</li>
+                    </ul>
+                </section>
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+                <section>
+                    <h3>Backup Slides</h3>
+                </section>
+                <section>
+                    <section>
+                        <h4>Truncations for infinite horizon tasks</h4>
+                        <p class="medium-text">truncation vs termination</p>
+
+                        <div class="r-stack">
+                            <img class="fragment shadow" src="https://araffin.github.io/slides/ingredients-learning-locomotion/images/truncation/episode_setup.jpg">
+                            <img class="fragment" src="https://araffin.github.io/slides/ingredients-learning-locomotion/images/truncation/episode_terminated.jpg">
+                            <img class="fragment" src="https://araffin.github.io/slides/ingredients-learning-locomotion/images/truncation/episode_timeout.jpg">
+                            <img class="fragment" src="https://araffin.github.io/slides/ingredients-learning-locomotion/images/truncation/episode_truncated.jpg">
+                        </div>
+                        <aside class="notes">
+                            Infinite horizon ex: learning to walk<br>
+                            when to terminate an episode?<br>
+                            truncation: not the robot's fault<br>
+                            should not be penalized <br>
+                            should pretend there are no time/space limits here
+                        </aside>
+                    </section>
+
+                    <section>
+                     <h4>Example</h4>
+                     <div class="medium-text">
+                         <div class="fragment" style="font-size:100%; text-align:center">
+                             \[\begin{aligned}
+                                 \forall t, \quad r_t = 1, \quad
+                                 \gamma = 0.98
+                             \end{aligned} \]
+                         </div>
+                         <p class="fragment">Timeout: <code>max_episode_steps=4</code></p>
+                         <ul>
+                             <li class="fragment">
+                                 <span style="color:#a61e4d">Without truncation handling</span>: <br>
+                                 $V_\pi(s_0) = \mathop{\sum^{\textcolor{a61e4d}{3}}_{t=0}}[\gamma^t r_t] = 1 + 1 \cdot 0.98 + 0.98^2 + 0.98^3 \approx 3.9 $
+                             </li>
+                             <li class="fragment" style="margin-top: 5%">
+                                 <span style="color:green">With truncation handling</span>: <br>
+                                 $V_\pi(s_0) = \mathop{\sum^{\textcolor{green}{\infty}}_{t=0}}[\gamma^t r_t] = \sum^{\textcolor{green}{\infty}}_{t=0}[\gamma^t] = \frac{1}{1 - \gamma} \approx 50 $
+                             </li>
+                         </ul>
+                     </div>
+
+                    </section>
+
+                    <section>
+                        <h4>Recall: DQN Update</h4>
+                        <ol class="medium-text">
+                            <li class="fragment">DQN loss:
+                                <div style="font-size:100%; text-align:center">
+                                    \[\begin{aligned}
+                            \mathcal{L} = \mathop{\mathbb{E}}[(\textcolor{#a61e4d}{y_t} - \textcolor{#1864ab}{Q_\theta(s_t, a_t)} )^2]
+                                    \end{aligned} \]
+                                </div>
+                            </li>
+
+                            <li class="fragment">Regression $ \textcolor{#1864ab}{f_\theta(x)} = \textcolor{#a61e4d}{y}$
+                        with input $\textcolor{#1864ab}{x}$ and target $\textcolor{#a61e4d}{y}$:
+                                <ul style="margin-top: 5%">
+                                    <li class="fragment">input: <span style="margin-left:27.5%;">$\textcolor{#1864ab}{x = (s_t, a_t)}$</span></li>
+                                    <li class="fragment"><span>if $s_{t+1}$ is <b>non</b> terminal</span>: &nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q_\theta(s_{t+1}, a'))$</span></li>
+                                    <li class="fragment"><span>if $s_{t+1}$ is terminal</span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        $\textcolor{a61e4d}{y = r_t}$</span></li>
+                                    <li class="fragment"><span>
+                                        <b>if $s_{t+1}$ is truncation</b></span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q_\theta(s_{t+1}, a'))$</span></li>
+
+                                </ul>
+                            </li>
+                        </ol>
+                    </section>
+
+
+                    <section>
+                        <h4>In Practice</h4>
+
+                        <div class="row">
+                            <div class="col-xs-12 medium-text">
+                                <img class="shadow" src="https://araffin.github.io/slides/ingredients-learning-locomotion/images/truncation/code.png">
+                            </div>
+                        </div>
+
+                        <aside class="notes">
+                            how implemented in practice (for user/algo)<br>
+                            bootstrap but end of episode for truncation <br>
+                            pretend it didn't happen, use the value fn to look in future <br>
+                            show gSDE ablation?/show how it differs?
+                        </aside>
+                    </section>
+
+                </section>
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="dist/plugin/notes.js"></script>
+        <script src="dist/plugin/markdown.js"></script>
+        <script src="dist/plugin/highlight.js"></script>
+        <script src="dist/plugin/math.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                // Display the page number of the current slide
+                slideNumber: true,
+
+                // Add the current slide number to the URL hash so that reloading the
+                // page/copying the URL will return you to the same slide
+                hash: true,
+
+                // Push each slide change to the browser history. Implies `hash: true`
+                // history: false,
+
+                // math: {
+                //  mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                //  config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                //  // pass other options into `MathJax.Hub.Config()`
+                //  // TeX: { Macros: macros }
+                // },
+
+                // Use local version of katex
+                katex: {
+                  local: 'dist/katex',
+                },
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+            });
+        </script>
+    </body>
+</html>
