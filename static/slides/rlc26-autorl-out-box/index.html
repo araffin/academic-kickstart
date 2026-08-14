@@ -99,6 +99,7 @@
                             <div class="col-xs-4">
                                 <img src="https://araffin.github.io/slides/tips-reliable-rl/images/sb3/sb_logo.png" class="shadow" alt="" style="max-width:100%">
                             </div>
+                            <!--To generate the code image: https://ray.so/#padding=16&theme=vercel&darkMode=false-->
                             <div class="col-xs-8">
                                 <img src="images/sb3/sb3_7.svg" alt="" style="max-width:80%">
                             </div>
@@ -178,7 +179,7 @@
                 <section>
                     <section>
                         <h5>The 37 Implementation Details of PPO</h5>
-                        <img class="shadow" style="max-width: 90%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bench/td_lambda.png" alt="">
+                        <img class="shadow fragment" style="max-width: 90%" src="https://araffin.github.io/slides/tips-reliable-rl/images/bench/td_lambda.png" alt="">
                         <p class="small-text">
                             <a href="https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/">
                                 https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/
@@ -363,14 +364,32 @@
                     <h4>Action Space and Action Dist</h4>
                     <div class="r-stack" style="margin-bottom: 0;">
                         <img width="80%" class="fragment current-visible" src="images/sac_sim/action_space.svg">
-                        <img width="80%" class="shadow fragment current-visible" src="images/sac_sim/rlvs_normalize.png">
-                        <img width="80%" class="shadow fragment" src="https://araffin.github.io/post/sac-massive-sim/img/squashed_vs_gaussian.svg">
+                        <img width="80%" class="shadow fragment" src="images/sac_sim/rlvs_normalize.png">
 
                     </div>
                     <aside class="notes">
                         First problem: action space design (made for PPO).
                     </aside>
                 </section>
+
+                <section>
+                    <h4>PPO Gaussian Distribution</h4>
+                    <div class="r-stack">
+                        <img width="100%" class="fragment current-visible" src="https://araffin.github.io/post/sac-massive-sim/img/gaussian.svg">
+                        <img width="100%" class="current-visible fragment" src="https://araffin.github.io/post/sac-massive-sim/img/gaussian_large_bounds.svg">
+                        <img width="100%" class="fragment" src="https://araffin.github.io/post/sac-massive-sim/img/dist_actions_trained_ppo.svg">
+                    </div>
+                </section>
+
+                <section>
+                    <h4>SAC Gaussian Distribution</h4>
+                    <div class="r-stack">
+                        <img width="100%" class="fragment current-visible" src="https://araffin.github.io/post/sac-massive-sim/img/squashed_vs_gaussian.svg">
+                        <img width="100%" class="current-visible fragment" src="https://araffin.github.io/post/sac-massive-sim/img/squashed_rescaled.svg">
+                        <img width="100%" class="fragment" src="images/sac_sim/learning_curve_quick_fix.svg">
+                    </div>
+                </section>
+
 
                 <section>
                     <h4>Optimizing for speed</h4>
@@ -391,6 +410,7 @@
                         <li class="fragment">Software engineering for reliable implementations</li>
                         <li class="fragment">Experiments database (OpenRL Benchmark)</li>
                         <li class="fragment">Reducing complexity</li>
+                        <li class="fragment">Env design (reward, action space)</li>
                         <li class="fragment">Automatic hyperparameter tuning</li>
                     </ul>
                 </section>
