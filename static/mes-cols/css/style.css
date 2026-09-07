@@ -239,13 +239,30 @@ body{
 }
 #search:focus, #dept-input:focus{ outline:2px solid var(--accent-pass); outline-offset:1px; }
 
-.combobox{ position:relative; }
+.search-combobox, .combobox{ position:relative; }
+#search, #dept-input{ padding-right:30px; }
+.search-clear{
+  position:absolute;
+  top:50%;
+  right:6px;
+  width:22px;
+  height:22px;
+  transform:translateY(-50%);
+  background:transparent;
+  border:0;
+  border-radius:var(--radius);
+  color:var(--text-muted);
+  font-size:18px;
+  line-height:1;
+  cursor:pointer;
+}
+.search-clear:hover{ background:var(--bg-hover); color:var(--text-primary); }
 .combobox-list{
   position:absolute;
   top:calc(100% + 4px);
   left:0; right:0;
   z-index:50;
-  max-height:260px;
+   max-height:180px;
   overflow-y:auto;
   margin:0;
   padding:4px;

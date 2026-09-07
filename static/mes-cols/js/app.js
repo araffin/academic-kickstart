@@ -16,11 +16,15 @@
   };
 
   let pendingImport = null; // parsed records waiting for confirmation
+  let searchFilterTimer = null;
 
   const els = {
     stats: document.getElementById("stats"),
     search: document.getElementById("search"),
+    searchClear: document.getElementById("search-clear"),
+    searchList: document.getElementById("search-list"),
     deptInput: document.getElementById("dept-input"),
+    deptClear: document.getElementById("dept-clear"),
     deptList: document.getElementById("dept-list"),
     fPass: document.getElementById("f-pass"),
     fMontee: document.getElementById("f-montee"),
@@ -145,14 +149,22 @@
   }
 
   function filterDeptList() {
-    const q = els.deptInput.value.trim().toLowerCase();
-    let visible = 0;
+    const q = els.deptInput.value.trim();
+    const matches = Array.from(els.deptList.children)
+      .filter(li => !li.classList.contains("dept-empty"))
+      .map(li => ({
+        li,
+        score: q ? fuzzyScore(li.textContent, q) : (li.dataset.value ? 1 : 0),
+      }))
+      .filter(item => item.score != null)
+      .sort((a, b) => a.score - b.score || a.li.textContent.localeCompare(b.li.textContent, "fr"));
+
     for (const li of els.deptList.children) {
-      if (li.classList.contains("dept-empty")) continue;
-      const show = !q || li.textContent.toLowerCase().includes(q);
-      li.hidden = !show;
-      if (show) visible++;
+      if (!li.classList.contains("dept-empty")) li.hidden = true;
     }
+    for (const item of matches) item.li.hidden = false;
+
+    const visible = matches.length;
     let empty = els.deptList.querySelector(".dept-empty");
     if (visible === 0) {
       if (!empty) {
@@ -183,6 +195,7 @@
     if (!li || li.classList.contains("dept-empty")) return;
     state.dept = li.dataset.value || "";
     els.deptInput.value = state.dept ? li.textContent : "";
+    updateDeptClear();
     markDeptSelected(state.dept);
     closeDeptList();
     applyFilters();
@@ -213,17 +226,35 @@
     els.filtersToggle.addEventListener("click", () => {
       setFiltersOpen(els.filters.classList.contains("collapsed"));
     });
-    els.search.addEventListener("input", applyFilters);
+    els.search.addEventListener("input", () => {
+      updateSearchClear();
+      showSearchSuggestions();
+      setSearchActive(searchVisibleItems()[0]);
+      scheduleSearchFilter();
+    });
+    els.search.addEventListener("focus", () => {
+      showSearchSuggestions();
+      setSearchActive(searchVisibleItems()[0]);
+    });
+    els.search.addEventListener("keydown", handleSearchKeydown);
+    els.searchClear.addEventListener("click", clearSearch);
+    els.searchList.addEventListener("click", (e) => {
+      const li = e.target instanceof Element ? e.target.closest("li[data-name]") : null;
+      if (li) selectSearchSuggestion(li.dataset.name || "");
+    });
     els.deptInput.addEventListener("focus", () => {
+      updateDeptClear();
       openDeptList();
       filterDeptList();
       setDeptActive(deptVisibleItems()[0]);
     });
     els.deptInput.addEventListener("input", () => {
+      updateDeptClear();
       openDeptList();
       filterDeptList();
       setDeptActive(deptVisibleItems()[0]);
     });
+    els.deptClear.addEventListener("click", clearDept);
     els.deptInput.addEventListener("keydown", (e) => {
       const open = !els.deptList.hidden;
       if (e.key === "ArrowDown" || e.key === "ArrowUp") {
@@ -250,6 +281,7 @@
     });
     document.addEventListener("mousedown", (e) => {
       if (e.target instanceof Element && !e.target.closest(".combobox")) closeDeptList();
+      if (e.target instanceof Element && !e.target.closest(".search-combobox")) closeSearchSuggestions();
     });
     els.fPass.addEventListener("change", applyFilters);
     els.fMontee.addEventListener("change", applyFilters);
@@ -299,6 +331,147 @@
     els.filtersToggle.querySelector(".filters-toggle-icon").textContent = open ? "\u2039" : "\u203a";
   }
 
+  function scheduleSearchFilter() {
+    clearTimeout(searchFilterTimer);
+    searchFilterTimer = setTimeout(() => {
+      searchFilterTimer = null;
+      applyFilters();
+    }, 300);
+  }
+
+  function updateSearchClear() {
+    els.searchClear.hidden = !els.search.value;
+  }
+
+  function updateDeptClear() {
+    els.deptClear.hidden = !els.deptInput.value;
+  }
+
+  function clearSearch() {
+    clearTimeout(searchFilterTimer);
+    searchFilterTimer = null;
+    els.search.value = "";
+    updateSearchClear();
+    showSearchSuggestions();
+    setSearchActive(searchVisibleItems()[0]);
+    applyFilters();
+    els.search.focus();
+  }
+
+  function clearDept() {
+    state.dept = "";
+    els.deptInput.value = "";
+    updateDeptClear();
+    markDeptSelected("");
+    closeDeptList();
+    applyFilters();
+    els.deptInput.focus();
+  }
+
+  function normalizeSearch(value) {
+    return value
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+  }
+
+  function fuzzyScore(name, query) {
+    const candidate = normalizeSearch(name);
+    const needle = normalizeSearch(query);
+    if (!needle) return 0;
+    if (candidate === needle) return 0;
+    if (candidate.startsWith(needle)) return 1;
+    if (candidate.includes(needle)) return 2 + candidate.indexOf(needle) / 1000;
+
+    let cursor = 0;
+    let gaps = 0;
+    for (const character of needle) {
+      const index = candidate.indexOf(character, cursor);
+      if (index === -1) return null;
+      gaps += index - cursor;
+      cursor = index + 1;
+    }
+    return 3 + gaps / 1000 + (candidate.length - needle.length) / 10000;
+  }
+
+  function searchSuggestions() {
+    const query = els.search.value.trim();
+    const matches = state.all
+      .map(rec => ({ rec, score: fuzzyScore(rec.name, query) }))
+      .filter(item => item.score != null)
+      .sort((a, b) => a.score - b.score || a.rec.name.localeCompare(b.rec.name, "fr"))
+      .map(item => item.rec);
+    return query ? matches : state.all.slice().sort((a, b) => a.name.localeCompare(b.name, "fr"));
+  }
+
+  function showSearchSuggestions() {
+    const query = els.search.value.trim();
+    const suggestions = searchSuggestions();
+    els.searchList.innerHTML = "";
+    if (query && suggestions.length === 0) {
+      const empty = document.createElement("li");
+      empty.className = "dept-empty";
+      empty.setAttribute("role", "option");
+      empty.textContent = "Aucun résultat";
+      els.searchList.appendChild(empty);
+    }
+    for (const rec of suggestions) {
+      const li = document.createElement("li");
+      li.dataset.name = rec.name;
+      li.setAttribute("role", "option");
+      li.textContent = rec.name;
+      els.searchList.appendChild(li);
+    }
+    els.searchList.hidden = false;
+    els.search.setAttribute("aria-expanded", "true");
+  }
+
+  function searchVisibleItems() {
+    return Array.from(els.searchList.children).filter(li => !li.hidden);
+  }
+
+  function setSearchActive(li) {
+    for (const item of els.searchList.children) item.classList.remove("active");
+    if (li) li.classList.add("active");
+  }
+
+  function closeSearchSuggestions() {
+    els.searchList.hidden = true;
+    els.search.setAttribute("aria-expanded", "false");
+  }
+
+  function selectSearchSuggestion(name) {
+    clearTimeout(searchFilterTimer);
+    searchFilterTimer = null;
+    els.search.value = name;
+    updateSearchClear();
+    closeSearchSuggestions();
+    applyFilters();
+  }
+
+  function handleSearchKeydown(e) {
+    if (e.key === "Escape") {
+      closeSearchSuggestions();
+      return;
+    }
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp" && e.key !== "Enter") return;
+    const items = Array.from(els.searchList.querySelectorAll("li[data-name]"));
+    if (!items.length || els.searchList.hidden) return;
+    e.preventDefault();
+    const active = els.searchList.querySelector("li.active");
+    const index = items.indexOf(active);
+    if (e.key === "Enter") {
+      selectSearchSuggestion((active || items[0]).dataset.name);
+      return;
+    }
+    const next = e.key === "ArrowDown"
+      ? items[(index + 1) % items.length]
+      : items[(index - 1 + items.length) % items.length];
+    for (const item of items) item.classList.remove("active");
+    next.classList.add("active");
+    next.scrollIntoView({ block: "nearest" });
+  }
+
   function switchView(view) {
     state.view = view;
     els.mapView.hidden = view !== "map";
@@ -315,9 +488,14 @@
   // CSV / JSON export & import
   // ---------------------------------------------------------------
   function resetFilters() {
+    clearTimeout(searchFilterTimer);
+    searchFilterTimer = null;
     els.search.value = "";
+    updateSearchClear();
+    closeSearchSuggestions();
     state.dept = "";
     els.deptInput.value = "";
+    updateDeptClear();
     markDeptSelected("");
     closeDeptList();
     els.fPass.checked = true;

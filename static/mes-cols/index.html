@@ -86,7 +86,13 @@
     <aside id="filters">
       <div class="filter-block">
         <label for="search">Rechercher</label>
-        <input type="search" id="search" placeholder="Nom du col…" autocomplete="off">
+        <div class="search-combobox">
+          <input type="search" id="search" placeholder="Nom du col…" autocomplete="off"
+                 role="combobox" aria-expanded="false" aria-controls="search-list">
+          <button id="search-clear" class="search-clear" type="button"
+                  aria-label="Effacer la recherche" hidden>&times;</button>
+          <ul id="search-list" class="combobox-list search-list" role="listbox" hidden></ul>
+        </div>
       </div>
 
       <div class="filter-block">
@@ -95,6 +101,8 @@
           <input type="text" id="dept-input" placeholder="Tous" autocomplete="off"
                  role="combobox" aria-expanded="false" aria-controls="dept-list"
                  aria-label="D&eacute;partement / Pays">
+          <button id="dept-clear" class="search-clear" type="button"
+                  aria-label="Effacer le département ou le pays" hidden>&times;</button>
           <ul id="dept-list" class="combobox-list" role="listbox" hidden></ul>
         </div>
       </div>
