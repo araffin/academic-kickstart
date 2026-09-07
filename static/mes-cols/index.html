@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mes cols · Carte des ascensions</title>
+<link rel="icon" href="favicon.ico">
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.css" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Top bar -->
+  <header id="topbar">
+    <div class="brand">
+      <span class="brand-mark">&#9650;</span>
+      <h1>Mes cols</h1>
+    </div>
+    <div id="stats" class="stats"></div>
+    <div class="topbar-right">
+      <span id="data-source" class="data-source" hidden
+            title="Les données importées ne sont conservées que pour cette session. Rechargez la page pour revenir au fichier d'origine.">
+        Import (session) &mdash; rechargez pour revenir au fichier
+      </span>
+      <div class="data-actions">
+        <div class="export-menu">
+          <button id="btn-download" class="data-btn" type="button"
+                  aria-haspopup="true" aria-expanded="false"
+                  title="Choisir le format d'export des données">
+          <span class="data-btn-icon">&darr;</span>&nbsp;Exporter
+          </button>
+          <div id="export-options" class="export-options" hidden>
+            <button type="button" data-export-format="csv">CSV (Excel / LibreOffice)</button>
+            <button type="button" data-export-format="json">JSON (données complètes)</button>
+          </div>
+        </div>
+        <button id="btn-import" class="data-btn" type="button"
+                title="Importer des données depuis un fichier CSV ou JSON">
+          <span class="data-btn-icon">&uarr;</span>&nbsp;Importer
+        </button>
+      </div>
+      <div class="view-toggle" role="tablist" aria-label="Vue">
+        <button id="btn-view-map" class="toggle-btn active" role="tab" aria-selected="true">Carte</button>
+        <button id="btn-view-list" class="toggle-btn" role="tab" aria-selected="false">Liste</button>
+      </div>
+    </div>
+  </header>
+
+  <div id="main">
+
+    <button id="filters-toggle" class="filters-toggle" type="button"
+            aria-controls="filters" aria-expanded="false">
+      <span class="filters-toggle-label">Filtres</span>
+      <span class="filters-toggle-icon" aria-hidden="true">&rsaquo;</span>
+    </button>
+
+    <!-- Filter panel -->
+    <aside id="filters">
+      <div class="filter-block">
+        <label for="search">Rechercher</label>
+        <input type="search" id="search" placeholder="Nom du col…" autocomplete="off">
+      </div>
+
+      <div class="filter-block">
+        <label for="dept-input">D&eacute;partement / Pays</label>
+        <div class="combobox">
+          <input type="text" id="dept-input" placeholder="Tous" autocomplete="off"
+                 role="combobox" aria-expanded="false" aria-controls="dept-list"
+                 aria-label="D&eacute;partement / Pays">
+          <ul id="dept-list" class="combobox-list" role="listbox" hidden></ul>
+        </div>
+      </div>
+
+      <div class="filter-block checkboxes">
+        <span class="filter-label">Type</span>
+        <label class="check"><input type="checkbox" id="f-pass" checked><span>Cols</span></label>
+        <label class="check"><input type="checkbox" id="f-montee" checked><span>Mont&eacute;es</span></label>
+      </div>
+
+      <div class="filter-block checkboxes">
+        <span class="filter-label">Filtres</span>
+        <label class="check"><input type="checkbox" id="f-high"><span>&gt; 2000&nbsp;m uniquement</span></label>
+        <label class="check"><input type="checkbox" id="f-mtb"><span>VTT uniquement</span></label>
+        <label class="check"><input type="checkbox" id="f-unclimbed"><span>Non g&eacute;olocalis&eacute;s</span></label>
+      </div>
+
+      <div class="filter-block">
+        <span class="filter-label">Altitude min. <span id="alt-value" class="mono">0 m</span></span>
+        <input type="range" id="alt-min" min="0" max="2900" step="50" value="0">
+      </div>
+
+      <div class="filter-block">
+        <span class="filter-label">Nombre d'ascensions min.</span>
+        <div class="stepper">
+          <button type="button" id="asc-minus" aria-label="Diminuer">&minus;</button>
+          <input type="number" id="asc-value" min="0" max="20" step="1" value="0" inputmode="numeric" aria-label="Nombre d'ascensions minimum">
+          <button type="button" id="asc-plus" aria-label="Augmenter">+</button>
+        </div>
+      </div>
+
+      <button id="reset-filters" class="reset-btn">R&eacute;initialiser</button>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <p class="empty-title">Coordonn&eacute;es manquantes</p>
+        <p class="empty-body">
+          <code>data/cols_geocoded.json</code> est introuvable ou incomplet.
+          Lancez <code>scripts/parse_csv.py</code> puis <code>scripts/geocode.py</code>
+          (voir le README) pour g&eacute;olocaliser vos cols avant de les afficher ici.
+        </p>
+      </div>
+    </aside>
+
+    <!-- Map view -->
+    <div id="map-view">
+      <div id="map"></div>
+    </div>
+
+    <!-- List view -->
+    <div id="list-view" hidden>
+      <table id="cols-table">
+        <thead id="cols-table-head">
+          <tr>
+            <th data-sort="name">Nom<span class="sort-ind"></span></th>
+            <th data-sort="loc">D&eacute;p. / Pays<span class="sort-ind"></span></th>
+            <th class="num" data-sort="altitude">Altitude<span class="sort-ind"></span></th>
+            <th class="num" data-sort="ascents">Ascensions<span class="sort-ind"></span></th>
+            <th>Type</th>
+          </tr>
+        </thead>
+        <tbody id="cols-table-body"></tbody>
+      </table>
+    </div>
+
+    <!-- Import view -->
+    <div id="import-view" hidden>
+      <div class="import-wrap">
+        <h2 class="import-title">Importer des donn&eacute;es</h2>
+        <p class="import-sub">
+          Les donn&eacute;es import&eacute;es remplacent celles affich&eacute;es
+          <b>pour cette session uniquement</b> : rechargez la page pour revenir
+          au fichier <code>data/cols_geocoded.json</code>.
+        </p>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button"
+             aria-label="D&eacute;poser un fichier CSV ou JSON">
+          <div class="dz-icon">&uarr;</div>
+          <p class="dz-title">D&eacute;posez un fichier ici</p>
+          <p class="dz-sub">ou cliquez pour parcourir &mdash;
+            <code>.csv</code> (format de l'export &laquo;&nbsp;Exporter&nbsp;&raquo;) ou <code>.json</code></p>
+          <input type="file" id="file-input" accept=".csv,.json,text/csv,application/json" hidden>
+        </div>
+        <div id="import-result" class="import-result" hidden>
+          <p id="import-summary" class="import-summary"></p>
+          <ul id="import-errors" class="import-errors" hidden></ul>
+          <p id="import-warnings" class="import-warnings" hidden></p>
+          <div class="import-actions">
+            <button id="btn-import-confirm" class="btn-primary" type="button">Remplacer les donn&eacute;es</button>
+            <button id="btn-import-cancel" class="btn-ghost" type="button">Annuler</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail drawer -->
+    <aside id="drawer" aria-hidden="true">
+      <button id="drawer-close" aria-label="Fermer">&times;</button>
+      <div id="drawer-content"></div>
+    </aside>
+
+  </div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/maplibre-gl@3/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.1.2/leaflet-maplibre-gl.js"></script>
+<script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+<script src="js/csv.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

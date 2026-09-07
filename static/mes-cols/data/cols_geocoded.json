@@ -1,0 +1,3562 @@
+[
+  {
+    "id": "col-de-vars",
+    "name": "Col de Vars",
+    "department_code": "04",
+    "department_name": "Alpes-de-Haute-Provence",
+    "country": "France",
+    "altitude": 2108,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de Vars, Alpes-de-Haute-Provence, France",
+    "lat": 44.5299043,
+    "lon": 6.7111941,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/ubaye/france/col-de-vars-depuis-guillestre-c93.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-vars-guillestre"
+    }
+  },
+  {
+    "id": "col-d-allos",
+    "name": "Col d'Allos",
+    "department_code": "04",
+    "department_name": "Alpes-de-Haute-Provence",
+    "country": "France",
+    "altitude": 2247,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col d'Allos, Alpes-de-Haute-Provence, France",
+    "lat": 44.2972097,
+    "lon": 6.5937055,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pelat/france/col-d-allos-depuis-barcelonnette-c113.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-cayolle",
+    "name": "Col de la Cayolle",
+    "department_code": "04",
+    "department_name": "Alpes-de-Haute-Provence",
+    "country": "France",
+    "altitude": 2326,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Cayolle, Alpes-de-Haute-Provence, France",
+    "lat": 44.259142,
+    "lon": 6.7439734,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/mercantour/france/col-de-la-cayolle-depuis-barcelonnette-c97.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-cayolle-uvernet-fours"
+    }
+  },
+  {
+    "id": "col-de-la-bonnette",
+    "name": "Col de la Bonnette",
+    "department_code": "04",
+    "department_name": "Alpes-de-Haute-Provence",
+    "country": "France",
+    "altitude": 2802,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Bonnette, Alpes-de-Haute-Provence, France",
+    "lat": 45.9160105,
+    "lon": 5.8087546,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-saulce",
+    "name": "Col de la Saulce",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 877,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Saulce, Hautes-Alpes, France",
+    "lat": 44.4155026,
+    "lon": 5.584134,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-sentinelle",
+    "name": "Col de la Sentinelle",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 981,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Sentinelle, Hautes-Alpes, France",
+    "lat": 44.5128388,
+    "lon": 6.1009526,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/bochaine/france/col-de-la-sentinelle-depuis-gap-c554.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-sentinelle-gap"
+    }
+  },
+  {
+    "id": "col-du-villar",
+    "name": "Col du Villar",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1039,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Villar, Hautes-Alpes, France",
+    "lat": 45.0206008,
+    "lon": 6.3278954,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-pommerol",
+    "name": "Col de Pommerol",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1072,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Pommerol, Hautes-Alpes, France",
+    "lat": 44.4264569,
+    "lon": 5.4624841,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-des-tourettes",
+    "name": "Col des Tourettes",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1126,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Tourettes, Hautes-Alpes, France",
+    "lat": 44.6591203,
+    "lon": 6.4243731,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-des-tourettes-depuis-col-de-la-saulce-c1001.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-tourettes"
+    }
+  },
+  {
+    "id": "col-de-cabre",
+    "name": "Col de Cabre",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1180,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Cabre, Hautes-Alpes, France",
+    "lat": 44.5495973,
+    "lon": 5.5983269,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-cabre-depuis-beaurieres-c879.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-carabes",
+    "name": "Col de Carabes",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1261,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Carabes, Hautes-Alpes, France",
+    "lat": 44.5006375,
+    "lon": 5.6539762,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-carabes-depuis-sigottier-c992.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-manse",
+    "name": "Col de Manse",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1268,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Manse, Hautes-Alpes, France",
+    "lat": 44.612379,
+    "lon": 6.1344136,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/ecrins/france/col-de-manse-depuis-la-batie-neuve-c555.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-manse-la-batie-neuve"
+    }
+  },
+  {
+    "id": "col-de-festre",
+    "name": "Col de Festre",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1441,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Festre, Hautes-Alpes, France",
+    "lat": 44.6672528,
+    "lon": 5.8578578,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-festre"
+    }
+  },
+  {
+    "id": "col-de-moissiere",
+    "name": "Col de Moissière",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1573,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Moissière, Hautes-Alpes, France",
+    "lat": 44.6010559,
+    "lon": 6.2201426,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/ecrins/france/col-de-moissiere-depuis-forest-saint-julien-c550.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-moissiere"
+    }
+  },
+  {
+    "id": "col-du-noyer",
+    "name": "Col du Noyer",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1664,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Noyer, Hautes-Alpes, France",
+    "lat": 44.692549,
+    "lon": 5.9842975,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/devoluy/france/col-du-noyer-depuis-le-noyer-c199.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-noyer"
+    }
+  },
+  {
+    "id": "col-de-l-echelle",
+    "name": "Col de L'échelle",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 1762,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de L'échelle, Hautes-Alpes, France",
+    "lat": 45.0264828,
+    "lon": 6.6569896,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/cerces/italie/col-de-l-echelle-depuis-bardonecchia-c428.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-lautaret",
+    "name": "Col du Lautaret",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 2058,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col du Lautaret, Hautes-Alpes, France",
+    "lat": 45.0352314,
+    "lon": 6.4051088,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-du-lautaret-depuis-briancon-c49.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-lautaret-mizoen"
+    }
+  },
+  {
+    "id": "col-de-la-platriere-izoard-cote-guillestre",
+    "name": "Col de la Platrière (Izoard côté Guillestre)",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 2220,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Platrière, Hautes-Alpes, France",
+    "lat": 44.8075655,
+    "lon": 6.7361802,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-l-izoard",
+    "name": "Col de l'Izoard",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 2360,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de l'Izoard, Hautes-Alpes, France",
+    "lat": 44.8196595,
+    "lon": 6.734975,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/queyras/france/col-de-l-izoard-depuis-briancon-c47.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-galibier",
+    "name": "Col du Galibier",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 2682,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col du Galibier, Hautes-Alpes, France",
+    "lat": 45.0641384,
+    "lon": 6.407857,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-du-galibier-depuis-col-du-lautaret-c36.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-galibier-col-du-galibier-mywhoosh"
+    }
+  },
+  {
+    "id": "col-agnel",
+    "name": "Col Agnel",
+    "department_code": "05",
+    "department_name": "Hautes-Alpes",
+    "country": "France",
+    "altitude": 2744,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col Agnel, Hautes-Alpes, France",
+    "lat": 44.6838546,
+    "lon": 6.9794662,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/queyras/italie/col-agnel-depuis-casteldelfino-c117.htm",
+      "mycols": "https://mycols.app/fr/col/col-agnel"
+    }
+  },
+  {
+    "id": "col-des-4-chemins",
+    "name": "Col des 4 chemins",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 321,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des 4 chemins, Alpes-Maritimes, France",
+    "lat": 43.7167082,
+    "lon": 7.3125911,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-d-eze",
+    "name": "Col d'Eze",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 507,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Eze, Alpes-Maritimes, France",
+    "lat": 43.7340405,
+    "lon": 7.3466312,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-nice/france/col-d-eze-depuis-nice-c1066.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-leque",
+    "name": "Col de la Lèque",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 695,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Lèque, Alpes-Maritimes, France",
+    "lat": 43.6818502,
+    "lon": 6.8131608,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-de-la-leque-depuis-saint-cezaire-sur-siagne-c3174.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-leque"
+    }
+  },
+  {
+    "id": "col-du-pilon",
+    "name": "Col du Pilon",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 786,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Pilon, Alpes-Maritimes, France",
+    "lat": 43.6850106,
+    "lon": 6.8826353,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-du-pilon-depuis-grasse-c1112.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-pilon-route-napoleon-grasse"
+    }
+  },
+  {
+    "id": "col-de-vence",
+    "name": "Col de Vence",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 963,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Vence, Alpes-Maritimes, France",
+    "lat": 43.7606246,
+    "lon": 7.0751167,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-de-vence-depuis-pont-du-loup-c593.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-vence-saint-martin-le-vinoux"
+    }
+  },
+  {
+    "id": "col-du-ferrier",
+    "name": "Col du Ferrier",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1041,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Ferrier, Alpes-Maritimes, France",
+    "lat": 43.7117846,
+    "lon": 6.8650989,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-du-ferrier-depuis-saint-vallier-de-thiey-c1111.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-ferrier"
+    }
+  },
+  {
+    "id": "col-de-la-sine",
+    "name": "Col de la Sine",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1108,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Sine, Alpes-Maritimes, France",
+    "lat": 43.7594642,
+    "lon": 6.8612045,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-de-la-sine-depuis-pont-du-loup-c1898.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-l-ecre",
+    "name": "Col de l'Ecre",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1118,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de l'Ecre, Alpes-Maritimes, France",
+    "lat": 43.7419765,
+    "lon": 6.9456811,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/prealpes-de-castellane/france/col-de-l-ecre-depuis-chateauneuf-de-grasse-c1656.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-st-martin",
+    "name": "Col St Martin",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1500,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col St Martin, Alpes-Maritimes, France",
+    "lat": 44.0709578,
+    "lon": 7.2213726,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-turini",
+    "name": "Col du Turini",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1607,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Turini, Alpes-Maritimes, France",
+    "lat": 43.9848544,
+    "lon": 7.3638727,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-couillole",
+    "name": "Col de la Couillole",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 1678,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Couillole, Alpes-Maritimes, France",
+    "lat": 44.1002269,
+    "lon": 7.0229315,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/mercantour/france/col-de-la-couillole-depuis-beuil-c352.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-couillole-rigaud"
+    }
+  },
+  {
+    "id": "col-des-champs",
+    "name": "Col des Champs",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 2093,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col des Champs, Alpes-Maritimes, France",
+    "lat": 44.1750349,
+    "lon": 6.6979081,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pelat/france/col-des-champs-depuis-colmars-c125.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-champs-colmars"
+    }
+  },
+  {
+    "id": "col-de-la-lombarde",
+    "name": "Col de la Lombarde",
+    "department_code": "06",
+    "department_name": "Alpes-Maritimes",
+    "country": "France",
+    "altitude": 2350,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Lombarde, Alpes-Maritimes, France",
+    "lat": 44.1993306,
+    "lon": 7.1554253,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/mercantour/france/col-de-la-lombarde-depuis-isola-c304.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-lombarde-isola"
+    }
+  },
+  {
+    "id": "col-de-mezilhac",
+    "name": "Col de Mézilhac",
+    "department_code": "07",
+    "department_name": "Ardèche",
+    "country": "France",
+    "altitude": 1119,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Mézilhac, Ardèche, France",
+    "lat": 44.807926,
+    "lon": 4.346197,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/monts-du-vivarais/france/col-de-mezilhac-depuis-albon-d-ardeche-c2395.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-mezilhac"
+    }
+  },
+  {
+    "id": "col-st-michel",
+    "name": "Col St Michel",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 347,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col St Michel, Drôme, France",
+    "lat": 44.2454563,
+    "lon": 5.2283359,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-perponcher",
+    "name": "Col de Perponcher",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 460,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Perponcher, Drôme, France",
+    "lat": 44.2882152,
+    "lon": 5.2318651,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-propiac",
+    "name": "Col de Propiac",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 526,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Propiac, Drôme, France",
+    "lat": 44.2760659,
+    "lon": 5.1811594,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/baronnies/france/col-de-propiac-depuis-propiac-c861.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-propiac-propiac"
+    }
+  },
+  {
+    "id": "col-de-la-borne",
+    "name": "Col de la Borne",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 591,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Col de la Borne, Drôme, France",
+    "lat": 44.7945686,
+    "lon": 5.357598,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-ferrand",
+    "name": "Col de Ferrand",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 594,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Col de Ferrand, Drôme, France",
+    "lat": 44.6926454,
+    "lon": 5.4449807,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-reychasset",
+    "name": "Col de Reychasset",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 600,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Reychasset, Drôme, France",
+    "lat": 44.3190259,
+    "lon": 5.5945882,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-reychasset-villebois-les-pins"
+    }
+  },
+  {
+    "id": "col-de-romeyer",
+    "name": "Col de Romeyer",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 637,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Col de Romeyer, Drôme, France",
+    "lat": 44.790248,
+    "lon": 5.3981914,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-valouse",
+    "name": "Col de Valouse",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 735,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Valouse, Drôme, France",
+    "lat": 44.4617,
+    "lon": 5.1759,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-valouse-depuis-la-pailette-c991.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-valouse-saint-ferreol-trente-pas"
+    }
+  },
+  {
+    "id": "col-d-aiguieres",
+    "name": "Col d'Aiguières",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 738,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Aiguières, Drôme, France",
+    "lat": 44.2242624,
+    "lon": 5.3284893,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/baronnies/france/col-d-aiguieres-depuis-eygaliers-c921.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-croix",
+    "name": "Col de la Croix",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 745,
+    "ascents": 5,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix, Drôme, France",
+    "lat": 44.9488639,
+    "lon": 5.2692667,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-la-croix-depuis-beaufort-sur-gervanne-c2352.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-saint-andeol"
+    }
+  },
+  {
+    "id": "col-de-marignac",
+    "name": "Col de Marignac",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 748,
+    "ascents": 10,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Marignac, Drôme, France",
+    "lat": 44.815706,
+    "lon": 5.3016231,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-marignac-saint-julien-en-quint"
+    }
+  },
+  {
+    "id": "col-de-sausse",
+    "name": "Col de Sausse",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 791,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Sausse, Drôme, France",
+    "lat": 44.4772487,
+    "lon": 5.2187525,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-lescou",
+    "name": "Col Lescou",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 829,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Lescou, Drôme, France",
+    "lat": 44.5078833,
+    "lon": 5.2487631,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-lescou-depuis-crupies-c1006.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-l-abbaye",
+    "name": "Col de l'abbaye",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 848,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Col de l'abbaye, Drôme, France",
+    "lat": 44.7304247,
+    "lon": 5.4378038,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-gaudissart",
+    "name": "Col de Gaudissart",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 889,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Gaudissart, Drôme, France",
+    "lat": 44.5803377,
+    "lon": 5.7932074,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-pre-guittard",
+    "name": "Col de Pré-Guittard",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 914,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Pré-Guittard, Drôme, France",
+    "lat": 44.5047206,
+    "lon": 5.3058004,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-muse",
+    "name": "Col de Muse",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 932,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Muse, Drôme, France",
+    "lat": 44.2615189,
+    "lon": 5.6107884,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-muse-depuis-saint-nazaire-le-desert-c3834.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-muse-saint-nazaire-le-desert"
+    }
+  },
+  {
+    "id": "col-de-premol",
+    "name": "Col de Prémol",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 964,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Prémol, Drôme, France",
+    "lat": 44.5509667,
+    "lon": 5.4151538,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-premol-depuis-la-charce-c1005.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-premol-la-charce"
+    }
+  },
+  {
+    "id": "col-de-bacchus",
+    "name": "Col de Bacchus",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 980,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Bacchus, Drôme, France",
+    "lat": 44.8530487,
+    "lon": 5.1756439,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-bacchus-depuis-beaufort-sur-gervanne-c644.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-bacchus-beaufort-sur-gervanne"
+    }
+  },
+  {
+    "id": "col-de-geine",
+    "name": "Col de Geine",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1009,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Geine, Drôme, France",
+    "lat": 44.2233075,
+    "lon": 5.3583893,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/baronnies/france/col-de-geine-depuis-eygaliers-c920.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-geine"
+    }
+  },
+  {
+    "id": "col-de-la-machine",
+    "name": "Col de la Machine",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1011,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Machine, Drôme, France",
+    "lat": 44.974739,
+    "lon": 5.3347686,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-la-machine-depuis-saint-jean-en-royans-c570.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-machine-saint-laurent-en-royans"
+    }
+  },
+  {
+    "id": "col-de-miscon",
+    "name": "Col de Miscon",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1023,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Miscon, Drôme, France",
+    "lat": 44.628933,
+    "lon": 5.5438128,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-miscon-boulc"
+    }
+  },
+  {
+    "id": "col-des-roustans",
+    "name": "Col des Roustans",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1030,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Roustans, Drôme, France",
+    "lat": 44.5398865,
+    "lon": 5.368926,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-des-roustans"
+    }
+  },
+  {
+    "id": "col-de-pennes",
+    "name": "Col de Pennes",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1040,
+    "ascents": 8,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Pennes, Drôme, France",
+    "lat": 44.6447407,
+    "lon": 5.342558,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-pennes-depuis-barnave-c749.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-pennes-recoubeau-jansac"
+    }
+  },
+  {
+    "id": "col-de-la-chaudiere",
+    "name": "Col de la Chaudière",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1047,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Chaudière, Drôme, France",
+    "lat": 44.6268187,
+    "lon": 5.2014474,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-la-chaudiere-depuis-bourdeaux-c848.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-chaudiere-saillans"
+    }
+  },
+  {
+    "id": "col-du-fays",
+    "name": "Col du Fays",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1051,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Fays, Drôme, France",
+    "lat": 44.502258,
+    "lon": 5.4728796,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-proncel",
+    "name": "Col de Proncel",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1100,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Proncel, Drôme, France",
+    "lat": 44.9278226,
+    "lon": 5.3820777,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-proncel-depuis-les-barraques-en-vercors-c590.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-rossas",
+    "name": "Col de Rossas",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1121,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Rossas, Drôme, France",
+    "lat": 44.5068014,
+    "lon": 5.5103465,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-rossas-valdrome"
+    }
+  },
+  {
+    "id": "col-de-la-croix-haute",
+    "name": "Col de la Croix-Haute",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1176,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix-Haute, Drôme, France",
+    "lat": 44.7237892,
+    "lon": 5.6774167,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-haute"
+    }
+  },
+  {
+    "id": "col-de-carri",
+    "name": "Col de Carri",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1202,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Carri, Drôme, France",
+    "lat": 44.9441955,
+    "lon": 5.3623596,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-carri-depuis-les-barraques-en-vercors-c569.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-st-alexis",
+    "name": "Col St Alexis",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1222,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col St Alexis, Drôme, France",
+    "lat": 44.8725696,
+    "lon": 5.4069295,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-rousset",
+    "name": "Col de Rousset",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1254,
+    "ascents": 31,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Rousset, Drôme, France",
+    "lat": 44.8375223,
+    "lon": 5.4020174,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-rousset-depuis-die-c223.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-rousset"
+    }
+  },
+  {
+    "id": "col-de-la-bataille",
+    "name": "Col de la Bataille",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1313,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Bataille, Drôme, France",
+    "lat": 44.897794,
+    "lon": 5.2337878,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-la-bataille-depuis-leoncel-c573.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-bataille-bouvante"
+    }
+  },
+  {
+    "id": "col-de-grimone",
+    "name": "Col de Grimone",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1318,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Grimone, Drôme, France",
+    "lat": 44.6914457,
+    "lon": 5.6539885,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-grimone-depuis-chatillon-en-diois-c563.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-grimone-treschenu-creyers"
+    }
+  },
+  {
+    "id": "col-de-lachau",
+    "name": "Col de Lachau",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1337,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Lachau, Drôme, France",
+    "lat": 44.7211844,
+    "lon": 5.6337724,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-menee",
+    "name": "Col de Menée",
+    "department_code": "26",
+    "department_name": "Drôme",
+    "country": "France",
+    "altitude": 1402,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Menée, Drôme, France",
+    "lat": 44.7577636,
+    "lon": 5.6037693,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/diois/france/col-de-menee-depuis-d75-c970.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-menee-clelles"
+    }
+  },
+  {
+    "id": "col-du-menez-hom",
+    "name": "Col du Menez-Hom",
+    "department_code": "29",
+    "department_name": "Finistère",
+    "country": "France",
+    "altitude": 211,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Menez-Hom, Finistère, France",
+    "lat": 48.2047031,
+    "lon": -4.2488918,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-peyresourde",
+    "name": "Col de Peyresourde",
+    "department_code": "31",
+    "department_name": "Haute-Garonne",
+    "country": "France",
+    "altitude": 1569,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Peyresourde, Haute-Garonne, France",
+    "lat": 42.80231,
+    "lon": 0.46308,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-de-peyresourde-depuis-armenteule-c66.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-peyresourde-avajan"
+    }
+  },
+  {
+    "id": "col-du-chateau-d-eau",
+    "name": "Col du Château d'eau",
+    "department_code": "33",
+    "department_name": "Gironde",
+    "country": "France",
+    "altitude": 34,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Château d'eau, Gironde, France",
+    "lat": 45.1518,
+    "lon": -1.1278,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-placette",
+    "name": "Col de la Placette",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 587,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Placette, Isère, France",
+    "lat": 45.3301122,
+    "lon": 5.6581859,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-la-placette-depuis-saint-laurent-du-pont-c950.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-placette"
+    }
+  },
+  {
+    "id": "col-de-clemenciere",
+    "name": "Col de Clémencière",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 622,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Clémencière, Isère, France",
+    "lat": 45.2446289,
+    "lon": 5.7236695,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-clemenciere-depuis-grenoble-c432.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-vence-2",
+    "name": "Col de Vence",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 782,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Vence, Isère, France",
+    "lat": 45.2356334,
+    "lon": 5.750961,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-vence-depuis-grenoble-c430.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-vence-saint-martin-le-vinoux"
+    }
+  },
+  {
+    "id": "col-acarias",
+    "name": "Col Acarias",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 892,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Acarias, Isère, France",
+    "lat": 44.83604,
+    "lon": 5.73747,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-fau",
+    "name": "Col du Fau",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 899,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Fau, Isère, France",
+    "lat": 44.9059141,
+    "lon": 5.6261968,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-du-fau-vif"
+    }
+  },
+  {
+    "id": "col-des-ayes",
+    "name": "Col des Ayes",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 944,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Ayes, Isère, France",
+    "lat": 45.2741845,
+    "lon": 5.9885265,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/belledonne/france/col-des-ayes-depuis-tencin-c1524.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-ayes-theys"
+    }
+  },
+  {
+    "id": "col-des-mouilles",
+    "name": "Col des Mouilles",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1020,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Mouilles, Isère, France",
+    "lat": 45.2394185,
+    "lon": 5.9512846,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/belledonne/france/col-des-mouilles-depuis-villard-bonnot-c2474.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-mouilles-sainte-agnes"
+    }
+  },
+  {
+    "id": "col-de-marcieu",
+    "name": "Col de Marcieu",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1060,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Marcieu, Isère, France",
+    "lat": 45.3558184,
+    "lon": 5.918806,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-marcieu-depuis-la-buissiere-c915.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-marcieu"
+    }
+  },
+  {
+    "id": "col-de-romeyere",
+    "name": "Col de Romeyere",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1069,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Romeyere, Isère, France",
+    "lat": 45.1438725,
+    "lon": 5.4796741,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-romeyere-depuis-la-balme-de-rencurel-c213.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-cucheron",
+    "name": "Col de Cucheron",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1139,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Cucheron, Isère, France",
+    "lat": 45.4375208,
+    "lon": 6.0256942,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-malissol",
+    "name": "Col de Malissol",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1153,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Malissol, Isère, France",
+    "lat": 44.9284611,
+    "lon": 5.8435367,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/taillefer/france/col-de-malissol-depuis-basse-valette-c2572.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-malissol"
+    }
+  },
+  {
+    "id": "col-de-palaquit",
+    "name": "Col de Palaquit",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1154,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Palaquit, Isère, France",
+    "lat": 45.2728823,
+    "lon": 5.765495,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-palaquit-depuis-grenoble-c431.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-palaquit"
+    }
+  },
+  {
+    "id": "col-de-l-arzelier",
+    "name": "Col de l'Arzelier",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1154,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de l'Arzelier, Isère, France",
+    "lat": 44.9906273,
+    "lon": 5.5952228,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-l-arzelier-depuis-saint-guillaume-c2509.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-prayet",
+    "name": "Col du Prayet",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1197,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Prayet, Isère, France",
+    "lat": 45.3300912,
+    "lon": 5.865393,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-croix-perrin",
+    "name": "Col de la Croix Perrin",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1218,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix Perrin, Isère, France",
+    "lat": 45.1303776,
+    "lon": 5.5597624,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-la-croix-perrin-depuis-autrans-c2282.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-perrin-autrans"
+    }
+  },
+  {
+    "id": "col-des-deux",
+    "name": "Col des Deux",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1222,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Deux, Isère, France",
+    "lat": 44.909718,
+    "lon": 5.5523631,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-des-deux"
+    }
+  },
+  {
+    "id": "col-de-la-charmette",
+    "name": "Col de la Charmette",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1261,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Charmette, Isère, France",
+    "lat": 45.3218615,
+    "lon": 5.7399335,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-la-charmette-depuis-saint-egreve-c1170.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-charmette-saint-egreve"
+    }
+  },
+  {
+    "id": "col-de-porte",
+    "name": "Col de Porte",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1328,
+    "ascents": 6,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Porte, Isère, France",
+    "lat": 45.2899423,
+    "lon": 5.7669989,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-de-porte-depuis-grenoble-c90.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-porte-grenoble"
+    }
+  },
+  {
+    "id": "col-de-la-morte",
+    "name": "Col de la Morte",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1360,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Morte, Isère, France",
+    "lat": 45.0249267,
+    "lon": 5.860855,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/taillefer/france/col-de-la-morte-depuis-sechilienne-c1431.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-morte-saint-barthelemy-de-sechilienne"
+    }
+  },
+  {
+    "id": "col-d-herbouilly",
+    "name": "Col d'Herbouilly",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1370,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Herbouilly, Isère, France",
+    "lat": 45.043545,
+    "lon": 5.475878,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-d-herbouilly-depuis-les-barraques-en-vercors-c951.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "pas-du-mortier",
+    "name": "Pas du Mortier",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1389,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Pas du Mortier, Isère, France",
+    "lat": 45.2411397,
+    "lon": 5.5867629,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-coq",
+    "name": "Col du Coq",
+    "department_code": "38",
+    "department_name": "Isère",
+    "country": "France",
+    "altitude": 1434,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Coq, Isère, France",
+    "lat": 45.30246,
+    "lon": 5.8367738,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-du-coq-depuis-saint-hugues-c914.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-coq-saint-nazaire-les-eymes"
+    }
+  },
+  {
+    "id": "col-de-lessy",
+    "name": "Col de Lessy",
+    "department_code": "57",
+    "department_name": "Moselle",
+    "country": "France",
+    "altitude": 306,
+    "ascents": 19,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Lessy, Moselle, France",
+    "lat": 49.1255685,
+    "lon": 6.1155025,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-moreno",
+    "name": "Col de la Moreno",
+    "department_code": "63",
+    "department_name": "Puy-de-Dôme",
+    "country": "France",
+    "altitude": 1062,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Moreno, Puy-de-Dôme, France",
+    "lat": 45.7415517,
+    "lon": 2.9488525,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chaine-des-puys-monts-dore/france/col-de-la-moreno-depuis-ceyssat-c1046.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-moreno-orcines"
+    }
+  },
+  {
+    "id": "col-d-aubisque",
+    "name": "Col d'Aubisque",
+    "department_code": "64",
+    "department_name": "Pyrénées-Atlantiques",
+    "country": "France",
+    "altitude": 1709,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Aubisque, Pyrénées-Atlantiques, France",
+    "lat": 42.9765752,
+    "lon": -0.339792,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-d-aubisque-depuis-argeles-gazost-c12.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-soulor",
+    "name": "Col du Soulor",
+    "department_code": "65",
+    "department_name": "Hautes-Pyrénées",
+    "country": "France",
+    "altitude": 1474,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Soulor, Hautes-Pyrénées, France",
+    "lat": 42.9606159,
+    "lon": -0.2611338,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-du-soulor-depuis-argeles-gazost-c121.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-soulor-arrens-marsous"
+    }
+  },
+  {
+    "id": "col-d-aspin",
+    "name": "Col d'Aspin",
+    "department_code": "65",
+    "department_name": "Hautes-Pyrénées",
+    "country": "France",
+    "altitude": 1489,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Aspin, Hautes-Pyrénées, France",
+    "lat": 42.9423318,
+    "lon": 0.3273823,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-d-aspin-depuis-arreau-c9.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-d-azet",
+    "name": "Col d'Azet",
+    "department_code": "65",
+    "department_name": "Hautes-Pyrénées",
+    "country": "France",
+    "altitude": 1580,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Azet, Hautes-Pyrénées, France",
+    "lat": 42.7918785,
+    "lon": 0.3809508,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-d-azet-depuis-bazus-aure-c258.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-tourmalet",
+    "name": "Col du Tourmalet",
+    "department_code": "65",
+    "department_name": "Hautes-Pyrénées",
+    "country": "France",
+    "altitude": 2114,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col du Tourmalet, Hautes-Pyrénées, France",
+    "lat": 42.9083884,
+    "lon": 0.145297,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-centrales/france/col-du-tourmalet-depuis-luz-saint-sauveur-c65.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-tourmalet-luz-saint-sauveur"
+    }
+  },
+  {
+    "id": "col-rigat",
+    "name": "Col Rigat",
+    "department_code": "66",
+    "department_name": "Pyrénées-Orientales",
+    "country": "France",
+    "altitude": 1488,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Rigat, Pyrénées-Orientales, France",
+    "lat": 42.4709421,
+    "lon": 2.0517632,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-perche",
+    "name": "Col de la Perche",
+    "department_code": "66",
+    "department_name": "Pyrénées-Orientales",
+    "country": "France",
+    "altitude": 1581,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Perche, Pyrénées-Orientales, France",
+    "lat": 42.4965561,
+    "lon": 2.0927905,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-est/france/col-de-la-perche-depuis-bourg-madame-c2339.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-calvaire-de-font-romeu",
+    "name": "Col du Calvaire de Font Romeu",
+    "department_code": "66",
+    "department_name": "Pyrénées-Orientales",
+    "country": "France",
+    "altitude": 1838,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Calvaire de Font Romeu, Pyrénées-Orientales, France",
+    "lat": 42.5107959,
+    "lon": 2.0498514,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-est/france/col-du-calvaire-de-font-romeu-depuis-estavar-c2611.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-calvaire-de-font-romeu-estavar"
+    }
+  },
+  {
+    "id": "col-de-la-llose",
+    "name": "Col de la Llose",
+    "department_code": "66",
+    "department_name": "Pyrénées-Orientales",
+    "country": "France",
+    "altitude": 1861,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Llose, Pyrénées-Orientales, France",
+    "lat": 42.5355841,
+    "lon": 2.1420015,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/pyrenees-est/france/col-de-la-llose-depuis-la-llagonne-c2278.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-llose-olette"
+    }
+  },
+  {
+    "id": "col-del-pam",
+    "name": "Col del pam",
+    "department_code": "66",
+    "department_name": "Pyrénées-Orientales",
+    "country": "France",
+    "altitude": 1997,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col del pam, Pyrénées-Orientales, France",
+    "lat": 42.5327828,
+    "lon": 2.0365611,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-kreuzweg",
+    "name": "Col de Kreuzweg",
+    "department_code": "67",
+    "department_name": "Bas-Rhin",
+    "country": "France",
+    "altitude": 768,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Kreuzweg, Bas-Rhin, France",
+    "lat": 48.1007222,
+    "lon": 7.2878198,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-charbonniere",
+    "name": "Col de la Charbonnière",
+    "department_code": "67",
+    "department_name": "Bas-Rhin",
+    "country": "France",
+    "altitude": 961,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Charbonnière, Bas-Rhin, France",
+    "lat": 48.3834854,
+    "lon": 7.2574328,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-de-la-charbonniere-depuis-col-de-steige-c488.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-charbonniere"
+    }
+  },
+  {
+    "id": "col-du-wilsbach",
+    "name": "Col du Wilsbach",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 605,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Wilsbach, Haut-Rhin, France",
+    "lat": 48.0506427,
+    "lon": 7.2650654,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-firstplan",
+    "name": "Col Firstplan",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 722,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Firstplan, Haut-Rhin, France",
+    "lat": 47.9992601,
+    "lon": 7.185117,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-haut-de-ribeauville",
+    "name": "Col Haut de Ribeauvillé",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 742,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Haut de Ribeauvillé, Haut-Rhin, France",
+    "lat": 48.2267741,
+    "lon": 7.2313942,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-haut-de-ribeauville-depuis-ribeauville-c1273.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-amic",
+    "name": "Col Amic",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 825,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Amic, Haut-Rhin, France",
+    "lat": 47.8754863,
+    "lon": 7.1273463,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-amic-uffholtz"
+    }
+  },
+  {
+    "id": "col-de-freland",
+    "name": "Col de Freland",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 830,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Freland, Haut-Rhin, France",
+    "lat": 48.192921,
+    "lon": 7.2152459,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-de-freland-depuis-beblenheim-c2091.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-freland-ribeauville"
+    }
+  },
+  {
+    "id": "col-herrenfluh",
+    "name": "Col Herrenfluh",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 835,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Herrenfluh, Haut-Rhin, France",
+    "lat": 47.8455374,
+    "lon": 7.143365,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-silberloch",
+    "name": "Col Silberloch",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 909,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col Silberloch, Haut-Rhin, France",
+    "lat": 47.857408,
+    "lon": 7.1574462,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-wettstein",
+    "name": "Col du Wettstein",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 882,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Wettstein, Haut-Rhin, France",
+    "lat": 48.0878752,
+    "lon": 7.1160112,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-du-wettstein-depuis-munster-c1138.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-wettstein-orbey"
+    }
+  },
+  {
+    "id": "col-de-grosse-pierre",
+    "name": "Col de Grosse-Pierre",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 954,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Col de Grosse-Pierre, Haut-Rhin, France",
+    "lat": 48.0263908,
+    "lon": 6.8855654,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-schlucht",
+    "name": "Col de la Schlucht",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 1139,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Schlucht, Haut-Rhin, France",
+    "lat": 48.063994,
+    "lon": 7.0235584,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-de-la-schlucht-depuis-fraize-c230.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-schlucht-xonrupt-longemer"
+    }
+  },
+  {
+    "id": "col-du-calvaire",
+    "name": "Col du Calvaire",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 1144,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Calvaire, Haut-Rhin, France",
+    "lat": 48.1367024,
+    "lon": 7.0866136,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/col-du-calvaire-depuis-hachimette-c1136.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-calvaire-louschbach"
+    }
+  },
+  {
+    "id": "col-du-petit-ballon",
+    "name": "Col du Petit Ballon",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 1160,
+    "ascents": 2,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Petit Ballon, Haut-Rhin, France",
+    "lat": 47.9849907,
+    "lon": 7.120528,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-du-petit-ballon-soultzbach-les-bains"
+    }
+  },
+  {
+    "id": "col-du-platzerwasel",
+    "name": "Col du Platzerwasel",
+    "department_code": "68",
+    "department_name": "Haut-Rhin",
+    "country": "France",
+    "altitude": 1183,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Platzerwasel, Haut-Rhin, France",
+    "lat": 47.9694963,
+    "lon": 7.0428914,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/col-du-platzerwasel"
+    }
+  },
+  {
+    "id": "col-de-la-croix-de-l-orme",
+    "name": "Col de la Croix de l'Orme",
+    "department_code": "69",
+    "department_name": "Rhône",
+    "country": "France",
+    "altitude": 491,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix de l'Orme, Rhône, France",
+    "lat": 46.2760692,
+    "lon": 4.5726085,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaujolais/france/col-de-la-croix-de-l-orme-depuis-germolles-sur-grosne-c1212.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-de-lorme-trades"
+    }
+  },
+  {
+    "id": "col-de-la-cepee",
+    "name": "Col de la Cépée",
+    "department_code": "69",
+    "department_name": "Rhône",
+    "country": "France",
+    "altitude": 545,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Cépée, Rhône, France",
+    "lat": 46.2370858,
+    "lon": 4.3917755,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaujolais/france/col-de-la-cepee-depuis-d10-d66-c285.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-crie",
+    "name": "Col de Crie",
+    "department_code": "69",
+    "department_name": "Rhône",
+    "country": "France",
+    "altitude": 622,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Crie, Rhône, France",
+    "lat": 46.2066808,
+    "lon": 4.537158,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaujolais/france/col-de-crie-depuis-monsols-c1183.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-crie-monsols"
+    }
+  },
+  {
+    "id": "col-du-champ-juin",
+    "name": "Col du Champ Juin",
+    "department_code": "69",
+    "department_name": "Rhône",
+    "country": "France",
+    "altitude": 731,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Champ Juin, Rhône, France",
+    "lat": 46.248889,
+    "lon": 4.481111,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-fut-d-avenas",
+    "name": "Col du Fut d'Avenas",
+    "department_code": "69",
+    "department_name": "Rhône",
+    "country": "France",
+    "altitude": 740,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Fut d'Avenas, Rhône, France",
+    "lat": 46.1924653,
+    "lon": 4.6194297,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaujolais/france/col-du-fut-d-avenas-depuis-beaujeu-c2522.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-fut-davenas"
+    }
+  },
+  {
+    "id": "ballon-de-servance",
+    "name": "Ballon de Servance",
+    "department_code": "70",
+    "department_name": "Haute-Saône",
+    "country": "France",
+    "altitude": 1156,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Ballon de Servance, Haute-Saône, France",
+    "lat": 47.8301995,
+    "lon": 6.7928905,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/ballon-de-servance-depuis-col-des-croix-c391.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-brancion",
+    "name": "Col de Brancion",
+    "department_code": "71",
+    "department_name": "Saône-et-Loire",
+    "country": "France",
+    "altitude": 354,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Brancion, Saône-et-Loire, France",
+    "lat": 46.5414011,
+    "lon": 4.8006204,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/monts-du-maconnais/france/col-de-brancion-depuis-d14-depuis-le-menhir-71-c1308.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-brancion-martailly-les-brancion"
+    }
+  },
+  {
+    "id": "col-des-chevres",
+    "name": "Col des Chèvres",
+    "department_code": "71",
+    "department_name": "Saône-et-Loire",
+    "country": "France",
+    "altitude": 419,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Chèvres, Saône-et-Loire, France",
+    "lat": 46.5699766,
+    "lon": 4.8168648,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/monts-du-maconnais/france/col-des-chevres-depuis-d215-collonge-71-c1309.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-chevres-mancey"
+    }
+  },
+  {
+    "id": "col-de-la-croix-2",
+    "name": "Col de la Croix",
+    "department_code": "71",
+    "department_name": "Saône-et-Loire",
+    "country": "France",
+    "altitude": 486,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix, Saône-et-Loire, France",
+    "lat": 46.4785934,
+    "lon": 4.7517233,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/monts-du-maconnais/france/col-de-la-croix-depuis-blanot-c1304.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-saint-andeol"
+    }
+  },
+  {
+    "id": "col-des-4-vents",
+    "name": "Col des 4 Vents",
+    "department_code": "71",
+    "department_name": "Saône-et-Loire",
+    "country": "France",
+    "altitude": 489,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des 4 Vents, Saône-et-Loire, France",
+    "lat": 46.4433027,
+    "lon": 4.7133761,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-croix-d-auterre",
+    "name": "Col de la Croix d'Auterre",
+    "department_code": "71",
+    "department_name": "Saône-et-Loire",
+    "country": "France",
+    "altitude": 556,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix d'Auterre, Saône-et-Loire, France",
+    "lat": 46.3020046,
+    "lon": 4.4504121,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-granier",
+    "name": "Col du Granier",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1134,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Granier, Savoie, France",
+    "lat": 45.4804946,
+    "lon": 5.9149776,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/chartreuse/france/col-du-granier-depuis-chambery-c108.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-granier-saint-pierre-dentremont"
+    }
+  },
+  {
+    "id": "col-de-la-confrerie",
+    "name": "Col de la Confrérie",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1368,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Confrérie, Savoie, France",
+    "lat": 45.2457256,
+    "lon": 6.3520203,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-des-aravis",
+    "name": "Col des Aravis",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1486,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Aravis, Savoie, France",
+    "lat": 45.872279,
+    "lon": 6.4648689,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/aravis/france/col-des-aravis-depuis-flumet-c2.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-aravis-thones"
+    }
+  },
+  {
+    "id": "col-du-telegraphe",
+    "name": "Col du Télégraphe",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1566,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Télégraphe, Savoie, France",
+    "lat": 45.2026999,
+    "lon": 6.4446143,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-du-telegraphe-depuis-saint-michel-de-maurienne-c57.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-telegraphe-watopia-climb-portal"
+    }
+  },
+  {
+    "id": "col-des-saisies",
+    "name": "Col des Saisies",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1633,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Saisies, Savoie, France",
+    "lat": 45.7615643,
+    "lon": 6.5333569,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaufortain/france/col-des-saisies-depuis-beaufort-c3862.htm",
+      "mycols": "https://mycols.app/fr/col/col-des-saisies-les-devies"
+    }
+  },
+  {
+    "id": "col-du-mollard",
+    "name": "Col du Mollard",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1638,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Mollard, Savoie, France",
+    "lat": 45.4837231,
+    "lon": 5.8675795,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-du-mollard-depuis-pont-de-belleville-c952.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-mollard-villargondran"
+    }
+  },
+  {
+    "id": "col-d-albanne",
+    "name": "Col d'Albanne",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1656,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col d'Albanne, Savoie, France",
+    "lat": 45.212509,
+    "lon": 6.4219343,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-d-albanne-depuis-le-bochet-c2588.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-madeleine-bessans",
+    "name": "Col de la Madeleine (Bessans)",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1746,
+    "ascents": 4,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Madeleine, Savoie, France",
+    "lat": 45.4349516,
+    "lon": 6.3755223,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vanoise/france/col-de-la-madeleine-depuis-feissons-sur-isere-c344.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-madeleine-bedoin"
+    }
+  },
+  {
+    "id": "col-du-glandon",
+    "name": "Col du Glandon",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1924,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col du Glandon, Savoie, France",
+    "lat": 45.2396059,
+    "lon": 6.1755353,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-du-glandon-depuis-barrage-du-verney-c45.htm",
+      "mycols": "https://mycols.app/fr/col/col-du-glandon-vaujany"
+    }
+  },
+  {
+    "id": "cormet-de-roselend",
+    "name": "Cormet de Roselend",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 1968,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Cormet de Roselend, Savoie, France",
+    "lat": 45.6913293,
+    "lon": 6.6906249,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/beaufortain/france/cormet-de-roselend-depuis-beaufort-c148.htm",
+      "mycols": "https://mycols.app/fr/col/cormet-de-roselend-beaufort"
+    }
+  },
+  {
+    "id": "col-de-la-madeleine",
+    "name": "Col de la Madeleine",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 2000,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Madeleine, Savoie, France",
+    "lat": 45.4349516,
+    "lon": 6.3755223,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vanoise/france/col-de-la-madeleine-depuis-feissons-sur-isere-c344.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-madeleine-bedoin"
+    }
+  },
+  {
+    "id": "col-de-la-croix-de-fer",
+    "name": "Col de la Croix de Fer",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 2064,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de la Croix de Fer, Savoie, France",
+    "lat": 45.2274902,
+    "lon": 6.2033309,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/arves-et-grandes-rousses/france/col-de-la-croix-de-fer-depuis-barrage-du-verney-c41.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-croix-de-fer-saint-jean-de-maurienne"
+    }
+  },
+  {
+    "id": "col-du-mont-cenis",
+    "name": "Col du Mont Cenis",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 2081,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col du Mont Cenis, Savoie, France",
+    "lat": 45.2598281,
+    "lon": 6.9008841,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/massif-du-mont-cenis/france/col-du-mont-cenis-depuis-lanslebourg-c87.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-du-petit-st-bernard",
+    "name": "Col du Petit St Bernard",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 2188,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col du Petit St Bernard, Savoie, France",
+    "lat": 45.6792488,
+    "lon": 6.8829399,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-l-iseran",
+    "name": "Col de l'Iseran",
+    "department_code": "73",
+    "department_name": "Savoie",
+    "country": "France",
+    "altitude": 2764,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Col de l'Iseran, Savoie, France",
+    "lat": 45.4171129,
+    "lon": 7.0308508,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vanoise/france/col-de-l-iseran-depuis-bourg-saint-maurice-c105.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-la-ramaz",
+    "name": "Col de la Ramaz",
+    "department_code": "74",
+    "department_name": "Haute-Savoie",
+    "country": "France",
+    "altitude": 1557,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Ramaz, Haute-Savoie, France",
+    "lat": 46.1593242,
+    "lon": 6.5806587,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/giffre-chablais/france/col-de-la-ramaz-depuis-mieussy-c52.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-ramaz-mieussy"
+    }
+  },
+  {
+    "id": "col-de-la-colombiere",
+    "name": "Col de la Colombière",
+    "department_code": "74",
+    "department_name": "Haute-Savoie",
+    "country": "France",
+    "altitude": 1613,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Colombière, Haute-Savoie, France",
+    "lat": 45.9922299,
+    "lon": 6.4756948,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/aravis/france/col-de-la-colombiere-depuis-le-grand-bornand-c111.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-colombiere-marnaz"
+    }
+  },
+  {
+    "id": "pas-du-voltigeur",
+    "name": "Pas du Voltigeur",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 328,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Pas du Voltigeur, Vaucluse, France",
+    "lat": 44.2289162,
+    "lon": 5.1482603,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-champ-paga",
+    "name": "Col de champ Paga",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 366,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de champ Paga, Vaucluse, France",
+    "lat": 44.139697,
+    "lon": 5.081362,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/provence/france/col-de-champ-paga-depuis-le-barroux-c820.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "col-de-suzette",
+    "name": "Col de Suzette",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 392,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de Suzette, Vaucluse, France",
+    "lat": 44.1685942,
+    "lon": 5.0683956,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/provence/france/col-de-suzette-depuis-beaumes-de-venise-c782.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-suzette-le-barroux"
+    }
+  },
+  {
+    "id": "col-de-la-chaine",
+    "name": "Col de la chaine",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 472,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la chaine, Vaucluse, France",
+    "lat": 44.1793108,
+    "lon": 5.0966402,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/provence/france/col-de-la-chaine-depuis-beaumes-de-venise-c831.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-chaine-le-barroux"
+    }
+  },
+  {
+    "id": "col-de-la-madeleine-bedouin",
+    "name": "Col de la Madeleine (Bedouin)",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 478,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Madeleine, Vaucluse, France",
+    "lat": 44.141193,
+    "lon": 5.1294341,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/provence/france/col-de-la-madeleine-depuis-bedoin-c641.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-madeleine-bedoin"
+    }
+  },
+  {
+    "id": "col-des-tempetes-mont-ventoux-1910m",
+    "name": "Col des Tempêtes (Mont Ventoux 1910m)",
+    "department_code": "84",
+    "department_name": "Vaucluse",
+    "country": "France",
+    "altitude": 1829,
+    "ascents": 3,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col des Tempêtes, Vaucluse, France",
+    "lat": 44.1741642,
+    "lon": 5.2837459,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "colle-sacreu-arenys-de-mar",
+    "name": "Colle Sacreu (Arenys de Mar)",
+    "department_code": null,
+    "department_name": null,
+    "country": "Espagne",
+    "altitude": 400,
+    "ascents": 2,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Colle Sacreu, Espagne",
+    "lat": 42.0088567,
+    "lon": 2.7196527,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "passo-dell-aprica",
+    "name": "Passo Dell'Aprica",
+    "department_code": null,
+    "department_name": null,
+    "country": "Italie",
+    "altitude": 1202,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Passo Dell'Aprica, Italie",
+    "lat": 46.1543295,
+    "lon": 10.1541791,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/massif-de-l-ortles/italie/passo-dell-aprica-depuis-edolo-c1632.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "passo-dello-stelvio",
+    "name": "Passo Dello Stelvio",
+    "department_code": null,
+    "department_name": null,
+    "country": "Italie",
+    "altitude": 2760,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Passo Dello Stelvio, Italie",
+    "lat": 46.5286176,
+    "lon": 10.4532056,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/massif-de-l-ortles/italie/passo-dello-stelvio-depuis-bormio-c361.htm",
+      "mycols": "https://mycols.app/fr/col/passo-dello-stelvio-prato-allo-stelvio"
+    }
+  },
+  {
+    "id": "col-de-la-forclaz",
+    "name": "Col de la Forclaz",
+    "department_code": null,
+    "department_name": null,
+    "country": "Suisse",
+    "altitude": 1526,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Col de la Forclaz, Suisse",
+    "lat": 46.0577309,
+    "lon": 7.0013461,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/massif-du-mont-blanc/suisse/col-de-la-forclaz-depuis-la-croix-c624.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-forclaz-martign-combe"
+    }
+  },
+  {
+    "id": "haut-folin",
+    "name": "Haut Folin",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 901,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Haut Folin, France",
+    "lat": 46.9961466,
+    "lon": 4.0371134,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "croix-de-justin-die",
+    "name": "Croix de Justin (Die)",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1004,
+    "ascents": 2,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": true,
+    "geocode_query": "Croix de Justin, France",
+    "lat": 44.7441648,
+    "lon": 5.3502004,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "la-planche-des-belles-filles",
+    "name": "La Planche des Belles Filles",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1035,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "La Planche des Belles Filles",
+    "lat": 47.7718658,
+    "lon": 6.7761968,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/la-planche-des-belles-filles"
+    }
+  },
+  {
+    "id": "le-champ-du-feu-vosges",
+    "name": "Le champ du Feu (Vosges)",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1099,
+    "ascents": 2,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Le champ du Feu, France",
+    "lat": 48.4028203,
+    "lon": 7.2640446,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "monte-generoso-suisse",
+    "name": "Monte Generoso (Suisse)",
+    "department_code": null,
+    "department_name": null,
+    "country": "Suisse",
+    "altitude": 1202,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Monte Generoso, Suisse",
+    "lat": 45.9312778,
+    "lon": 9.019945,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/alpes-lepontines/suisse/monte-generoso-depuis-mendrisio-c473.htm",
+      "mycols": "https://mycols.app/fr/col/monte-generoso"
+    }
+  },
+  {
+    "id": "grand-ballon",
+    "name": "Grand Ballon",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1343,
+    "ascents": 2,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Grand Ballon, France",
+    "lat": 47.9008362,
+    "lon": 7.0983962,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/grand-ballon-depuis-cernay-c79.htm",
+      "mycols": null
+    }
+  },
+  {
+    "id": "betex",
+    "name": "Betex",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1400,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Betex, France",
+    "lat": 46.1439829,
+    "lon": 6.5819402,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "crans-montana",
+    "name": "Crans-Montana",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1470,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Crans-Montana",
+    "lat": 46.3069171,
+    "lon": 7.469015,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/crans-montana-sierre"
+    }
+  },
+  {
+    "id": "mont-du-chat",
+    "name": "Mont du Chat",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1500,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Mont du Chat, France",
+    "lat": 45.643238,
+    "lon": 5.8186549,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/bugey/france/mont-du-chat-depuis-d921-d41a-c2454.htm",
+      "mycols": "https://mycols.app/fr/col/mont-du-chat"
+    }
+  },
+  {
+    "id": "champex-depuis-les-valettes-suisse",
+    "name": "Champex depuis les Valettes (Suisse)",
+    "department_code": null,
+    "department_name": null,
+    "country": "Suisse",
+    "altitude": 1500,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Champex depuis les Valettes, Suisse",
+    "lat": 46.0284449,
+    "lon": 7.1163339,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "les-orres",
+    "name": "Les Orres",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1550,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Les Orres, France",
+    "lat": 44.5140024,
+    "lon": 6.5510313,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/les-orres"
+    }
+  },
+  {
+    "id": "pla-d-adet",
+    "name": "Pla d'Adet",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1700,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Pla d'Adet, France",
+    "lat": 42.8125539,
+    "lon": 0.2947084,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/pla-dadet"
+    }
+  },
+  {
+    "id": "chamrousse",
+    "name": "Chamrousse",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1700,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Chamrousse, France",
+    "lat": 45.1108068,
+    "lon": 5.8748399,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/chamrousse-vaulnaveys-le-haut"
+    }
+  },
+  {
+    "id": "orciere-merlette",
+    "name": "Orcière Merlette",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1850,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Orcière Merlette, France",
+    "lat": 44.6952933,
+    "lon": 6.3248407,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "alpe-d-huez",
+    "name": "Alpe d'Huez",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 1860,
+    "ascents": 2,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Alpe d'Huez, France",
+    "lat": 45.092401,
+    "lon": 6.0699443,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": "https://mycols.app/fr/col/alpe-dhuez-allemond"
+    }
+  },
+  {
+    "id": "lago-di-cancano-torri-di-fraele-italie",
+    "name": "Lago Di Cancano - Torri Di Fraele (Italie)",
+    "department_code": null,
+    "department_name": null,
+    "country": "Italie",
+    "altitude": 1941,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Lago Di Cancano - Torri Di Fraele, Italie",
+    "lat": 46.5258595,
+    "lon": 10.3048947,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "arolla-suisse",
+    "name": "Arolla (Suisse)",
+    "department_code": null,
+    "department_name": null,
+    "country": "Suisse",
+    "altitude": 2000,
+    "ascents": 1,
+    "is_pass": false,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Arolla, Suisse",
+    "lat": 46.025975,
+    "lon": 7.4810866,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/alpes-valaisannes/suisse/arolla-depuis-sion-c1245.htm",
+      "mycols": "https://mycols.app/fr/col/arolla-les-hauderes"
+    }
+  }
+]
