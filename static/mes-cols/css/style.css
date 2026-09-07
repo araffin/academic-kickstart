@@ -398,7 +398,7 @@ body{
 /* ---------------------------------------------------------------
    List view
 ------------------------------------------------------------------ */
-#list-view{ flex:1; overflow-y:auto; padding:20px; }
+#list-view{ flex:1; overflow-y:auto; padding:60px 20px 20px; }
 #cols-table{ width:100%; border-collapse:collapse; font-size:13px; }
 #cols-table thead th{
   text-align:left;
@@ -604,7 +604,6 @@ body{
   .filters-toggle{
     top:68px;
   }
-  #list-view{ padding-top:60px; }
   #drawer{ width:100%; }
   .stats{ display:none; }
   .data-source{ display:none; }
