@@ -44,6 +44,7 @@ body{
 
 #app{
   height:100vh;
+  height:100dvh;
   overflow:hidden;
   position:relative;
   isolation:isolate;
@@ -345,7 +346,14 @@ body{
    Map
 ------------------------------------------------------------------ */
 #map-view{ flex:1; position:relative; z-index:0; }
-#map{ width:100%; height:100%; background:var(--bg-page); position:relative; z-index:0; }
+#map{
+  width:100%;
+  height:100%;
+  background:var(--bg-page);
+  position:relative;
+  z-index:0;
+  touch-action:none;
+}
 #map .leaflet-top.leaflet-left{
   top:auto;
   bottom:50px;
@@ -502,8 +510,8 @@ body{
     Detail drawer
 ------------------------------------------------------------------ */
 #drawer{
-  position:absolute;
-  top:0; right:0; bottom:0;
+  position:fixed;
+  top:56px; right:0; bottom:0;
   width:320px;
   background:var(--bg-panel-raised);
   border-left:1px solid var(--border-strong);
