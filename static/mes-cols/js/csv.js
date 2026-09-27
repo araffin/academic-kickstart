@@ -243,6 +243,22 @@
     return Papa.unparse(rows, { delimiter: ";", newline: "\n" });
   }
 
+  // Match Python's json.dump(..., ensure_ascii=False, indent=2,
+  // sort_keys=True) so the browser export is byte-for-byte reproducible.
+  function sortObjectKeys(value) {
+    if (Array.isArray(value)) return value.map(sortObjectKeys);
+    if (value !== null && typeof value === "object") {
+      return Object.fromEntries(
+        Object.keys(value).sort().map(key => [key, sortObjectKeys(value[key])]),
+      );
+    }
+    return value;
+  }
+
+  function recordsToJson(records) {
+    return JSON.stringify(sortObjectKeys(records), null, 2) + "\n";
+  }
+
   // ---------------------------------------------------------------
   // Text -> records (import)
   // ---------------------------------------------------------------
@@ -448,6 +464,7 @@
     parseNumber,
     parseBool,
     recordsToCsv,
+    recordsToJson,
     csvTextToRecords,
     jsonTextToRecords,
   };

@@ -526,7 +526,7 @@
       // BOM so Excel/LibreOffice detect the UTF-8 encoding.
       const contents = isCsv
         ? "\uFEFF" + ColCsv.recordsToCsv(state.all)
-        : JSON.stringify(state.all, null, 2) + "\n";
+        : ColCsv.recordsToJson(state.all);
       const blob = new Blob([contents], {
         type: isCsv ? "text/csv;charset=utf-8" : "application/json;charset=utf-8",
       });
