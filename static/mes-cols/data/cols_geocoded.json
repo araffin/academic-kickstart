@@ -75,8 +75,8 @@
     "lon": 5.8087546,
     "geocode_status": "ok",
     "profile_links": {
-      "cols_cyclisme": null,
-      "mycols": null
+      "cols_cyclisme": "https://www.cols-cyclisme.com/mercantour/france/cime-de-la-bonette-depuis-jausiers-c173.htm",
+      "mycols": "https://mycols.app/fr/col/col-de-la-bonette-saint-etienne-de-tinee"
     }
   },
   {
