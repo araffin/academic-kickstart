@@ -1381,7 +1381,7 @@
   },
   {
     "id": "col-de-lachau",
-    "name": "Col de Lachau",
+    "name": "Col de La Chau",
     "department_code": "26",
     "department_name": "Drôme",
     "country": "France",
@@ -1390,12 +1390,12 @@
     "is_pass": true,
     "is_high_altitude": false,
     "is_mtb": false,
-    "geocode_query": "Col de Lachau, Drôme, France",
-    "lat": 44.7211844,
-    "lon": 5.6337724,
+    "geocode_query": "Col de La Chau, Drôme, France",
+    "lat": 44.90731,
+    "lon": 5.35662,
     "geocode_status": "ok",
     "profile_links": {
-      "cols_cyclisme": null,
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vercors/france/col-de-la-chau-depuis-les-trois-routes-c160.htm",
       "mycols": null
     }
   },
@@ -1926,7 +1926,7 @@
     "department_name": "Moselle",
     "country": "France",
     "altitude": 306,
-    "ascents": 19,
+    "ascents": 20,
     "is_pass": true,
     "is_high_altitude": false,
     "is_mtb": false,
@@ -3180,13 +3180,33 @@
     }
   },
   {
+    "id": "passo-gavia",
+    "name": "Passo di Gavia",
+    "department_code": null,
+    "department_name": null,
+    "country": "Italie",
+    "altitude": 2652,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": true,
+    "is_mtb": false,
+    "geocode_query": "Passo di Gavia, Italie",
+    "lat": 44.51918,
+    "lon": 7.06967,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/massif-de-l-ortles/italie/passo-di-gavia-depuis-bormio-c357.htm",
+      "mycols": "https://mycols.app/fr/col/passo-di-gavia-bormio"
+    }
+  },
+  {
     "id": "passo-dello-stelvio",
     "name": "Passo Dello Stelvio",
     "department_code": null,
     "department_name": null,
     "country": "Italie",
     "altitude": 2760,
-    "ascents": 1,
+    "ascents": 2,
     "is_pass": true,
     "is_high_altitude": true,
     "is_mtb": false,
@@ -3236,6 +3256,26 @@
     "geocode_status": "ok",
     "profile_links": {
       "cols_cyclisme": null,
+      "mycols": null
+    }
+  },
+  {
+    "id": "haut-koenigsbourg",
+    "name": "Haut Koenigsbourg",
+    "department_code": null,
+    "department_name": null,
+    "country": "France",
+    "altitude": 707,
+    "ascents": 1,
+    "is_pass": true,
+    "is_high_altitude": false,
+    "is_mtb": false,
+    "geocode_query": "Haut Koenigsbourg, France",
+    "lat": 48.249382,
+    "lon": 7.3439412,
+    "geocode_status": "ok",
+    "profile_links": {
+      "cols_cyclisme": "https://www.cols-cyclisme.com/vosges/france/haut-koenigsbourg-depuis-kintzheim-c2096.htm",
       "mycols": null
     }
   },
@@ -3526,7 +3566,7 @@
     "department_name": null,
     "country": "Italie",
     "altitude": 1941,
-    "ascents": 1,
+    "ascents": 2,
     "is_pass": false,
     "is_high_altitude": false,
     "is_mtb": false,
