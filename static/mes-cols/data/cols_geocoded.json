@@ -3191,13 +3191,13 @@
     "is_high_altitude": true,
     "is_mtb": false,
     "geocode_query": "Passo di Gavia, Italie",
-    "lat": 44.51918,
-    "lon": 7.06967,
-    "geocode_status": "ok",
+    "lat": 46.3434797,
+    "lon": 10.4873336,
     "profile_links": {
       "cols_cyclisme": "https://www.cols-cyclisme.com/massif-de-l-ortles/italie/passo-di-gavia-depuis-bormio-c357.htm",
       "mycols": "https://mycols.app/fr/col/passo-di-gavia-bormio"
-    }
+    },
+    "geocode_status": "ok"
   },
   {
     "id": "passo-dello-stelvio",
