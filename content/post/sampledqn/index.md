@@ -15,7 +15,7 @@ Spoiler alert: with this very simple algorithm, you can go much further than I t
 When going from the Deep Q-Network (DQN) algorithm to the Soft-Actor Critic (SAC) algorithm, one of the first step is to extend DQN to continuous actions.
 
 At the core of [DQN (see RL102 blog post)](../rl102), the goal is to find the action $a^\star$ that maximizes the current estimated $Q$-value, for a given state $s$.
-In the case of discrete actions, this is easy: just enumerate all possible actions $a_i$ and select $a^\star = \argmax_{a_i \in \mathcal{A}}Q^_\theta(s, a_i)$.
+In the case of discrete actions, this is easy: just enumerate all possible actions $a_i$ and select $a^\star = \mathop{\text{argmax}}_{a_i \in \mathcal{A}}{\ Q\_{\theta}(s, a)}$.
 DQN even does that in one forward pass.
 
 For continuous actions, it becomes tricky because there is an infinite number of actions!
@@ -24,10 +24,19 @@ However, it doesn't mean we cannot deal with continous actions.
 In my [RL103 blog post](../rl103), I mention one alternative (restrict $Q$-value function approximator) before presenting the most popular solution (DDPG) which is to train a second network $\pi_{\phi}$ that approximates the maximum.
 I also left a small note mentioning a third alternative, "à la QT-Opt"[^qt-opt]: just sample the $Q$-value.
 <!--Another alternative is to discretize but that's more taking the problem the other way around-->
+<!--Note: in offline RL, some random sampling done and also used in model based RL -->
 
 But, as many resources, including Sergey Levine's tutorial (see below), nothing additional is said about this solution.
 
-![screenshot from sergey levine lecture]
+<img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_2.png"/>
+For offline RL:
+<img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_4.png"/>
+
+screenshot from sergey levine lecture
+Video: https://www.youtube.com/watch?v=Q-Qwjz8Zmh0 (https://youtu.be/Q-Qwjz8Zmh0?si=mHDiR4PJnLbDPiez&t=120)
+CS 185/285 Deep Reinforcement Learning, Decision Making, and Control (Spring 2026)
+2026: https://youtu.be/lQaVa53pS-Q?si=oKfJxm3F42EbSr7W&t=4283 (1:11:21)
+Slides: https://rail.eecs.berkeley.edu/deeprlcourse/static/slides/lec-8.pdf
 
 After looking for papers that explore, compare, benchmark this alternative, I only found related ideas[^qt-opt-successors] but not a clear study of this simple extension.
 Even QT-Opt only presents a specialized version and no benchmark against alternatives.
@@ -100,6 +109,12 @@ def find_best_action(...) -> np.ndarray:
 
 Note: the current algorithm is very simple but also very inneficient! I'll show later (or in the appendix) how to have an optimized version of it using Jax and vectorization.
 
+<video controls src="./img/SampleDQN_uniform_sampling.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">SampleDQN Uniform sampling
+</p>
+
+
 Optionally, and similar to what DDPG/TD3 are using, we can add some noise to this selected action (OU noise/Gaussian noise): 
 ```python
 def select_action(...) -> np.ndarray:
@@ -162,6 +177,12 @@ but that's already surpising
 
 ## Second Iteration: Noisy Cross Entropy Method (CEM)
 
+<video controls src="./img/SampleDQN_cem_sampling.mp4">
+</video>
+<p style="font-size: 14pt; text-align:center;">SampleDQN Uniform sampling
+</p>
+
+
 ## Reporting Optimization Cost (Martha White)
 
 detail what are the hyperparameters
@@ -203,9 +224,9 @@ All the graphics were made using [excalidraw](https://excalidraw.com/) and [late
 ## Footnotes
 
 [^qt-opt]: [QT-Opt](https://arxiv.org/abs/1806.10293)
-[^qt-opt-successors]: [QT-Opt](https://arxiv.org/abs/1806.10293)
+[^qt-opt-successors]: TBA
 [^n-word]: And it would have been rejected for "lack of novelty" despite the insights it could provide.
 [^sbx]: Well know, you have an implementation in [SBX](https://github.com/araffin/sbx)
 [^litterature]: if you know any prior study that fills that gap, feel free to reach out!
 
-<!--Note: in offline RL, some random sampling down-->
+<!--Note: in offline RL, some random sampling done -->
