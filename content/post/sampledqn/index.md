@@ -17,32 +17,36 @@ When going from the Deep Q-Network (DQN) algorithm to the Soft-Actor Critic (SAC
 At the core of [DQN (see RL102 blog post)](../rl102), the goal is to find the action $a^\star$ that maximizes the current estimated $Q$-value, for a given state $s$.
 In the case of discrete actions, this is easy: just enumerate all possible actions $a_i$ and select $a^\star = \mathop{\text{argmax}}_{a_i \in \mathcal{A}}{\ Q\_{\theta}(s, a)}$.
 DQN even does that in one forward pass.
+<!--In a single forward pass-->
 
 For continuous actions, it becomes tricky because there is an infinite number of actions!
-However, it doesn't mean we cannot deal with continous actions.
+However, that doesn't mean we cannot deal with continuous actions.
 
-In my [RL103 blog post](../rl103), I mention one alternative (restrict $Q$-value function approximator) before presenting the most popular solution (DDPG) which is to train a second network $\pi_{\phi}$ that approximates the maximum.
+In my [RL103 blog post](../rl103), I mention one alternative (restrict $Q$-value function approximator) before presenting the most popular solution (DDPG), which is to train a second network $\pi_{\phi}$ that approximates the maximum.
 I also left a small note mentioning a third alternative, "à la QT-Opt"[^qt-opt]: just sample the $Q$-value.
 <!--Another alternative is to discretize but that's more taking the problem the other way around-->
 <!--Note: in offline RL, some random sampling done and also used in model based RL -->
 
 But, as many resources, including Sergey Levine's tutorial (see below), nothing additional is said about this solution.
 
-<img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_2.png"/>
-For offline RL:
-<img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_4.png"/>
+<a href="https://youtu.be/Q-Qwjz8Zmh0?si=mHDiR4PJnLbDPiez&t=120">
+  <img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_2.png"/>
+</a>
+<p style="font-size: 14pt; text-align:center;">Screenshot from
+  Sergey Levine 2018 lecture (CS 185/285 Deep Reinforcement Learning, Decision Making, and Control),
+</p>
 
-screenshot from sergey levine lecture
-Video: https://www.youtube.com/watch?v=Q-Qwjz8Zmh0 (https://youtu.be/Q-Qwjz8Zmh0?si=mHDiR4PJnLbDPiez&t=120)
-CS 185/285 Deep Reinforcement Learning, Decision Making, and Control (Spring 2026)
+<!--screenshot from sergey levine lecture
+Video: https://www.youtube.com/watch?v=Q-Qwjz8Zmh0 (https://youtu.be/Q-Qwjz8Zmh0?si=mHDiR4PJnLbDPiez&t=120)-->
+<!--CS 185/285 Deep Reinforcement Learning, Decision Making, and Control (Spring 2026)
 2026: https://youtu.be/lQaVa53pS-Q?si=oKfJxm3F42EbSr7W&t=4283 (1:11:21)
-Slides: https://rail.eecs.berkeley.edu/deeprlcourse/static/slides/lec-8.pdf
+Slides: https://rail.eecs.berkeley.edu/deeprlcourse/static/slides/lec-8.pdf-->
 
 After looking for papers that explore, compare, benchmark this alternative, I only found related ideas[^qt-opt-successors] but not a clear study of this simple extension.
 Even QT-Opt only presents a specialized version and no benchmark against alternatives.
-This also translates no reference implementation can be found in major RL libraries[^sbx].
+This also translates in the fact that no reference implementation can be found in major RL libraries[^sbx].
 
-That's why I decided to start investigating this family I call SampleDQN, to see how it compares to the widely studied algorithms like DDPG, SAC or TD3.
+That's why I decided to start investigating this family of algorithms I call SampleDQN, to see how it compares to the widely studied algorithms like DDPG, SAC or TD3.
 
 ## An Impractical Useless Algorithm?
 
@@ -53,7 +57,7 @@ Before I started, I had some hypothesis of why it does not appear in any benchma
 
 Unfortunately, because I couldn't find any prior study[^litterature], I didn't have quantitative results to answer those hypothesis.
 
-However, the simplicity is appealing and the sampling mechanism could be combined with what SAC/TD3 are using.
+However, the simplicity is appealing, and the sampling mechanism could be combined with what SAC/TD3 are using.
 That would also be refreshing to have a working algorithm without [37 implementation details](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) (yes, I'm looking at you PPO ;)).
 
 <!--It would also allow to optimize multimodal value-->
@@ -64,14 +68,23 @@ First, let's review DQN's internals, and see how to extend them to continuous ac
 
 We are interested in two main components:
 1. The exploration mechanism: how to select actions during exploraiton to collect new data?
-2. The update mechanism: how to find the maximum of the $Q$-network to perform the gradient update?
+2. The update mechanism: how to find the maximum of the $Q$-network to perform the gradient update? (the TD backup $Q^{i+1}(s_t, a_t) = r_t + max_{a'} Q^{i}(s_{t+1}, a')$)
 
 ### $Q$-network
 
+<img style="width:100%" src="../rl102/img/target_net.svg"/>
+
+
 The first thing to change is the $Q$-network itself.
-Instead of having only one input ``q_net(observation)`` and outputting all possible actions (`q_value = q_net(observation)[0]` for the first action for instance), it should now take directly the continuous action that is evaluated as input: ``q_value = q_net(observation, action)``.
+Instead of having only one input ``q_net(state)`` and outputting all possible actions (`q_value = q_net(state)[0]` for the first action for instance), it should now take directly the continuous action that is evaluated as input: ``q_value = q_net(state, action)``:
+
+<img style="width:60%" src="./img/q_net_sac.svg"/>
+
 
 ### Exploration
+
+<img style="width:60%" src="../rl102/img/epsilon_greedy.svg"/>
+
 
 During exploration, [DQN](https://github.com/araffin/rlss23-dqn-tutorial) follow an $\epsilon$-greedy exploration that looks like that:
 
@@ -89,11 +102,11 @@ def select_action(...) -> int:
   return action
 ```
 
-To make it work with continuous action, we can at first sample some actions and keep the one with the highest $Q$-value:
+To make it work with continuous action, we can at first sample actions randomly and keep the one with the highest $Q$-value:
 
 ```python
 def find_best_action(...) -> np.ndarray:
-  # Sample some actions (here using a uniform distribution)
+  # Sample actions (here using a uniform distribution)
   best_q_value = -np.inf
   best_action = None
   for _ in range(n_candidates):
@@ -109,13 +122,15 @@ def find_best_action(...) -> np.ndarray:
 
 Note: the current algorithm is very simple but also very inneficient! I'll show later (or in the appendix) how to have an optimized version of it using Jax and vectorization.
 
-<video controls src="./img/SampleDQN_uniform_sampling.mp4">
+You can below an animation of this approximation. As the number of sample action grows ($N \to \infty$), it gets closer and closer to the true maximum:
+
+<video style="min-height: 500px" poster="./img/mpv-shot0005.jpg" controls src="./img/SampleDQN_uniform_sampling.mp4">
 </video>
-<p style="font-size: 14pt; text-align:center;">SampleDQN Uniform sampling
+<p style="font-size: 14pt; text-align:center;">Illustration of Uniform sampling to approximate the maximum of $Q_\theta(s, a)$ ($q_\text{max}$)
 </p>
 
 
-Optionally, and similar to what DDPG/TD3 are using, we can add some noise to this selected action (OU noise/Gaussian noise): 
+Optionally, and similar to what DDPG/TD3 are using, we can add some noise to this selected action to improve exploration (OU noise/Gaussian noise): 
 ```python
 def select_action(...) -> np.ndarray:
   # Find the action that maximizes qf(obs, action)
@@ -128,6 +143,7 @@ def select_action(...) -> np.ndarray:
 ```
 
 <!--Note: compared to discrete actions, doing so already introduces a bit of noise-->
+<!--TODO: same as DQN/SAC add an algorithm image-->
 
 ### Update
 
@@ -177,7 +193,7 @@ but that's already surpising
 
 ## Second Iteration: Noisy Cross Entropy Method (CEM)
 
-<video controls src="./img/SampleDQN_cem_sampling.mp4">
+<video poster="./img/mpv-shot0001.jpg" style="min-height: 500px" controls src="./img/SampleDQN_cem_sampling.mp4">
 </video>
 <p style="font-size: 14pt; text-align:center;">SampleDQN Uniform sampling
 </p>
@@ -216,7 +232,7 @@ Hybrid algorithms (already a bit studied?), learned an actor to make algorithm f
 
 I would like to thank Anssi and Alison for their feedback =).
 
-All the graphics were made using [excalidraw](https://excalidraw.com/) and [latex-to-svg](https://viereck.ch/latex-to-svg/).-->
+All the graphics were made using [excalidraw](https://excalidraw.com/), [manimgx](https://manimgx.academa.ai/) and [latex-to-svg](https://viereck.ch/latex-to-svg/).-->
 
 
 ### Did you find this post helpful? Consider sharing it 🙌
@@ -228,5 +244,9 @@ All the graphics were made using [excalidraw](https://excalidraw.com/) and [late
 [^n-word]: And it would have been rejected for "lack of novelty" despite the insights it could provide.
 [^sbx]: Well know, you have an implementation in [SBX](https://github.com/araffin/sbx)
 [^litterature]: if you know any prior study that fills that gap, feel free to reach out!
+[^offlineRL]: As mentioned in the updated slide (2026) of Levine's course, this is a technique often used in offline RL, but understudied in oneline RL:
+<a href="https://youtu.be/lQaVa53pS-Q?si=oKfJxm3F42EbSr7W&t=4283">
+  <img style="box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);" src="./img/cs_185_4.png"/>
+</a>
 
 <!--Note: in offline RL, some random sampling done -->
