@@ -41,7 +41,7 @@ The DDPG actor's loss is therefore:
 <!--\end{align}-->
 <img style="height: 50px;" src="./img/ddpg.svg"/>
 
-<video controls src="https://araffin.github.io/slides/advances-rl-sota-2026/images/DDPGLoss.mp4">
+<video poster="./img/DDPGLoss.jpg" controls src="https://araffin.github.io/slides/advances-rl-sota-2026/images/DDPGLoss.mp4">
 </video>
 <p style="font-size: 14pt; text-align:center;">
   An animation of the DDPG update of the actor network.
@@ -79,7 +79,7 @@ To overcome the limitations of DDPG, [Twin Delayed DDPG (TD3)](https://arxiv.org
 3. Target action noise: TD3 adds noise to the target action during the $Q$-network update step.
   This makes it harder for the actor to exploit the learned $Q$-function.
 
-<video controls src="https://araffin.github.io/slides/advances-rl-sota-2026/images/QOverestimation.mp4">
+<video controls poster="./img/QOverestimation.jpg" src="https://araffin.github.io/slides/advances-rl-sota-2026/images/QOverestimation.mp4">
 </video>
 <p style="font-size: 14pt; text-align:center;">
   An animation of the overestimation and extrapolation error and how TD3 tries to reduce it.
