@@ -377,12 +377,37 @@ body{
 }
 
 .col-marker{
+  position:relative;
   display:flex;
   flex-direction:column;
   align-items:center;
   font-family:var(--font-mono);
   cursor:pointer;
 }
+/* Pass name, shown only from NAME_ZOOM up. Positioned above the pin so
+   the pin (and its anchor on the pass) never moves. */
+.col-marker .name{
+  position:absolute;
+  bottom:100%;
+  left:50%;
+  transform:translateX(-50%);
+  margin-bottom:4px;
+  white-space:nowrap;
+  font-family:var(--font-body);
+  font-size:11px;
+  font-weight:600;
+  line-height:1.4;
+  color:#1B0D08;
+  background:rgba(250,247,240,0.95);
+  border:1px solid rgba(0,0,0,0.25);
+  border-radius:4px;
+  padding:1px 6px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.5);
+  /* Clickable: bubbles up to the marker's click handler, which opens
+     the detail panel - same as clicking the pin itself. */
+  animation:name-in 0.15s ease-out;
+}
+@keyframes name-in{ from{ opacity:0; } }
 .col-marker .pin{
   min-width:34px;
   padding:2px 6px;

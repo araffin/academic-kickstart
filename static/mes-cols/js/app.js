@@ -10,6 +10,7 @@
     map: null,
     markers: new Map(), // id -> leaflet marker
     markerLayer: null,
+    showingNames: false, // marker icons currently include the pass name
     view: "map",
     viewBeforeImport: "map",
     sort: { key: "altitude", dir: "desc" }, // list view sort
@@ -218,6 +219,8 @@
       .addTo(state.map);
 
     state.markerLayer = L.layerGroup().addTo(state.map);
+
+    state.map.on("zoomend", refreshMarkerNames);
   }
 
   function wireControls() {
@@ -724,9 +727,28 @@
   // ---------------------------------------------------------------
   // Map rendering
   // ---------------------------------------------------------------
-  function markerHtml(rec) {
+  // Below this zoom the full pass names overlap, so markers show only
+  // the altitude; from this zoom up the name appears above the pin and
+  // the altitude stays on the pin (smaller) on the second line.
+  const NAME_ZOOM = 10;
+
+  function markerHtml(rec, showName) {
     const cls = ["col-marker", rec.is_pass ? "pass" : "montee", rec.is_high_altitude ? "high" : ""].join(" ").trim();
-    return `<div class="${cls}"><div class="pin">${rec.altitude}</div></div>`;
+    const name = showName ? `<div class="name">${escapeHtml(rec.name)}</div>` : "";
+    return `<div class="${cls}">${name}<div class="pin">${rec.altitude}</div></div>`;
+  }
+
+  function markerIcon(rec, showName) {
+    return L.divIcon({
+      html: markerHtml(rec, showName),
+      className: "",
+      iconSize: null,
+      iconAnchor: [17, 24],
+    });
+  }
+
+  function namesVisible() {
+    return state.map.getZoom() >= NAME_ZOOM;
   }
 
   function renderMap() {
@@ -734,17 +756,13 @@
     state.markers.clear();
 
     const bounds = [];
+    const showNames = namesVisible();
+    state.showingNames = showNames;
     state.filtered.forEach(rec => {
       if (rec.lat == null || rec.lon == null) return;
-      const icon = L.divIcon({
-        html: markerHtml(rec),
-        className: "",
-        iconSize: null,
-        iconAnchor: [17, 24],
-      });
-      const marker = L.marker([rec.lat, rec.lon], { icon }).addTo(state.markerLayer);
+      const marker = L.marker([rec.lat, rec.lon], { icon: markerIcon(rec, showNames) }).addTo(state.markerLayer);
       marker.on("click", () => openDrawer(rec));
-      marker.bindTooltip(rec.name, { direction: "top", offset: [0, -20] });
+      if (!showNames) marker.bindTooltip(rec.name, { direction: "top", offset: [0, -20] });
       state.markers.set(rec.id, marker);
       bounds.push([rec.lat, rec.lon]);
     });
@@ -757,6 +775,24 @@
     } else if (bounds.length > 1) {
       state.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
     }
+  }
+
+  // Called on zoomend: when the zoom crosses NAME_ZOOM, refresh every
+  // marker's icon so the pass name appears or disappears. The name is
+  // positioned above the pin, so the icon size/anchor are unchanged and
+  // the view doesn't need to be re-fitted. The hover tooltip carries the
+  // name only while the name isn't already printed on the marker.
+  function refreshMarkerNames() {
+    const showNames = namesVisible();
+    if (showNames === state.showingNames) return;
+    state.showingNames = showNames;
+    state.markers.forEach((marker, id) => {
+      const rec = state.all.find(r => r.id === id);
+      if (!rec) return;
+      marker.setIcon(markerIcon(rec, showNames));
+      if (showNames) marker.unbindTooltip();
+      else marker.bindTooltip(rec.name, { direction: "top", offset: [0, -20] });
+    });
   }
 
   // ---------------------------------------------------------------
