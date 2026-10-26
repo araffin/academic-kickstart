@@ -89,7 +89,7 @@ Instead of having only one input ``q_net(state)`` and outputting all possible ac
 During exploration, [DQN](https://github.com/araffin/rlss23-dqn-tutorial) follow an $\epsilon$-greedy exploration that looks like that:
 
 ```python
-def select_action(...) -> int:
+def select_action(observation, ...) -> int:
   # Epsilon-greedy exploration
   if np.random.rand() < exploration_rate:
       # Random action
@@ -105,7 +105,7 @@ def select_action(...) -> int:
 To make it work with continuous action, we can at first sample actions randomly and keep the one with the highest $Q$-value:
 
 ```python
-def find_best_action(...) -> np.ndarray:
+def find_best_action(observation, ...) -> np.ndarray:
   # Sample actions (here using a uniform distribution)
   best_q_value = -np.inf
   best_action = None
@@ -132,22 +132,87 @@ You can below an animation of this approximation. As the number of sample action
 
 Optionally, and similar to what DDPG/TD3 are using, we can add some noise to this selected action to improve exploration (OU noise/Gaussian noise): 
 ```python
-def select_action(...) -> np.ndarray:
+def select_action(observation, ...) -> np.ndarray:
   # Find the action that maximizes qf(obs, action)
   # by sampling different candidates
-  best_action = find_best_action(q_net, observation)
+  best_action = find_best_action(observation, q_net, ...)
   # Sample some noise from a Gaussian distribution
   noise = np.random.normal(noise_mean, noise_std)
   # Clip to action space limits
   return np.clip(best_action + noise, action_low, action_high)
 ```
 
+This is used when collecting data:
+
+```python
+def collect_data(...) -> None:
+  ...
+  # Select noisy action
+  action = select_action(observation, q_net, ...)
+  # Step in the env
+  next_observation, reward, terminated, truncated, _ = env.step(action)
+  # Store the transition
+  replay_buffer.store(observation, action, reward, next_observation, terminated)
+  ...
+
+```
+
 <!--Note: compared to discrete actions, doing so already introduces a bit of noise-->
 <!--TODO: same as DQN/SAC add an algorithm image-->
 
-### Update
+### Gradient Update
 
 same same but with target net, can re-use the `find_best_q_value()` from before.
+
+```python
+def gradient_step(...) -> None:
+  ...
+  # Sample a minibatch from the replay buffer
+  replay_data = replay_buffer.sample(batch_size)
+  with th.no_grad():
+      # Compute the next Q-values using the target network
+      next_q_values = q_net_target(replay_data.next_observations)
+      # Follow greedy policy: use the one with the highest value
+      next_q_values, _ = next_q_values.max(dim=1)
+      # 1-step TD target
+      should_bootstrap = (1 - replay_data.terminateds)
+      target_q_values = replay_data.rewards + should_bootstrap  * gamma * next_q_values
+  
+  # Get current Q-values estimates
+  current_q_values = q_net(replay_data.observations)
+  # Retrieve the q-values for the actions from the replay buffer
+  current_q_values = th.gather(current_q_values, dim=1, index=replay_data.actions.long())
+  # Compute regression loss
+  loss = ((current_q_values - target_q_values)**2).mean()
+  ...
+```
+
+With SampleDQN:
+
+```python
+def gradient_step(...) -> None:
+  ...
+  # Sample a minibatch from the replay buffer
+  replay_data = replay_buffer.sample(batch_size)
+  with th.no_grad():
+      # Compute the next Q-values using the target network
+      # Find the next target q-value with the highest value (max q(s_{t+1}, a'))
+      next_best_actions = find_best_action(replay_data.next_observations, q_net_target, ...)
+      next_q_values = q_net_target(replay_data.next_observations, next_best_actions)
+      # 1-step TD target
+      should_bootstrap = (1 - replay_data.terminateds)
+      target_q_values = replay_data.rewards + should_bootstrap  * gamma * next_q_values
+  
+  # Get current Q-values estimates
+  current_q_values = q_net(replay_data.observations, replay_data.actions)
+  # Compute regression loss
+  loss = ((current_q_values - target_q_values)**2).mean()
+  ...
+```
+
+Note: `find_best_action(...)` and computing `next_q_values` can be combined in a single `find_max_target_q(...)` step for efficiency
+
+<!--TODO: maybe display diff? add a toggle to display diff?-->
 
 ## Design choices
 
@@ -195,7 +260,7 @@ but that's already surpising
 
 <video poster="./img/mpv-shot0001.jpg" style="min-height: 500px" controls src="./img/SampleDQN_cem_sampling.mp4">
 </video>
-<p style="font-size: 14pt; text-align:center;">SampleDQN Uniform sampling
+<p style="font-size: 14pt; text-align:center;">Illustration of Cross Entropy Method (CEM) to approximate the maximum of $Q_\theta(s, a)$ ($q_\text{max}$)
 </p>
 
 
