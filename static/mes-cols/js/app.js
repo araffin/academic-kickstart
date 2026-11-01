@@ -8,6 +8,7 @@
     filtered: [],
     dept: "", // selected département/country value ("" = all)
     map: null,
+    mapUserAdjusted: false, // user took control of the view: stop auto-fitting
     markers: new Map(), // id -> leaflet marker
     markerLayer: null,
     showingNames: false, // marker icons currently include the pass name
@@ -18,6 +19,9 @@
 
   let pendingImport = null; // parsed records waiting for confirmation
   let searchFilterTimer = null;
+  let viewMoveInFlight = false; // a map view animation is currently running
+  let fitQueued = false;        // a fit was deferred until that animation ends
+  let latestBounds = null;      // bounds from the most recent renderMap()
 
   const els = {
     stats: document.getElementById("stats"),
@@ -221,6 +225,56 @@
     state.markerLayer = L.layerGroup().addTo(state.map);
 
     state.map.on("zoomend", refreshMarkerNames);
+    state.map.on("movestart", () => { viewMoveInFlight = true; });
+    state.map.on("moveend", () => {
+      viewMoveInFlight = false;
+      if (!fitQueued) return;
+      fitQueued = false;
+      // The user may have grabbed the map while the animation was running:
+      // the view is then locked and must not be re-fit.
+      if (latestBounds && latestBounds.length > 1 && !state.mapUserAdjusted) {
+        state.map.fitBounds(latestBounds, { padding: [50, 50], maxZoom: 12 });
+      }
+    });
+    lockViewOnUserInteraction();
+  }
+
+  // ---------------------------------------------------------------
+  // Map view lock
+  // ---------------------------------------------------------------
+  // Once the user changes the view themselves - wheel zoom, drag,
+  // pinch, double click/tap, keyboard, box zoom, or the +/- buttons -
+  // the filters stop re-centering/re-zooming the map: renderMap()
+  // only updates the markers and leaves the current view untouched.
+  // The lock lasts until the page is reloaded or the filters are reset
+  // (Réinitialiser releases it and re-fits the full dataset). Clicking a
+  // marker (or getting a single filter result) still flies to the pass,
+  // since that's an explicit navigation, not an auto-fit.
+  //
+  // Each listener below matches one user interaction that can change
+  // the view. None of them fire for the app's own setView/fitBounds/
+  // flyTo calls, so programmatic navigation never locks the view.
+  function lockViewOnUserInteraction() {
+    const markUserView = () => { state.mapUserAdjusted = true; };
+    const container = state.map.getContainer();
+
+    container.addEventListener("wheel", markUserView, { passive: true });
+    container.addEventListener("touchstart", (e) => {
+      if (e.touches.length >= 2) markUserView(); // pinch zoom
+    }, { passive: true });
+    container.addEventListener("keydown", (e) => {
+      // Keys Leaflet's Keyboard handler turns into zoom or pan.
+      if (/^[=+_-]$/.test(e.key) || e.key.startsWith("Arrow")) markUserView();
+    });
+    container.addEventListener("click", (e) => {
+      if (e.target instanceof Element &&
+          e.target.closest(".leaflet-control-zoom-in, .leaflet-control-zoom-out")) markUserView();
+    });
+    // Leaflet events: dragstart only fires on a real user drag, dblclick
+    // also covers synthesized double taps, boxzoomstart is shift+drag.
+    state.map.on("dragstart", markUserView);
+    state.map.on("dblclick", markUserView);
+    state.map.on("boxzoomstart", markUserView);
   }
 
   function wireControls() {
@@ -302,7 +356,7 @@
       applyFilters();
     });
     els.ascValue.addEventListener("change", () => setAscMin(getAscMin()));
-    setAscMin(0);
+    setAscMin(1);
 
     els.resetBtn.addEventListener("click", resetFilters);
 
@@ -508,7 +562,10 @@
     els.fUnclimbed.checked = false;
     els.altMin.value = 0;
     els.altValue.textContent = "0 m";
-    setAscMin(0);
+    // The reset also restores the initial view: release the user-view lock
+    // so the applyFilters() below re-fits the map to the full dataset.
+    state.mapUserAdjusted = false;
+    setAscMin(1);
   }
 
   function toggleExportOptions() {
@@ -605,6 +662,11 @@
     pendingImport = null;
     closeDrawer();
     populateDeptList(state.all);
+    // Imported records may share an id with a shown pass while carrying
+    // different data (e.g. corrected coordinates or altitude): rebuild all
+    // markers instead of diffing them against the previous dataset.
+    state.markerLayer.clearLayers();
+    state.markers.clear();
     resetFilters(); // ends with applyFilters()
     els.emptyState.hidden = true;
     els.dataSource.hidden = false;
@@ -751,30 +813,66 @@
     return state.map.getZoom() >= NAME_ZOOM;
   }
 
-  function renderMap() {
-    state.markerLayer.clearLayers();
-    state.markers.clear();
+  // Builds a marker (and, below NAME_ZOOM, its hover tooltip). Markers are
+  // created once and reused across filter changes, so the map doesn't
+  // flicker while e.g. dragging the altitude slider.
+  function createMarker(rec, showNames) {
+    const marker = L.marker([rec.lat, rec.lon], { icon: markerIcon(rec, showNames) });
+    marker.on("click", () => openDrawer(rec));
+    if (!showNames) marker.bindTooltip(rec.name, { direction: "top", offset: [0, -20] });
+    return marker;
+  }
 
+  // Auto-fits the view to `bounds`, but only while the user hasn't taken
+  // control of the map (see lockViewOnUserInteraction). If a view
+  // animation is already running, a single re-fit is queued for when it
+  // ends: rapid filter changes (e.g. dragging the altitude slider) then
+  // converge smoothly instead of re-animating per step (Leaflet would
+  // silently drop fit requests made mid-animation).
+  function fitBoundsLatest(bounds) {
+    latestBounds = bounds;
+    if (bounds.length < 2 || state.mapUserAdjusted) {
+      fitQueued = false; // nothing to fit: void any pending queued fit
+      return;
+    }
+    if (viewMoveInFlight) {
+      fitQueued = true;
+      return;
+    }
+    fitQueued = false;
+    state.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
+  }
+
+  function renderMap() {
     const bounds = [];
     const showNames = namesVisible();
     state.showingNames = showNames;
+    const visible = new Set();
+
+    // Add the markers that just appeared; keep the ones already there.
     state.filtered.forEach(rec => {
       if (rec.lat == null || rec.lon == null) return;
-      const marker = L.marker([rec.lat, rec.lon], { icon: markerIcon(rec, showNames) }).addTo(state.markerLayer);
-      marker.on("click", () => openDrawer(rec));
-      if (!showNames) marker.bindTooltip(rec.name, { direction: "top", offset: [0, -20] });
-      state.markers.set(rec.id, marker);
+      visible.add(rec.id);
       bounds.push([rec.lat, rec.lon]);
+      if (!state.markers.has(rec.id)) {
+        state.markers.set(rec.id, createMarker(rec, showNames).addTo(state.markerLayer));
+      }
     });
+    // Remove the markers that just disappeared.
+    for (const [id, marker] of state.markers) {
+      if (!visible.has(id)) {
+        marker.remove();
+        state.markers.delete(id);
+      }
+    }
 
     if (bounds.length === 1) {
       // Same effect as clicking the climb's row in the list view:
       // switch to the map, fly to it and open the detail panel.
       const rec = state.filtered.find(r => r.lat != null && r.lon != null);
       if (rec) openDrawer(rec, { switchToMap: true });
-    } else if (bounds.length > 1) {
-      state.map.fitBounds(bounds, { padding: [50, 50], maxZoom: 12 });
     }
+    fitBoundsLatest(bounds);
   }
 
   // Called on zoomend: when the zoom crosses NAME_ZOOM, refresh every
@@ -876,7 +974,11 @@
   function profileLinks(rec) {
     const saved = rec.profile_links || {};
     const name = cleanName(rec);
-    return [
+    const links = [
+      // Manual link to the owner's own page (cyclophil): shown only when
+      // set — no search-page fallback, unlike the two resolved sites below.
+      // One link may be shared by several climbs.
+      ["cyclophil", rec.cyclophil],
       [
         "cols-cyclisme.com",
         saved.cols_cyclisme ||
@@ -887,6 +989,7 @@
         saved.mycols || `https://mycols.app/fr/cols/recherche?q=${encodeURIComponent(name)}`,
       ],
     ];
+    return links.filter(([, url]) => url);
   }
 
   function escapeHtml(s) {

@@ -9,7 +9,8 @@
  * line, header:
  *
  *   nom; pays; departement_code; departement; altitude; ascensions;
- *   est_un_col; vtt; latitude; longitude; link_cols_cyclisme; link_mycols
+ *   est_un_col; vtt; latitude; longitude; link_cols_cyclisme; link_mycols;
+ *   link_cyclophil
  *
  * The import is lenient on purpose (the file round-trips through Excel /
  * LibreOffice): comma decimals are accepted, booleans as Oui/Non/X/...,
@@ -17,6 +18,10 @@
  * its leading zero, which Excel eats), unknown columns are ignored.
  * Derived fields (id, is_high_altitude, geocode_status, geocode_query)
  * are recomputed on import.
+ *
+ * link_cyclophil is a manual link to the owner's own page for the climb
+ * (no search-page fallback, and one link may be shared by several climbs);
+ * it is omitted from the record when empty.
  */
 (() => {
   "use strict";
@@ -159,6 +164,7 @@
     "longitude",
     "link_cols_cyclisme",
     "link_mycols",
+    "link_cyclophil",
   ];
 
   // Header cell (normalized) -> canonical field. Aliases make the import
@@ -187,6 +193,9 @@
     cols_cyclisme: "cols_cyclisme",
     link_mycols: "mycols",
     mycols: "mycols",
+    link_cyclophil: "cyclophil",
+    lien_cyclophil: "cyclophil",
+    cyclophil: "cyclophil",
   };
 
   function stripAccents(s) {
@@ -238,6 +247,7 @@
         r.lon == null ? "" : r.lon,
         (r.profile_links && r.profile_links.cols_cyclisme) || "",
         (r.profile_links && r.profile_links.mycols) || "",
+        r.cyclophil || "",
       ]);
     }
     return Papa.unparse(rows, { delimiter: ";", newline: "\n" });
@@ -328,6 +338,7 @@
         lon: r.lon,
         cols_cyclisme: r.profile_links ? r.profile_links.cols_cyclisme : "",
         mycols: r.profile_links ? r.profile_links.mycols : "",
+        cyclophil: r.cyclophil,
       },
     }));
     return buildRecords(items);
@@ -378,6 +389,9 @@
 
     const cc = raw.cols_cyclisme == null ? "" : String(raw.cols_cyclisme).trim();
     const mc = raw.mycols == null ? "" : String(raw.mycols).trim();
+    // Manual link to the owner's own page (no fallback, may be shared by
+    // several climbs): kept as-is, omitted from the record when empty.
+    const cyclophil = raw.cyclophil == null ? "" : String(raw.cyclophil).trim();
 
     return {
       record: {
@@ -393,6 +407,7 @@
         lat,
         lon,
         profile_links: cc || mc ? { cols_cyclisme: cc || null, mycols: mc || null } : undefined,
+        cyclophil: cyclophil || undefined,
       },
       warnings,
     };
