@@ -144,6 +144,12 @@ def parse_args() -> argparse.Namespace:
         default="time",
         help="x axis: wall-clock time in minutes (default) or environment timesteps",
     )
+    parser.add_argument(
+        "--y-min", type=float, default=None, help="lower y axis limit (default: auto)"
+    )
+    parser.add_argument(
+        "--y-max", type=float, default=None, help="upper y axis limit (default: auto)"
+    )
     return parser.parse_args()
 
 
@@ -156,6 +162,8 @@ def main() -> None:
     for label, files in group_run_files():
         print(f"{label}: {len(files)} runs")
         plot_group(interpolate_runs(files, x_column), label, x_column)
+    if args.y_min is not None or args.y_max is not None:
+        plt.ylim(bottom=args.y_min, top=args.y_max)
     plt.xlabel(x_label)
     plt.ylabel("Mean Episode Return")
     plt.title(ENV_NAME)
