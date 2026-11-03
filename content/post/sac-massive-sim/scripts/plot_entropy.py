@@ -32,7 +32,7 @@ SAC_RUN_GROUPS: list[tuple[str, str]] = [
     ("sac_big_net_limits_2048", "SAC (w/ limits + bigger net)"),
     ("sac_ent_coef_2048", "SAC (w/ limits + ent coef)"),
     ("sac_big_net_ent_coef_2048", "SAC (w/ limits + ent coef + bigger net)"),
-    # ("sac_baseline_2048", "SAC (baseline, original action space)"),
+    ("sac_baseline_2048", "SAC (baseline, original action space)"),
 ]
 
 
