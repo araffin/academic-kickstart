@@ -1,0 +1,135 @@
+/* Shiki one-dark-pro theme with reveal.js code-block integration. */
+:root {
+  --code-background: #282c34;
+  --code-foreground: #abb2bf;
+  --code-comment: #5c6370;
+  --code-keyword: #c678dd;
+  --code-string: #98c379;
+  --code-constant: #56b6c2;
+  --code-number: #d19a66;
+  --code-function: #61aeee;
+  --code-parameter: #d19a66;
+  --code-variable: #e06c75;
+  --code-string-expression: #98c379;
+  --atom-background: var(--code-background);
+  --atom-foreground: var(--code-foreground);
+  --atom-comment: var(--code-comment);
+  --atom-line-highlight: rgb(62 68 81 / 25%);
+  --atom-crosshair: #5c6370;
+}
+
+.reveal .shiki {
+  display: block;
+  box-sizing: border-box;
+  max-height: 400px;
+  overflow: auto;
+  padding: 0.5em;
+  color: var(--code-foreground);
+  background: var(--code-background) !important;
+  white-space: pre;
+}
+
+.reveal .shiki .line {
+  display: inline-block;
+  width: 100%;
+}
+
+.reveal .shiki table {
+  margin: initial;
+  border-collapse: collapse;
+}
+
+.reveal .shiki .hljs-ln-n {
+  display: block;
+}
+
+.reveal .shiki .hljs-ln-n::before {
+  content: attr(data-line-number);
+}
+
+.reveal .shiki .hljs-ln-code,
+.reveal .shiki .hljs-ln-numbers {
+  padding: 0;
+  border: 0;
+}
+
+.reveal .shiki .hljs-ln-numbers {
+  padding-right: 0.75em;
+  color: var(--atom-comment);
+  opacity: 1;
+  text-align: right;
+  user-select: none;
+  vertical-align: top;
+}
+
+.reveal .shiki.has-highlights tr:not(.highlight-line) {
+  opacity: 0.4;
+}
+
+.reveal .shiki.has-highlights tr.highlight-line {
+  background-color: var(--atom-line-highlight);
+}
+
+.reveal .shiki.has-highlights[data-line-highlight-background="false"] tr.highlight-line,
+.reveal .shiki.has-highlights[data-no-line-highlight-background] tr.highlight-line,
+.reveal .shiki.has-highlights.no-line-highlight-background tr.highlight-line {
+  background-color: transparent;
+}
+
+/* Keep cloned fragment blocks stacked and opaque during transitions. */
+.reveal pre.code-wrapper > code.shiki.fragment {
+  z-index: 1;
+  background: var(--code-background) !important;
+}
+
+.reveal pre.code-wrapper > code.shiki.fragment.visible {
+  opacity: 1;
+}
+
+.reveal .shiki:not(:first-child).fragment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.reveal pre.code-wrapper {
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  border: 1px solid #3e4451;
+  box-shadow: none;
+  background: var(--code-background);
+}
+
+/* Corner crosshairs are opt-in (crosshair class on the <pre>). Uncomment the
+   following rules to enable them for the dark frame (25px arms, 1px thick,
+   12px from the corner):
+
+.reveal pre.code-wrapper.crosshair::before,
+.reveal pre.code-wrapper.crosshair::after {
+  position: absolute;
+  z-index: 2;
+  width: calc(100% + 26px);
+  height: 25px;
+  pointer-events: none;
+  content: "";
+  background:
+    linear-gradient(var(--atom-crosshair), var(--atom-crosshair)) left 0 top 12px / 25px 1px no-repeat,
+    linear-gradient(var(--atom-crosshair), var(--atom-crosshair)) left 12px top 0 / 1px 25px no-repeat,
+    linear-gradient(var(--atom-crosshair), var(--atom-crosshair)) right 0 top 12px / 25px 1px no-repeat,
+    linear-gradient(var(--atom-crosshair), var(--atom-crosshair)) right 12px top 0 / 1px 25px no-repeat;
+}
+
+.reveal pre.code-wrapper::before {
+  top: -13px;
+  left: -13px;
+}
+
+.reveal pre.code-wrapper::after {
+  right: -13px;
+  bottom: -13px;
+  transform: rotate(180deg);
+}
+*/

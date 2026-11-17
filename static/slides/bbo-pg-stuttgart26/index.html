@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Tutorial: Direct Policy Search (BBO & PG)</title>
+
+        <link rel="stylesheet" href="dist/reset.css">
+        <link rel="stylesheet" href="dist/reveal.css">
+        <link rel="stylesheet" href="dist/theme/white.css" id="theme">
+        <!-- Add DLR logo -->
+        <link rel="stylesheet" href="css/dlr.css">
+        <!-- Grid system: http://flexboxgrid.com/ -->
+        <link rel="stylesheet" href="css/flexboxgrid.min.css">
+
+        <!-- Theme used for syntax highlighted code -->
+        <link rel="stylesheet" href="dist/plugin/highlight/vercel.css" id="highlight-theme">
+        <!--<link rel="stylesheet" href="dist/plugin/highlight/atom-one-dark.css" id="highlight-theme">-->
+    </head>
+    <body>
+        <div class="side-block">
+        </div>
+        <div class="reveal">
+            <div class="slides">
+                <header>
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Direct Policy Search Tutorial &middot; Advanced Reinforcement Learning Uni Stuttgart &middot; 24.11.2026
+                </header>
+
+                <section data-background-image="images/bg_image.jpg">
+                    <div class="row bottom-xs">
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <h2 id='main-title'>Direct Policy Search <br> (BBO & PG)</h2>
+                            </div>
+                            <div class="col-xs-12">
+                                <img class="" style="width: 30%" src="images/racing/two_cars.svg">
+                            </div>
+                        </div>
+                        <div class="col-xs-12 xsmall-text">
+                            Antonin RAFFIN (<a href="https://bsky.app/profile/araffin.bsky.social">@araffin.bsky.social</a>) <br>
+                            <span class="italic">German Aerospace Center (DLR)</span><br>
+                            <a href="https://araffin.github.io/">https://araffin.github.io/</a>
+                        </div>
+                    </div>
+
+                </section>
+
+                <section>
+                    <h3>GitHub Repository</h3>
+                    <p>
+                        <a href="https://github.com/araffin/rlss26-pg-tutorial">
+                            https://github.com/araffin/rlss26-pg-tutorial
+                        </a>
+                    </p>
+                    <!--<p>
+                        Blog post <br>
+                        <a href="https://araffin.github.io/post/rl102/">
+                            https://araffin.github.io/post/rl102/
+                        </a>
+                    </p>-->
+                </section>
+
+                <section>
+                    <h3>Aims</h3>
+                    <ul>
+                        <li class="fragment">Directly learn a policy (no intermediate $Q^\pi_\theta(s, a)$)</li>
+                        <li class="fragment">Policy from a control perspective</li>
+                        <li class="fragment">Policy gradient from a classification perspective</li>
+                    </ul>
+                    <aside class="notes">
+                        Motivation: at the core of A2C/PPO/SAC widely used
+                        and also deployed on real robots
+                    </aside>
+                </section>
+
+                <section>
+                    <h4>Outline</h4>
+                    <ol class="">
+                        <li style="font-weight: bold;">From line following to autonomous racing</li>
+                        <li style="color:lightgrey;">Bang-bang and PD controller</li>
+                        <li style="color:lightgrey;">Black-box optimization</li>
+                        <li style="color:lightgrey;">From classification to policy gradient</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <section>
+                        <h4>Line following (2014)</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video style="width: 70%;" src="https://b2drop.eudat.eu/public.php/dav/files/MDXdmZSfWZPnaXa/line_follower_2024.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <aside class="notes">
+                        </aside>
+                    </section>
+                    <section>
+                        <h4>Line following and autonomous racing</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video style="width: 70%;" src="https://b2drop.eudat.eu/public.php/dav/files/MDXdmZSfWZPnaXa/line_follow.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <aside class="notes">
+                        </aside>
+                    </section>
+                    <!-- RL Racing car -->
+                    <section>
+                        <h4>Learning to race in minutes</h4>
+
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/P_5FUlnnBUI?start=0&rel=0" allowfullscreen width="100%" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h4>Learning to race in an hour</h4>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/ngK33h00iBE?start=0&rel=0&mute=1" allowfullscreen width="100%" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h3>Differential-Drive Robot</h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img src="images/racing/vehicle_basics.svg" alt="Dynamics" width="80%">
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3>Observation Space</h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img style="z-index: -1; position: relative; margin-bottom:-10%;" src="images/racing/car_track.svg" alt="Car track" width="50%">
+                        </div>
+                        <div class="col-xs-12 medium-text">
+                            <pre class="fragment crosshair"><code data-trim data-line-numbers="1-8|" class="python">
+                                obs_high = np.array(
+                                    [
+                                        self.off_track_threshold,  # lateral error
+                                        np.inf,  # lateral error derivative
+                                    ],
+                                    dtype=np.float32,
+                                )
+                                self.observation_space = spaces.Box(low=-obs_high, high=obs_high)
+                                # Later:       [lateral_error, heading_error, forward_velocity,
+                                #               angular_velocity, left_wheel_speed, right_wheel_speed,
+                                #               curvature, lookahead_lat_2, lookahead_lat_4, lookahead_lat_6]
+                            </code></pre>
+
+                        </div>
+                    </div>
+                </section>
+                <section>
+                    <h3>Action Space</h3>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <img style="z-index: -1; position: relative; margin-bottom:-10%;" src="images/racing/action_space.svg" alt="" width="100%">
+                        </div>
+                        <div class="col-xs-12 medium-text">
+                            <pre class="fragment crosshair"><code data-trim data-line-numbers="1-3|" class="python">
+                                # Action: [left_wheel_speed, right_wheel_speed]
+                                left_wheel_speed = base_speed + steering
+                                right_wheel_speed = base_speed - steering
+                                # 1-D action  →  steering ∈ [-1, 1]
+                                self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(1,))
+                            </code></pre>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>Reward</h3>
+                    <p>Stay close to the line while moving forward</p>
+                    <div class="col-xs-12 medium-text">
+                        <pre class="fragment crosshair"><code data-trim data-line-numbers="1-2|3|4|" class="python">
+                            # Note: always normalize!
+                            lateral_penalty = -((lateral_error / self.off_track_threshold) ** 2)
+                            alive_bonus = 1.0  # otherwise might try to terminate early
+                            reward = alive_bonus + lateral_penalty + forward_velocity
+                        </code></pre>
+                    </div>
+                    <p class="fragment">What can be changed for racing?</p>
+                </section>
+
+                <section>
+                    <h3>Termination conditions?</h3>
+                    <p>Move forward and stay on the track</p>
+                    <div class="col-xs-12 medium-text">
+                        <pre class="fragment crosshair"><code data-trim data-line-numbers="1|2|3|" class="python">
+                            off_track = abs(lateral_error) > self.off_track_threshold
+                            terminated = off_track or going_reverse
+                            truncated = self.step_count >= self.max_episode_steps  # timeout
+                        </code></pre>
+                    </div>
+                    <p class="fragment medium-text">
+                        Note: timeout/truncation needs <a href="https://araffin.github.io/slides/ingredients-learning-locomotion/#/13/0/0">special handling</a> in the algorithm
+                    </p>
+
+                </section>
+                <section>
+                    <ol class="">
+                        <li style="color:grey;">From line following to autonomous racing</li>
+                        <li style="font-weight:bold;">Bang-bang and PD controller</li>
+                        <li style="color:lightgrey;">Black-box optimization</li>
+                        <li style="color:lightgrey;">From classification to policy gradient</li>
+                    </ol>
+                </section>
+
+                <section>
+                    <h3>Bang-Bang Control</h3>
+                    <div class="col-xs-12 medium-text">
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video style="width: 40%;" src="https://b2drop.eudat.eu/public.php/dav/files/MDXdmZSfWZPnaXa/bang_bang.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <pre class="fragment crosshair"><code data-trim class="python">
+                            if lateral_error > 0:
+                                action = STEER_LEFT
+                            else:
+                                action = STEER_RIGHT
+
+                        </code></pre>
+                    </div>
+                </section>
+
+                <section>
+                    <h3>PD Control</h3>
+                    <div class="r-stack">
+                        <img style="width: 50%;" class="fragment" src="images/racing/pd_track.svg">
+                        <img style="width: 50%;" class="fragment" src="images/racing/pd_track2.svg">
+                        <img style="width: 50%;" class="fragment" src="images/racing/pd_track_discrete.svg">
+                    </div>
+                </section>
+
+                <section>
+                    <h3>PD Controller as Policy</h3>
+                    <div style="text-align: left; margin-left: 20%;">
+                        <p class="fragment fade-in-then-semi-out">$a_t = \textcolor{#1864ab}{K_p} \textcolor{#a61e4d}{e_t} + \textcolor{#1864ab}{K_d}  \textcolor{#a61e4d}{\frac{e_t - e_{t -1}}{\Delta t}}$</p>
+                        <p class="fragment">$a_t = \begin{bmatrix} \textcolor{#1864ab}{K_p} &  \textcolor{#1864ab}{K_d} \end{bmatrix} \cdot \begin{bmatrix} \textcolor{#a61e4d}{e_t} \\ \textcolor{#a61e4d}{\frac{e_t - e_{t -1}}{\Delta t}} \end{bmatrix}$</p>
+                        <p class="fragment fade-in-then-semi-out">$a_t = \textcolor{#1864ab}{\theta}^\top \textcolor{#a61e4d}{s_t}$ &nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <p class="fragment" style="margin-left: -11%">$\pi_{\textcolor{#1864ab}{\theta}}(\textcolor{#a61e4d}{s_t}) = \textcolor{#1864ab}{\theta}^\top \textcolor{#a61e4d}{s_t}$
+                        &nbsp;&nbsp;&nbsp;&nbsp; a linear policy!
+                        </p>
+                    </div>
+                </section>
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+                <section>
+                    <ol class="">
+                        <li style="color:grey;">From line following to autonomous racing</li>
+                        <li style="color:grey;">Bang-bang and PD controller</li>
+                        <li style="font-weight:bold;">Black-box optimization</li>
+                        <li style="color:lightgrey;">From classification to policy gradient</li>
+                    </ol>
+                </section>
+                <section>
+                    <h3>How to find a good policy?</h3>
+                    <p class="fragment">$\pi_{\textcolor{#1864ab}{\theta}}(\textcolor{#a61e4d}{s_t}) = \begin{bmatrix} \textcolor{#1864ab}{K_p} \\  \textcolor{#1864ab}{K_d} \end{bmatrix}^\top \textcolor{#a61e4d}{s_t} = \textcolor{#1864ab}{\theta}^\top \textcolor{#a61e4d}{s_t}$
+                    </p>
+                    <ul>
+                        <li class="fragment">how to find $K_p$, $K_d$ automatically?</li>
+                        <li class="fragment">how to extend $s_t$?
+                        <br>
+                        <span class="medium-text">
+                            ex: $s_t = [e_t, \frac{e_t - e_{t -1}}{\Delta t}, v_t, \text{curv}_t \ldots]$
+                        </span>
+                        </li>
+                        <li class="fragment">more complex policy $\pi_\theta$?</li>
+                    </ul>
+                    <aside class="notes">
+                    </aside>
+                </section>
+                <section>
+                    <h3>Black-Box Optimization</h3>
+                    <p>$\theta^* = \text{argmin}_{\theta}{J(\theta)}$</p>
+                    <div class="fragment" style="font-size:80%; text-align:center">
+                        \[\begin{aligned}
+                        J(\theta) = -\mathop{\mathbb{E}}[\sum_{t=0}^T r_t].
+                        \end{aligned} \]
+                    </div>
+                    <p class="fragment">Episodic RL?</p>
+                    <aside class="notes">
+                        Many variants: random search, ES, PSO, ...<br>
+                        Very useful when doing hyperparameter tuning.<br>
+                        Doesn't scale so much with the dim (dim less than 50)
+                    </aside>
+                </section>
+                <section>
+                    <section>
+                        <h3>Exploration in Parameter Space</h3>
+                        <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_3.png"/>
+
+                        <p>Finding better gains for the PD controller</p>
+                        <p class="fragment">
+                            $\tilde{\theta} = \begin{bmatrix} K_p \\ K_d \end{bmatrix} + \textcolor{#1864ab}{\begin{bmatrix} \epsilon_1 \\  \epsilon_2 \end{bmatrix}}$
+                        </p>
+                        <p class="fragment">
+                            \[ a_t = (\theta + \textcolor{#1864ab}{\theta_{\epsilon}})^{\top}s_t \]
+                        </p>
+                    </section>
+                    <section>
+                        <h3>Learning from human feedback</h3>
+                        <div class="row middle-xs">
+                            <div class="col-xs-12">
+                                <video src="https://b2drop.eudat.eu/s/6QTFgtz7xemtDxy/download/bert_feedback_edited.mp4" controls muted></video>
+                            </div>
+                        </div>
+                        <p class="small-text">
+                            Raffin, Antonin, "Enabling Reinforcement Learning on Real Robots." Diss. TUM, 2024.
+                        </p>
+
+                    </section>
+                    <section>
+                        <h4>Adapting quickly: Retrained from Space</h4>
+                        <div class="row">
+                            <div class="col-xs-1">
+                            </div>
+                            <div class="col-xs-11">
+                                <div class="videoWrapper">
+                                    <iframe src="https://www.youtube.com/embed/BMFPVCu16SQ?start=180&rel=0&mute=1" allowfullscreen width="50%" frameborder="0"></iframe>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <section>
+                    <h3>A Simple Evolution Strategy (ES)</h3>
+                    <div class="r-stack">
+                        <img style="width: 70%;" class="fragment current-visible" src="images/finite_diff/es_0.svg">
+                        <img style="width: 70%;" class="fragment current-visible" src="images/finite_diff/es_1.svg">
+                        <img style="width: 70%;" class="fragment" src="images/finite_diff/es_2.svg">
+                    </div>
+                    <p class="small-text" style="margin-top: -5%;">
+                        <a href="https://blog.otoro.net/2017/10/29/visual-evolution-strategies/">
+                            A Visual Guide to Evolution Strategies - David Ha (2017)
+                        </a>
+                    </p>
+                    <aside class="notes"></aside>
+                </section>
+                <section>
+                    <section>
+                        <h3>Transition: Finite Difference</h3>
+                        <!--<div class="fragment fade-in-then-semi-out" style="font-size:80%; text-align:center">
+                           Idea: $\nabla_{\theta}J(\theta) \approx \frac{J(\theta + \delta\theta) - J(\theta)}{\delta\theta}$
+                        </div>-->
+                        <div class="r-stack">
+                            <img style="width: 70%;" class="fragment current-visible" src="images/finite_diff/finite_diff_1.svg">
+                            <img style="width: 70%; position: relative; top: 6px; right:-1px;" class="fragment current-visible" src="images/finite_diff/finite_diff_2.svg">
+                            <img style="width: 70%; position: relative; top: 9px; right: 2px;" class="fragment current-visible" src="images/finite_diff/finite_diff_3.svg">
+                            <img style="width: 70%; position: relative; right: 3px;" class="fragment current-visible" src="images/finite_diff/finite_diff_4.svg">
+                            <img style="width: 70%; position: relative; right: 3px;" class="fragment" src="images/finite_diff/finite_diff_5.svg">
+                        </div>
+                        <p class="xsmall-text" style="margin-top: -5%; position: relative; z-index: 1;">
+                            Mania, Horia, et al. "Simple random search provides a competitive approach to reinforcement learning." NeurIPS 2018
+                        </p>
+                        <aside class="notes"></aside>
+                    </section>
+                    <section>
+                        <h3>Transition: Finite Difference (2)</h3>
+                        <div class="fragment fade-in-then-semi-out" style="font-size:80%; text-align:center">
+                           Idea: $\nabla_{\theta}J(\theta) \approx \frac{J(\theta + \delta\theta) - J(\theta)}{\delta\theta}$
+                        </div>
+                        <div class="fragment" style="font-size:80%; text-align:center">
+                            \[
+                            \nabla J(\theta) \approx \frac{1}{2 N \epsilon} \sum_{i=1}^N \left[ J(\theta^{+}_i) - J(\theta^{-}_i) \right] \mathbf{u}_i
+                            \]
+                        </div>
+
+                        <div class="fragment" style="font-size:80%; text-align:center">
+                           $$\theta^{t+1} = \theta^t - \eta \nabla_{\theta}J(\theta^t)$$
+                        </div>
+                        <aside class="notes"></aside>
+                    </section>
+                </section>
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+                <section>
+                    <h3>PD Control and Black-Box Optimization (1st notebook)</h3>
+                    <a href="https://github.com/araffin/rlss26-pg-tutorial">
+                        https://github.com/araffin/rlss26-pg-tutorial
+                    </a>
+                    <p>
+                        <b>WARNING: LLMs are tools, solutions notebooks are provided, mistakes are the best way to learn.</b>
+                    </p>
+                    <aside class="notes">LLMs are ok for Python question, ask for more explanation/learning.
+                        Not ok to use them to solve fully the exercises.</aside>
+                </section>
+                <section>
+                    <ol class="">
+                        <li style="color:grey;">From line following to autonomous racing</li>
+                        <li style="color:grey;">Bang-bang and PD controller</li>
+                        <li style="color:grey;">Black-box optimization</li>
+                        <li style="font-weight:bold;">From classification to policy gradient</li>
+                    </ol>
+                </section>
+                <section>
+                    <h3>BBO Limitations</h3>
+                    <ul>
+                        <li class="fragment">Does not use $r_t$, only $R(\tau)$</li>
+                        <li class="fragment">Does not scale when $\pi_\theta$ is more complex</li>
+                        <li class="fragment">Policy gradient?</li>
+                    </ul>
+                    <aside class="notes">
+                    </aside>
+                </section>
+                <section>
+                    <section>
+                        <h3>Classification 101</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img src="images/classification/classification_1.svg" width="25%">
+                                <img src="images/classification/classification_2.svg" width="80%">
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Cross-Entropy Loss</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img src="images/classification/classification_3.svg" width="80%">
+                            </div>
+                        </div>
+                        <div class="r-stack">
+                            <img style="width: 70%;" class="fragment current-visible" src="images/classification/ce_loss_1.svg">
+                            <img style="width: 80%;" class="fragment current-visible" src="images/classification/ce_loss_2.svg">
+                            <img style="width: 90%;" class="fragment" src="images/classification/ce_loss_3.svg">
+                        </div>
+                        <aside class="notes">
+                            Make the correct class more likely
+                        </aside>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h3>RL as classification (1)</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img src="images/pg/pg_classification.svg" width="80%" style="margin-bottom: 0;">
+                                <div class="r-stack" style="margin-top: -20px;">
+                                    <img style="width: 70%;" class="fragment current-visible" src="images/pg/ce_loss_maybe.svg">
+                                    <img style="width: 90%;" class="fragment" src="images/pg/rl_ce_loss_3.svg">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="xsmall-text" style="margin-top: -3%;">
+                            <a href="https://karpathy.github.io/2016/05/31/rl/">
+                                Deep Reinforcement Learning: Pong from Pixels - Andrej Karpathy (2016)
+                            </a>
+                        </p>
+                    </section>
+                    <section>
+                        <h3>RL as classification (2)</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img style="width: 90%; margin-top: -20px;" src="images/pg/rl_ce_loss_3.svg">
+                                <ul>
+                                    <li class="fragment">$R$ acts as weight</li>
+                                    <li class="fragment">$R > 0$ (win → reinforce the taken action)</li>
+                                    <li class="fragment">$R &lt; 0$ (lose → make the taken action less likely)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>RL as classification (3)</h3>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <img style="width: 30%; margin-top: -20px;" src="images/racing/action_space.svg">
+                                <p class="medium-text">
+                                    Discretized version: $\Delta \phi \in \{-1, -0.5, 0.0, 0.5, 1.0\}$</p>
+                                <ul>
+                                    <li class="fragment">Ex: taken action is $\Delta \phi = -1.0$ (left)</li>
+                                    <li class="fragment">Error reduced → reinforce the taken action</li>
+                                    <li class="fragment">Error increased → make the taken action less likely</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <section>
+                        <h3>Policy Gradient Loss (reminder)</h3>
+                        <img style="width: 40%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/rl_obj.svg">
+                        <img style="width: 70%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/pg_grad.svg">
+                        <img style="width: 90%; margin: 0;" class="fragment" src="images/pg/pg_loss.svg">
+                        <img style="width: 40%; margin: 0;" class="fragment" src="images/pg/reward_to_go.svg">
+                    </section>
+                    <section>
+                        <h3>Episodic Policy Gradient <br> (in practice)</h3>
+                        <img style="width: 90%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/pg_loss.svg">
+                        <img style="width: 70%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/pg_loss_episode.svg">
+                        <img style="width: 70%; margin: 0;" class="fragment" src="images/pg/pg_loss_episode_3.svg">
+                        <img style="width: 50%; margin: 0;" class="fragment" src="images/pg/advantage_example.svg">
+                    </section>
+                    <section>
+                        <h3>Policy Gradient (full)</h3>
+                        <img style="width: 70%; margin: 0;" class="fragment fade-in-then-semi-out" src="images/pg/full_pg_loss.svg">
+                        <img style="width: 90%; margin: 0;" class="fragment" src="images/pg/full_pg_loss_2.svg">
+                    </section>
+                </section>
+
+                <section>
+                    <h3>Some remarks</h3>
+                    <ul>
+                        <li class="fragment">Noisy gradient</li>
+                        <li class="fragment">Scales with action/policy dim</li>
+                        <li class="fragment">Not a true gradient for the discounted case</li>
+                    </ul>
+                    <p class="small-text">
+                        Nota, Chris, and Philip S. Thomas. "Is the policy gradient a gradient?" 2019. <br>
+                        Tosatto, Samuele, et al. "A temporal-difference approach to policy gradient estimation." ICML, 2022.
+                    </p>
+                </section>
+
+                <section>
+                    <h3>PG Training Loop</h3>
+                    <img width="100%" src="images/pg/pg_loop.svg" alt="">
+                </section>
+
+                <section>
+                    <h3>Exploration in Action Space</h3>
+                    <img style="margin: 0; width: 30%;" src="https://araffin.github.io/slides/icra-exploration-rl/images/line_follower/line_following_4.png"/>
+
+                    <p class="fragment">
+                        $a_t \sim \pi_\theta(a_t \mid s_t)$
+                        <span style="color: #6741d9;">stochastic</span> policy
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Action Distributions: Categorical</h3>
+                    <img style="margin: 0; width:50%;" src="images/classification/classification_2.svg"/>
+
+                    <p class="fragment">
+                        $$\pi_\theta(a_i \mid s_t) = \frac{\exp(z_{a_i})}{\sum_{j} \exp(z_{a_{j}})} $$
+                        $$\text{where} \quad z = \theta^\top s_t \ \ \text{(logits)}, \quad \theta \in \mathbb{R}^{d \times A}$$
+                    </p>
+                </section>
+
+                <section>
+                    <h3>Action Distributions: Gaussian</h3>
+                    <img style="margin: 0; width:30%;" src="https://araffin.github.io/slides/updated-phd-defense-enable-rl/images/unstructured.svg"/>
+
+                    <p class="fragment">
+                        $\mu_\theta(s_t) = \theta^\top s_t, \ \sigma \ \text{(learnable param)}$
+                    </p>
+                    <p class="fragment">
+                        $$\pi_\theta(a_t \mid s_t) = \mathcal{N}(\mu_\theta(s_t), \sigma^2 I)$$
+                    </p>
+                    <aside class="notes">
+                        Example: sigma_0 = 1.0
+                        <br>
+                        Clip in practice (or use a bounded distribution),
+                        careful with action bounds
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Questions?</h3>
+                </section>
+
+                <section>
+                    <h3>Policy Gradient (2nd notebook)</h3>
+                    <a href="https://github.com/araffin/rlss26-pg-tutorial">
+                        https://github.com/araffin/rlss26-pg-tutorial
+                    </a>
+                </section>
+
+
+                <section>
+                    <h2>Backup Slides</h2>
+                </section>
+
+                <section>
+                    <h3>How to train a value function</h3>
+                    <div class="row">
+                        <div class="col-xs-12 medium-text">
+                            <p class="fragment">
+                                $$\mathcal{L}_{VF} = \frac{1}{T} \sum_{t=0}^{T-1} \big(V_\phi(s_t) - G_t\big)^2$$
+                                <span class="small-text">Discounted returns: $G_t = \sum_{k=t}^{T} \gamma^{k-t} r_k$</span>
+                            </p>
+                            <p class="fragment">
+                                Used as a baseline: $A_t = G_t - V_\phi(s_t)$ (unbiased, reduces variance)
+                            </p>
+                            <pre class="fragment crosshair"><code data-trim class="python">
+                                class ValueNetwork(nn.Module):
+                                    def __init__(self, obs_dim: int = 2):
+                                        super().__init__()
+                                        self.net = nn.Linear(obs_dim, 1)
+
+                                    def predict_value(self, observation: th.Tensor) -> th.Tensor:
+                                        return self.net(observation).squeeze(dim=-1)
+                            </code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Bonus section of the PG notebook (2_policy_gradient_racing.ipynb).<br>
+                        Advantages: use .detach() so the gradient doesn't flow into the PG loss.
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Action distribution in PyTorch</h3>
+                    <div class="row">
+                        <div class="col-xs-12 medium-text">
+                            <p class="fragment">
+                                Diagonally factored Gaussian (one independent $\mathcal{N}$ per action dim):
+                                $$\pi_\theta(\mathbf{a} \mid \mathbf{s}) = \prod_{i=1}^{A} \mathcal{N}(a_i; \, \mu_i(\mathbf{s}), \, \sigma_i^2)$$
+                            </p>
+                            <pre class="fragment crosshair"><code data-trim class="python">
+                                class ContinuousLinearPolicy(nn.Module):
+                                    def __init__(self, obs_dim: int = 2, action_dim: int = 2, std_init: float = 1.0):
+                                        super().__init__()
+                                        self.net = nn.Linear(obs_dim, action_dim, bias=True)
+                                        self.log_std = nn.Parameter(th.ones(action_dim) * np.log(std_init))  # std > 0
+
+                                    def get_action(self, observation: th.Tensor, deterministic = False) -> th.Tensor:
+                                        action_mean = self.net(observation)
+                                        # Diagonal covariance matrix
+                                        action_std = th.ones_like(action_mean) * self.log_std.exp()
+                                        action_dist = Normal(action_mean, action_std)
+                                        if deterministic:
+                                            return action_dist.mode
+                                        return action_dist.sample()
+                            </code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Log-parameterization guarantees the standard deviation stays positive.<br>
+                        Here the std is state-independent; it could also be a second network outputting the std.
+                    </aside>
+                </section>
+
+                <section>
+                    <h3>Log probability of a Gaussian</h3>
+                    <div class="row">
+                        <div class="col-xs-12 medium-text">
+                            <p class="fragment">
+                                Decomposes across the independent action dims:
+                                $$\log \pi_\theta(\mathbf{a} \mid \mathbf{s}) = \sum_{i=1}^{A} \left[ -\log \sigma_i - \frac{(a_i - \mu_i)^2}{2 \sigma_i^2} - \frac{1}{2} \log(2\pi) \right]$$
+                            </p>
+                            <p class="fragment">
+                                $\mathcal{L}_{PG} = -\frac{1}{T} \sum_{t} \log \pi_\theta(a_t \mid s_t) \cdot A_t$
+                            </p>
+                            <pre class="fragment crosshair"><code data-trim class="python">
+                                def get_log_prob(self, observations: th.Tensor, actions: th.Tensor) -> th.Tensor:
+                                    action_mean = self.net(observations)
+                                    action_std = th.ones_like(action_mean) * self.log_std.exp()
+                                    # Create Gaussian distribution object
+                                    action_dist = Normal(action_mean, action_std)
+
+                                    return action_dist.log_prob(actions).sum(dim=-1)  # independent dimensions
+                            </code></pre>
+                        </div>
+                    </div>
+                    <aside class="notes">
+                        Derived from the probability density function (PDF)<br>
+                        Directly provided by PyTorch.
+                    </aside>
+                </section>
+
+            </div>
+        </div>
+
+        <script src="dist/reveal.js"></script>
+        <script src="dist/plugin/notes.js"></script>
+        <script src="dist/plugin/markdown.js"></script>
+        <script src="dist/plugin/highlight.js"></script>
+        <script src="dist/plugin/math.js"></script>
+        <script>
+            // More info about initialization & config:
+            // - https://revealjs.com/initialization/
+            // - https://revealjs.com/config/
+            Reveal.initialize({
+                // Display the page number of the current slide
+                slideNumber: true,
+
+                // Add the current slide number to the URL hash so that reloading the
+                // page/copying the URL will return you to the same slide
+                hash: true,
+
+                // Push each slide change to the browser history. Implies `hash: true`
+                // history: false,
+
+                // math: {
+                //  mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+                //  config: 'TeX-AMS_HTML-full'  // See http://docs.mathjax.org/en/latest/config-files.html
+                //  // pass other options into `MathJax.Hub.Config()`
+                //  // TeX: { Macros: macros }
+                // },
+
+                // Use local version of katex
+                katex: {
+                  local: 'dist/katex',
+                },
+                // Learn about plugins: https://revealjs.com/plugins/
+                plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath.KaTeX]
+            });
+        </script>
+    </body>
+</html>
