@@ -24,7 +24,7 @@
         <div class="reveal">
             <div class="slides">
                 <header>
-                    www.dlr.de &middot; Antonin RAFFIN &middot; Making RL Work Out-of-the-Box (WIP) &middot; University of Suttgart &middot; 25.11.2026
+                    www.dlr.de &middot; Antonin RAFFIN &middot; Making RL Work Out-of-the-Box (WIP) &middot; University of Stuttgart &middot; 25.11.2026
                 </header>
                 <section data-background-image="images/bg_image.jpg">
                     <div class="row bottom-xs">
@@ -76,7 +76,7 @@
                              <div class="col-xs-6">
                                  <p class="medium-text fragment">
                                      The only difference: the epsilon value to avoid division by zero in the optimizer
-                                     (one is <code class="medium-text">eps=1e-7</code>
+                                     (one is <code class="medium-text">eps=1e-7</code>,
                                      the other <code class="medium-text">eps=1e-5</code>)
                                  </p>
                              </div>
@@ -158,7 +158,7 @@
                         <aside class="notes">
                             What am I using to run RL experiments?<br>
                             RL Zoo: log everything that is needed to reproduce/compare automatically <br>
-                            Minimize potential mistake when running experiments <br>
+                            Minimize potential mistakes when running experiments <br>
                             Also has hyperparam optim implemented.
                         </aside>
                     </section>
@@ -272,7 +272,7 @@
                                     \[\begin{aligned}
                                     q^{\text{des}}_i(t) &amp;= \textcolor{#006400}{a_i} \cdot \sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) + \textcolor{#6d071a}{b_i} \\
                                     \dot{\theta_i}(t)  &amp;= \begin{cases}
-                                        \textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i})) > 0$}\\
+                                        \textcolor{#0b7285}{\omega_\text{swing}}  &amp;\text{if $\sin(\theta_i(t) + \textcolor{#5f3dc4}{\varphi_i}) > 0$}\\
                                         \textcolor{#862e9c}{\omega_\text{stance}}  &amp;\text{otherwise.}
                                     \end{cases}
 
@@ -563,7 +563,7 @@
                          <ul>
                              <li class="fragment">
                                  <span style="color:#a61e4d">Without truncation handling</span>: <br>
-                                 $V_\pi(s_0) = \mathop{\sum^{\textcolor{a61e4d}{3}}_{t=0}}[\gamma^t r_t] = 1 + 1 \cdot 0.98 + 0.98^2 + 0.98^3 \approx 3.9 $
+                                 $V_\pi(s_0) = \mathop{\sum^{\textcolor{#a61e4d}{3}}_{t=0}}[\gamma^t r_t] = 1 + 1 \cdot 0.98 + 0.98^2 + 0.98^3 \approx 3.9 $
                              </li>
                              <li class="fragment" style="margin-top: 5%">
                                  <span style="color:green">With truncation handling</span>: <br>
@@ -591,9 +591,9 @@
                                     <li class="fragment">input: <span style="margin-left:27.5%;">$\textcolor{#1864ab}{x = (s_t, a_t)}$</span></li>
                                     <li class="fragment"><span>if $s_{t+1}$ is <b>non</b> terminal</span>: &nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q_\theta(s_{t+1}, a'))$</span></li>
                                     <li class="fragment"><span>if $s_{t+1}$ is terminal</span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        $\textcolor{a61e4d}{y = r_t}$</span></li>
+                                        $\textcolor{#a61e4d}{y = r_t}$</span></li>
                                     <li class="fragment"><span>
-                                        <b>if $s_{t+1}$ is truncation</b></span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q_\theta(s_{t+1}, a'))$</span></li>
+                                        <b>if $s_{t+1}$ is truncated</b></span>: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <span style="color: #a61e4d">$y = r_t + \gamma \cdot \max_{a' \in A}(Q_\theta(s_{t+1}, a'))$</span></li>
 
                                 </ul>
                             </li>
