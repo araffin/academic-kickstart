@@ -1,0 +1,129 @@
+/* Vercel light theme for Shiki output. */
+:root {
+  --code-background: #fff;
+  --code-foreground: hsla(0, 0%, 9%, 1);
+  --code-comment: hsla(0, 0%, 40%, 1);
+  --code-keyword: oklch(53.5% 0.2058 2.84);
+  --code-string: oklch(51.75% 0.1453 147.65);
+  --code-constant: oklch(53.18% 0.2399 256.9900584162342);
+  --code-number: oklch(53.18% 0.2399 256.9900584162342);
+  --code-function: oklch(47.18% 0.2579 304);
+  --code-parameter: oklch(52.79% 0.1496 54.65);
+  --code-variable: oklch(53.18% 0.2399 256.9900584162342);
+  --code-string-expression: oklch(51.75% 0.1453 147.65);
+  --code-line-highlight: oklch(94.58% 0.0293 249.84870859673202 / 30%);
+  --code-crosshair: #a8a8a8;
+}
+
+.reveal .shiki {
+  display: block;
+  box-sizing: border-box;
+  max-height: 400px;
+  overflow: auto;
+  padding: 0.5em;
+  color: var(--code-foreground);
+  background: var(--code-background) !important;
+  white-space: pre;
+}
+
+.reveal .shiki .line {
+  display: inline-block;
+  width: 100%;
+}
+
+.reveal .shiki table {
+  margin: initial;
+  border-collapse: collapse;
+}
+
+.reveal .shiki .hljs-ln-n {
+  display: block;
+}
+
+.reveal .shiki .hljs-ln-n::before {
+  content: attr(data-line-number);
+}
+
+.reveal .shiki .hljs-ln-code,
+.reveal .shiki .hljs-ln-numbers {
+  padding: 0;
+  border: 0;
+}
+
+.reveal .shiki .hljs-ln-numbers {
+  padding-right: 0.75em;
+  color: var(--code-comment);
+  opacity: 1;
+  text-align: right;
+  user-select: none;
+  vertical-align: top;
+}
+
+.reveal .shiki.has-highlights tr:not(.highlight-line) {
+  opacity: 0.4;
+}
+
+.reveal .shiki.has-highlights tr.highlight-line {
+  background-color: var(--code-line-highlight);
+}
+
+.reveal .shiki.has-highlights[data-line-highlight-background="false"] tr.highlight-line,
+.reveal .shiki.has-highlights[data-no-line-highlight-background] tr.highlight-line,
+.reveal .shiki.has-highlights.no-line-highlight-background tr.highlight-line {
+  background-color: transparent;
+}
+
+.reveal pre.code-wrapper > code.shiki.fragment {
+  z-index: 1;
+  background: var(--code-background) !important;
+}
+
+.reveal pre.code-wrapper > code.shiki.fragment.visible {
+  opacity: 1;
+}
+
+.reveal .shiki:not(:first-child).fragment {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.reveal pre.code-wrapper {
+  position: relative;
+  z-index: 0;
+  overflow: visible;
+  border: 1px solid #ebebeb;
+  box-shadow: none;
+  background: var(--code-background);
+}
+
+/* Corner crosshairs, opt-in via the "crosshair" class on the <pre>. */
+.reveal pre.code-wrapper.crosshair::before,
+.reveal pre.code-wrapper.crosshair::after {
+  position: absolute;
+  z-index: 2;
+  width: calc(100% + 26px);
+  height: calc(100% + 26px);
+  pointer-events: none;
+  content: "";
+  background:
+    /* Dark crosshair arms. */
+    linear-gradient(var(--code-crosshair), var(--code-crosshair)) left 0 top 12px / 25px 0.5px no-repeat,
+    linear-gradient(var(--code-crosshair), var(--code-crosshair)) left 12px top 0 / 0.5px 25px no-repeat,
+    /* Pale border extensions slightly overshoot the crosshair arms. */
+    linear-gradient(#ebebeb, #ebebeb) left -10px top 12px / calc(100% + 20px) 1px no-repeat,
+    linear-gradient(#ebebeb, #ebebeb) left 12px top -10px / 1px calc(100% + 20px) no-repeat;
+}
+
+.reveal pre.code-wrapper.crosshair::before {
+  top: -13px;
+  left: -13px;
+}
+
+.reveal pre.code-wrapper.crosshair::after {
+  right: -13px;
+  bottom: -13px;
+  transform: rotate(180deg);
+}
